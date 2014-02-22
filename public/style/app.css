@@ -1,0 +1,110 @@
+
+#overlay {
+     visibility: hidden;
+     position: absolute;
+     left: 0px;
+     top: 0px;
+     width:100%;
+    /* height:100%;*/
+     z-index: 99999;
+}
+#overlay > div {
+   width: 60%;
+  position: relative;
+  margin: 5% auto;
+  background: #f2f2f2;
+  color: #000000;
+}
+.layout-title{
+  float: left;
+  font-size: 25.999999998px;
+}
+.layout-menu{
+  float: right;
+  color: #FFFFFF;
+  display: inline;
+}
+.layout-header{
+  padding: 10px 10px 10px 10px;
+  width: 100%;
+  background: #2e2d2c;
+  color: #FFFFFF;
+}
+
+.hunt-btn-style{
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  line-height: 24px;
+  padding:5px;
+  background: #167bc1;
+  border: none;
+  color: #ffffff;
+}
+.hunt-btn-style:hover {  
+  cursor: pointer;
+background-color: #999999;
+  color: #ffffff;
+  text-decoration:none;
+} 
+
+
+.challengeCreateDialog > div {
+  width: 400px;
+  position: relative;
+  margin: 5% auto;
+  padding: 5px 20px 13px 20px;
+  background: rgba(26, 28, 30, 0.8);
+}
+.challengesTableDialog> div,.leaderDialog >div{
+  width: 50%;
+  position: relative;
+  margin: 10% auto;
+  padding: 5px 10px 13px 10px;
+  background: rgba(26, 28, 30, 0.8);
+}
+.challengesDialog> div{
+  width: 80%;
+  position: relative;
+  margin: 10% auto;
+  padding:0 5px 0 5px;
+  background: rgba(26, 28, 30, 0.8);
+}
+.adminDialog > div{
+  width: 80%;
+  position: relative;
+  margin: 5% auto;
+  padding:0 5px 0 5px;
+  background: rgba(26, 28, 30, 0.8);
+}
+.close {
+  background: rgba(56, 61, 63, 0.75);
+  color: #FFFFFF;
+  line-height: 25px;
+  position: absolute;
+  right: -0px;
+  top:-0px;
+  text-align: center;
+  width: 24px;
+  text-decoration: none;
+  font-weight: bold;
+}
+h2 {
+  margin: 10px 0;
+font-size: 21.999999998px;
+font-weight: bold;
+text-transform: uppercase;
+letter-spacing: 0.03em;
+}
+.group{
+  text-align: center;
+  margin-top: 10px;
+}
+.control-group {
+margin-bottom: 10px;
+}
+.push-center{
+  margin-left: 20%;
+}
+
+.close:hover {    background: rgba(239, 124, 35, 0.6);color: #FFFFFF; }
