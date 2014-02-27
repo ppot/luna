@@ -4,6 +4,13 @@ html,body {
    height:100%;
 
 }
+.app-index{
+  position: fixed;
+  top: 0px;
+  background-image: url("../media/bg01.jpg");
+  height: 100%;
+  width: 100%;
+}
 #wrapper {
    min-height:100%;
    position:relative;
@@ -44,8 +51,11 @@ html,body {
   background-color: rgba(40,44,47,0.9);
   box-shadow: 0px 2px 5px 1px rgba(0,0,0,0.28);
 }
-.data-right{
+.data-right, .bill-price{
   float: right;
+}
+.bill-price{
+    color: #944238;
 }
 .data-title{
   margin-left: 5%;
@@ -143,7 +153,7 @@ html,body {
 .admin-btn-style{
   font-size: 14px;
   line-height: 24px;
-  padding:10px;
+  padding:5px;
   background: #f15743;
   border: none;
   color: #fff;

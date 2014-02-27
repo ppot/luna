@@ -30,7 +30,12 @@
           <div class="data-admin-menu">
          <div class="data-admin">
             <div class="data-admin-button">
-              <a class="admin-btn-style" href="javascript:app.app_nouveau_restaurateur();" >Liste commandes</a>
+              <a class="admin-btn-style" href="javascript:app.app_menus();" >Menus</a>
+            </div>
+          </div>
+            <div class="data-admin">
+            <div class="data-admin-button">
+              <a class="admin-btn-style" href="javascript:app.app_add_menu();" >Nouveau menu</a>
             </div>
           </div>
          </div>
@@ -39,50 +44,84 @@
       </div>
          <div class="dashboard-body">
           <div class="dashboard">
-              <div id="add-restaurant" class="row">
-             <div class="large-9 columns group dashboard-table">
-              <table>
-                <tr class="table-title">
-                  <th>Utilisateur</th>
-                  <th>Adresse</th>
-                  <th>no_de_confirmation</th>
-                  <th>date_commande</th>
-                  <th>heure_commande</th>
-                  <th>statut_pret</th>
-                  <th>prix_total</th>
-                </tr>
-                <tr>
-                  <td>Incognito Daou</td>
-                  <td>Pate-Palo</td>
-                  <td>514-333-0000</td>
-                  <td>10222</td>
-                  <td>St-Michel</td>
-                  <td>Montréal</td>
-                  <td>h4g 3n9</td>
-                </tr>
-                <tr>
-                  <td>Incognito Daou</td>
-                  <td>Pate-Palo</td>
-                  <td>514-333-0000</td>
-                  <td>10222</td>
-                  <td>St-Michel</td>
-                  <td>Montréal</td>
-                  <td>h4g 3n9</td>
-                </tr>
-                <tr>
-                  <td>Incognito Daou</td>
-                  <td>Pate-Palo</td>
-                  <td>514-333-0000</td>
-                  <td>10222</td>
-                  <td>St-Michel</td>
-                  <td>Montréal</td>
-                  <td>h4g 3n9</td>
-                </tr> 
-              </table>
+          <div id="menus" class="row">
+              <div class="large-5 columns group">
+            <div class="row">
+            <div  class="large-12 columns group">
+                <span class="add-title">THAI menu</span>
+              </div>
+                 <div  class="large-12 columns group">
+                <span class="add-title">MCDO menu</span>
+              </div>
+              <div  class="large-12 columns group">
+                <span class="add-title">PFK menu</span>
               </div>
             </div>
+         </div>
+         </div>
+            <div id="add-menu" class="row">
+              <div class="large-5 columns group">
+          <div class="row">
+            <div  class="large-12 columns group">
+                 <a class="admin-btn-style left" href="" >Confirmer</a>
+              </div>
+            </div>
+            <div class="row">
+            <div  class="large-8 columns group">
+                <span class="add-title">Nouveau menu</span>
+                <div class="row">
+                  <div class="large-7 columns">
+                    <input type="text" placeholder="nom du menu"/>
+                  </div>
+                </div> 
+              </div>
+            </div>
+            <div class="row">
+            <div  class="large-12 columns group">
+                <span class="add-title">Nouveau plat</span>
+                 <a class="admin-btn-style" href="" >Ajout</a>
+
+                <div class="row ">
+                  <div class="large-7 columns">
+                    <input type="text" placeholder="nom du plat"/>
+                  </div>
+                  <div class="large-9 columns">
+                    <input type="text" placeholder="description du plat"/>
+                  </div>
+                      <div class="large-4 columns left">
+                    <input type="text" placeholder="prix du plat"/>
+                  </div>
+                </div> 
+              </div>
             </div>
          </div>
+
+              <div class="large-7 columns group dashboard-table">
+                  <table>
+                  <tr class="table-title">
+                    <th>Nom du plat</th>
+                    <th>Description</th>
+                    <th>Prix</th>
+                  </tr>
+                  <tr>
+                    <td>mrluna</td>
+                    <td>qeqeqeqeqeqe eqeqeqeqe</td>
+                    <td>13 $</td>
+                  </tr>
+                  <tr>
+                    <td>mrluna</td>
+                    <td>Poteqeqe eqqeqeqeqeqeqevin</td>
+                    <td>254 $</td>
+                  </tr>
+                  <tr>
+                    <td>mrluna</td>
+                    <td>Potvqeqeqeqeqeqeqeqeq eqeqeqein</td>
+                    <td>45 $</td>
+                  </tr>
+                </table>
+              </div>
+         </div>
+       </div>
     </div>
    <div id="footer">
             <div class="row data-center">
@@ -102,6 +141,7 @@
     <script src="../../public/js/foundation.min.js"></script>
     <script>
      $(document).ready(function() {
+      app.app_menus_hide();
     });
     </script>
   </body>

@@ -58,6 +58,21 @@ app = (function(){
 		$('#gerer-livreur').hide();
 	}
 
+	function app_add_menu(){
+		app_menus_hide();
+		$('#add-menu').show();
+	}
+
+	function app_menus(){
+		app_menus_hide();
+		$('#menus').show();
+	}
+
+	function app_menus_hide(){
+		$('#add-menu').hide();
+		$('#menus').hide();
+	}
+
     return{
     	app_module_log:app_module_log,
         signin:signin,
@@ -69,6 +84,9 @@ app = (function(){
         app_gerer_restaurateur:app_gerer_restaurateur,
         app_gerer_restaurant:app_gerer_restaurant,
         app_gerer_livreur:app_gerer_livreur,
+        app_menus_hide:app_menus_hide,
+        app_add_menu:app_add_menu,
+        app_menus:app_menus,
 	}
-	
+
 })();
