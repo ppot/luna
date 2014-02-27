@@ -57,6 +57,9 @@ html,body {
 .bill-price{
     color: #944238;
 }
+.qte{
+  width: 50px;
+}
 .data-title{
   margin-left: 5%;
   font-size: 19px;
