@@ -61,7 +61,6 @@ html,body {
 .data-admin-menu{
   position: relative;
   margin-left: 10%;
-  margin-top: 2%;
 }
 .data-admin-menu-title{
   margin-top: 5px;
@@ -69,18 +68,19 @@ html,body {
 }
 .data-admin{
   float: left;
-  padding: 10px;
-  margin-left: 10px;
   width: 15%;
-  border: 1px solid #000;
 }
 .data-admin-button{
   margin-top: 10px;
   margin-bottom: 10px;
+    color: #944238;
 }
 
 #container {
    height:100%;
+}
+#map_canvas {
+  height: 200px;
 }
 
 .dashboard-body {
@@ -94,6 +94,13 @@ html,body {
 
 .dashboard-table{
   height: 362px;
+}
+.app-right{
+  position: relative;
+  margin-left: 60%;
+}
+.left{
+  text-align: left;
 }
 
 .dashboard-body table th,.dashboard-body table td{
@@ -228,12 +235,12 @@ h2 {
   position: relative;
   background-color: #282c2f;
   top: 0x;
-  height:350px;
+  height:250px;
   width: 100%;
 }
 .dashboard{
   position: relative;
-  margin-left: 5%;
+
 }
 .dashboard-header{
   position: relative;
@@ -247,6 +254,14 @@ h2 {
   letter-spacing: -4px;
   line-height: 60px;
   color: #FFFFFF;
+}
+.dashboard-title-spec{
+    font-size: 50px;
+  font-family: Helvetica,Arial,sans-serif;
+  font-weight: bold;
+  letter-spacing: -4px;
+  line-height: 60px;
+  color: #944238;
 }
 .close:hover {  background: rgba(239, 124, 35, 0.6);color: #FFFFFF; }
 
