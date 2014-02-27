@@ -68,10 +68,18 @@ app = (function(){
 		$('#menus').show();
 	}
 
+	function app_menu_preparation(){
+		app_menus_hide();
+		$('#menu-preparation').show();
+	}
+
 	function app_menus_hide(){
 		$('#add-menu').hide();
 		$('#menus').hide();
+		$('#menu-preparation').hide();
 	}
+
+
 
     return{
     	app_module_log:app_module_log,
@@ -87,6 +95,7 @@ app = (function(){
         app_menus_hide:app_menus_hide,
         app_add_menu:app_add_menu,
         app_menus:app_menus,
+        app_menu_preparation:app_menu_preparation,
 	}
 
 })();
