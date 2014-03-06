@@ -11,3 +11,5 @@ Techonologies and languages
 -HTML5
 JavaScript
 -Bootstrap
+
+Pour l'integration de la bd, changer le username pour le votre dans les config
