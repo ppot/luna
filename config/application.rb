@@ -1,5 +1,5 @@
 require File.expand_path('../boot', __FILE__)
-
+# config.autoload_paths += %W(#{config.root}/app/models/utilisateurs)
 require 'rails/all'
 
 # Require the gems listed in Gemfile, including any gems
