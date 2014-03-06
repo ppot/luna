@@ -10,6 +10,9 @@ LOG::Application.routes.draw do
   get "users/commande"
   get "users/profile"
 
+  get "app/login"
+  get "app/logout"
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

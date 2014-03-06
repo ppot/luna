@@ -298,8 +298,13 @@ h2 {
   font-size: 14px;
   color: #3aa9e3;
 }
+
 .connect:hover{
    color: #3aa9e3;
+}
+.user{
+font-size:14px;
+color:#FFFFFF;
 }
 .add-title{
   font-size: 20px;
