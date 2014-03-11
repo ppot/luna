@@ -217,7 +217,7 @@
                       
                       <tr>
                          <td><div><%= link_to "Supprimer", {controller: "management" ,action: "supprimerRestaurateur", id: r.id}, class: "hunt-btn-style" %></div><br/>
-                            <div><%= link_to "Modifier", {controller: "management" ,action: "supprimerRestaurateur", id: r.id}, class: "hunt-btn-style" %></div>
+                            <div><%= link_to "Modifier", {controller: "management" ,action: "modifierRestaurateur", id: r.id}, remote: true, :update => "test", class: "hunt-btn-style modifierRestaurateur_btn" %></div>
                         </td>
                         <td><%= r.identificateur %></td>
                         <td><%= r.mot_de_passe %></td>
@@ -236,21 +236,21 @@
                       <% end %>
                     </table>
               </div>
-               <!-- ******************************* fin gérer restaurateur ********************************-->
-                    <div  class="large-4 columns group">
+               <!-- ******************************* Modifier restaurateur ********************************-->
+                <div  class="large-4 columns group">
                 <span class="add-title">Edition restaurateur</span>
-                <div class="row">
+                <div class="row" id="mofifierRestaurateur_form">
                   <div class="large-8 columns">
-                    <input type="text" placeholder="nom d'utilisateur"/>
+                    <input id="restaurateur_identificateur_edit" type="text" placeholder="nom d'utilisateur"/>
                   </div>
                   <div class="large-8 columns">
-                  <input type="text" placeholder="nom" />
+                  <input id="restaurateur_nom_edit" type="text" placeholder="nom" />
                   </div>
                   <div class="large-8 columns">
-                  <input type="text" placeholder="prénom" />
+                  <input id="restaurateur_prenom_edit" type="text" placeholder="prénom" />
                   </div>
                   <div class="large-8 columns">
-                  <input type="password" placeholder="mot de passe" />
+                  <input id="restaurateur_mdp_edit" type="password" placeholder="mot de passe" />
                   </div>
                   <div class="large-8 columns">
                   <select>
@@ -430,3 +430,4 @@
           </div>
    </div>
 </div>
+

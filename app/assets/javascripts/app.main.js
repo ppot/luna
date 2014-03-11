@@ -1,5 +1,16 @@
 //Fichier de javascript
 app = (function(){
+	
+	//Reception de la requete ajax via json et insertion dans les id correspondants
+	$('.modifierRestaurateur_btn').on('ajax:success', function(e, data, status, xhr){
+	  if(data) {
+	  	restaurateur = data;
+	  	$('#restaurateur_nom_edit').val(restaurateur.nom);
+	  	$('#restaurateur_prenom_edit').val(restaurateur.prenom);
+	  	$('#restaurateur_identificateur_edit').val(restaurateur.identificateur);
+	  	$('#restaurateur_mdp_edit').val(restaurateur.mot_de_passe);
+	  }
+	});
 
 	function app_module_log() {
 	  el = document.getElementById("overlay");

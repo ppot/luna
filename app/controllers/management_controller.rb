@@ -8,8 +8,6 @@ class ManagementController < ApplicationController
     def saisirInformations
         @restaurateur = Restaurateur.new(restaurateur_params)
         
-        
-
         #Utilisattion des fonctions prédéfinis de rails
         #Pas de nécessité de créer Restaurateur.setInfo comme dans le RDCU1 
         if @restaurateur.save
@@ -30,6 +28,12 @@ class ManagementController < ApplicationController
      end
 
     def modifierRestaurateur
+        @restaurateur_modification = Restaurateur.find(params[:id])
+        respond_to do |format|
+            if @restaurateur_modification != nil
+              format.json { render json: @restaurateur_modification, status: :created}
+            end
+        end
     end
 
   def entrepreneur
