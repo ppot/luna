@@ -91,11 +91,9 @@ ActiveRecord::Schema.define(version: 20140306143527) do
   add_index "plats", ["nom"], name: "index_plats_on_nom", using: :btree
 
   create_table "restaurants", force: true do |t|
-    t.integer "utilisateur_id"
-    t.string  "nom",            limit: 25, null: false
+    t.integer "restaurateur_id"
+    t.string  "nom",             limit: 25, null: false
   end
-
-  add_index "restaurants", ["utilisateur_id"], name: "index_restaurants_on_utilisateur_id", using: :btree
 
   create_table "utilisateurs", force: true do |t|
     t.string   "identificateur", limit: 30, null: false

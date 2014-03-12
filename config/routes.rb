@@ -1,11 +1,25 @@
 LOG::Application.routes.draw do
 
+  get "gestionnaire_restaurateurs/index"
+  get "gestionnaire_restaurateurs/ajouterRestaurateur"
+  post "gestionnaire_restaurateurs/saisirInformations"
+  get "gestionnaire_restaurateurs/supprimerRestaurateur"
+  get "gestionnaire_restaurateurs/modifierRestaurateur"
+
+
   root 'app#index'
   get "app/index"
 
+  get "management/ajouterRestaurateur"
+  get "management/supprimerRestaurateur"
+  get "management/modifierRestaurateur"
   get "management/entrepreneur"
+  post "management/saisirInformations" 
+  post "management/saisirInformationsRestaurant" 
+  
   get "management/livraison"
   get "management/restaurateur"
+
 
   get "users/commande"
   get "users/profile"

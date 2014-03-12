@@ -3,3 +3,4 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
 # app.app_admin_hide();
+
