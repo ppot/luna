@@ -6,15 +6,13 @@ class ManagementController < ApplicationController
     end
 
     def saisirInformations
-        @restaurateur = Restaurateur.new(restaurateur_params)
-        
+        restaurateur = Restaurateur.new(restaurateur_params)
+        restaurant = Restaurant.find(params[:restaurant])
         #Utilisattion des fonctions prédéfinis de rails
         #Pas de nécessité de créer Restaurateur.setInfo comme dans le RDCU1 
-        if @restaurateur.save
+        if restaurateur.save
+            restaurant.update(restaurateur_id: restaurateur.id)
             redirect_to :action => "entrepreneur", notice: "add was successfully"
-            if !params[:restaurant].to_s.match(/-1/)
-               Restaurant.update(params[:restaurant], utilisateur_id: @restaurateur.id)
-            end
         else
             redirect_to :action => "entrepreneur", alert: "add was not successfully"
         end 
@@ -28,12 +26,22 @@ class ManagementController < ApplicationController
      end
 
     def modifierRestaurateur
-        @restaurateur_modification = Restaurateur.find(params[:id])
-        respond_to do |format|
-            if @restaurateur_modification != nil
-              format.json { render json: @restaurateur_modification, status: :created}
-            end
-        end
+        restaurateur = Restaurateur.find(params[:id])
+        restaurateur.update_attributes(restaurateur_params)
+        restaurant_modification = Restaurant.find(params[:restaurant])
+        #puisqu'on recoit l'information complete du client, la commande save est quivalante a celle de modification
+        if params[:restaurant] != "-1"
+            restaurant_modification.update(restaurateur_id: restaurateur.id)
+            redirect_to :action => "entrepreneur", notice: "add was successfully"
+        else
+            redirect_to :action => "entrepreneur", alert: "add was not successfully"
+        end 
+        # reference
+        # respond_to do |format|
+        #     if @restaurateur_modification != nil
+        #       format.json { render json: @restaurateur_modification, status: :created}
+        #     end
+        # end
     end
 
   def entrepreneur
@@ -72,6 +80,10 @@ class ManagementController < ApplicationController
   end
   private def adresse_params
       params.require(:adresse).permit!
+  end
+
+    private def restaurateur_modif_params
+      params.require(:utilisateur).permit(:id, :identificateur, :mot_de_passe, :nom, :prenom)
   end
 
 end

@@ -45,14 +45,14 @@
                 <div  class="large-6 columns group">
                 <span class="add-title large-6 columns ">Ajout d'un restaurateur</span>
                 <!--*********************** ajouter Restaurateur ******************************-->
-                <% form_select_array = @restaurants.map { |i| [i.nom, i.id] } %>
-                <% form_select_array.insert(0, [" ","-1"]) #on place un élément vide dans le select%>
+                <% form_restaurants_array = @restaurants.map { |i| [i.nom, i.id] } %>
+                <% form_restaurants_array.insert(0, [" ","-1"]) #on place un élément vide dans le select%>
                 <%= form_for @nouveau_restaurateur, url: {action: "saisirInformations"}, html:{class: "large-6 columns"}  do |f| %>
                     <%= f.text_field :nom, :placeholder => "nom", :class => "large-4 columns" %>
                     <%= f.text_field :prenom, :placeholder => "prenom", :class => "large-4 columns" %>
                     <%= f.text_field :identificateur, :placeholder => "nom d'utilisateur", :class => "large-4 columns" %>
                     <%= f.password_field :mot_de_passe, :placeholder => "mot de passe", :class => "large-4 columns" %>
-                    <%= select_tag(:restaurant, options_for_select(form_select_array, 0)) %>
+                    <%= select_tag(:restaurant, options_for_select(form_restaurants_array, 0)) %>
                     <%= f.submit "Ajouter restaurateur", :class => "admin-btn-style" %>   
                 <% end %>
               </div>
@@ -214,10 +214,9 @@
                         <th>Restaurant</th>
                       </tr>
                       <% @restaurateur.each do |r| %>
-                      
                       <tr>
                          <td><div><%= link_to "Supprimer", {controller: "management" ,action: "supprimerRestaurateur", id: r.id}, class: "hunt-btn-style" %></div><br/>
-                            <div><%= link_to "Modifier", {controller: "management" ,action: "modifierRestaurateur", id: r.id}, remote: true, :update => "test", class: "hunt-btn-style modifierRestaurateur_btn" %></div>
+                            <div><%= link_to "Modifier", "javascript:;", onclick: "app.restaurateur_form_values(#{r.id}, \'#{r.nom}\', \'#{r.prenom}\', \'#{r.identificateur}\', \'#{r.mot_de_passe}\');", class: "hunt-btn-style modifierRestaurateur_btn,return false;"%></div>
                         </td>
                         <td><%= r.identificateur %></td>
                         <td><%= r.mot_de_passe %></td>
@@ -240,30 +239,16 @@
                 <div  class="large-4 columns group">
                 <span class="add-title">Edition restaurateur</span>
                 <div class="row" id="mofifierRestaurateur_form">
-                  <div class="large-8 columns">
-                    <input id="restaurateur_identificateur_edit" type="text" placeholder="nom d'utilisateur"/>
-                  </div>
-                  <div class="large-8 columns">
-                  <input id="restaurateur_nom_edit" type="text" placeholder="nom" />
-                  </div>
-                  <div class="large-8 columns">
-                  <input id="restaurateur_prenom_edit" type="text" placeholder="prénom" />
-                  </div>
-                  <div class="large-8 columns">
-                  <input id="restaurateur_mdp_edit" type="password" placeholder="mot de passe" />
-                  </div>
-                  <div class="large-8 columns">
-                  <select>
-                     <option id="2" selected>AUCUN</option>
-                    <option id="1" >THAI express</option>
-                    <option id="2">MCDO</option>
-                    <option id="3">PFK</option>
-                    <option id="4">CAFE ECOLE</option>
-                  </select>
-                  </div>
-                    <div class="mod">
-                     <a class="admin-btn-style" href="" > Edition</a>
-                  </div>
+                  <!--*********************** Modifier Restaurateur ******************************-->
+                  <%= form_for @nouveau_restaurateur, url: {action: "modifierRestaurateur", id: "1"}, html:{class: "large-6 columns"}  do |f| %>
+                      <%= f.hidden_field :id, :id =>"restaurateur_id_edit", :value => "un id" %>
+                      <%= f.text_field :nom, :placeholder => "nom", :class => "large-4 columns", :id =>"restaurateur_nom_edit" %>
+                      <%= f.text_field :prenom, :placeholder => "prenom", :class => "large-4 columns", :id =>"restaurateur_prenom_edit" %>
+                      <%= f.text_field :identificateur, :placeholder => "nom d'utilisateur", :class => "large-4 columns", :id =>"restaurateur_identificateur_edit" %>
+                      <%= f.password_field :mot_de_passe, :placeholder => "mot de passe", :class => "large-4 columns", :id => "restaurateur_mdp_edit" %>
+                      <%= select_tag(:restaurant, options_for_select(form_restaurants_array, 0), :id => "restaurateur_restaurant_edit") %>
+                  <%= f.submit "Ajouter restaurateur", :class => "admin-btn-style" %>   
+                  <% end %>
                 </div>
               </div>
             </div>

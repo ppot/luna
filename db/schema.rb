@@ -46,7 +46,7 @@ ActiveRecord::Schema.define(version: 20140306143527) do
 
   create_table "commandes", force: true do |t|
     t.integer "client_id",                                            null: false
-    t.integer "utilisateur_id"
+    t.integer "livreur_id"
     t.string  "no_confirmation",   limit: 10,                         null: false
     t.date    "date_de_commande",                                     null: false
     t.time    "heure_de_commande",                                    null: false
@@ -55,8 +55,8 @@ ActiveRecord::Schema.define(version: 20140306143527) do
   end
 
   add_index "commandes", ["client_id"], name: "index_commandes_on_client_id", using: :btree
+  add_index "commandes", ["livreur_id"], name: "index_commandes_on_livreur_id", using: :btree
   add_index "commandes", ["no_confirmation"], name: "index_commandes_on_no_confirmation", unique: true, using: :btree
-  add_index "commandes", ["utilisateur_id"], name: "index_commandes_on_utilisateur_id", using: :btree
 
   create_table "commandes_plats", id: false, force: true do |t|
     t.integer "commande_id"

@@ -1,16 +1,5 @@
 //Fichier de javascript
 app = (function(){
-	
-	//Reception de la requete ajax via json et insertion dans les id correspondants
-	$('.modifierRestaurateur_btn').on('ajax:success', function(e, data, status, xhr){
-	  if(data) {
-	  	restaurateur = data;
-	  	$('#restaurateur_nom_edit').val(restaurateur.nom);
-	  	$('#restaurateur_prenom_edit').val(restaurateur.prenom);
-	  	$('#restaurateur_identificateur_edit').val(restaurateur.identificateur);
-	  	$('#restaurateur_mdp_edit').val(restaurateur.mot_de_passe);
-	  }
-	});
 
 	function app_module_log() {
 	  el = document.getElementById("overlay");
@@ -89,8 +78,17 @@ app = (function(){
 		$('#menu-preparation').hide();
 	}
 
+	function restaurateur_form_values(id, nom, prenom, identificateur, mot_de_passe ) {
+		//Cette fonctio place les valeur de la table vers un formulaire pour modifier un restaurateur
+		$('#restaurateur_id_edit').val(id);	//id creer par rails
+		$('#restaurateur_nom_edit').val(nom);
+	  	$('#restaurateur_prenom_edit').val(prenom);
+	  	$('#restaurateur_identificateur_edit').val(identificateur);
+	  	$('#restaurateur_mdp_edit').val(mot_de_passe);
+	}
+
   return{
-    	app_module_log:app_module_log,
+      app_module_log:app_module_log,
       signin:signin,
       join:join,
       app_admin_hide:app_admin_hide,
@@ -104,5 +102,6 @@ app = (function(){
       app_add_menu:app_add_menu,
       app_menus:app_menus,
       app_menu_preparation:app_menu_preparation,
+      restaurateur_form_values:restaurateur_form_values,
 	}
 })();
