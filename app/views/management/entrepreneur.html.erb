@@ -240,7 +240,7 @@
                 <span class="add-title">Edition restaurateur</span>
                 <div class="row" id="mofifierRestaurateur_form">
                   <!--*********************** Modifier Restaurateur ******************************-->
-                  <%= form_for @nouveau_restaurateur, url: {action: "modifierRestaurateur", id: "1"}, html:{class: "large-6 columns"}  do |f| %>
+                  <%= form_for @nouveau_restaurateur, url: {action: "modifierRestaurateur", id: "0"}, html:{class: "large-6 columns", id: "form_modifierRestaurateur" } do |f| %>
                       <%= f.hidden_field :id, :id =>"restaurateur_id_edit", :value => "un id" %>
                       <%= f.text_field :nom, :placeholder => "nom", :class => "large-4 columns", :id =>"restaurateur_nom_edit" %>
                       <%= f.text_field :prenom, :placeholder => "prenom", :class => "large-4 columns", :id =>"restaurateur_prenom_edit" %>
