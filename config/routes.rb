@@ -3,15 +3,24 @@ LOG::Application.routes.draw do
   root 'app#index'
   get "app/index"
 
+  get "management/ajouterRestaurateur"
+  get "management/supprimerRestaurateur"
   get "management/entrepreneur"
+  post "management/saisirInformations" 
+  post "management/saisirInformationsRestaurant" 
+  post "management/modifierRestaurateur"
+
   get "management/livraison"
   get "management/restaurateur"
+
 
   get "users/commande"
   get "users/profile"
 
   get "app/login"
   get "app/logout"
+
+  post 'modifierRestaurateur/:id' => 'management#modifierRestaurateur'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

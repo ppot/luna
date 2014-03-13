@@ -78,8 +78,17 @@ app = (function(){
 		$('#menu-preparation').hide();
 	}
 
+	function restaurateur_form_values(id, nom, prenom, identificateur, mot_de_passe ) {
+		//Cette fonctio place les valeur de la table vers un formulaire pour modifier un restaurateur
+		$('#restaurateur_id_edit').val(id);	//id creer par rails
+		$('#restaurateur_nom_edit').val(nom);
+	  	$('#restaurateur_prenom_edit').val(prenom);
+	  	$('#restaurateur_identificateur_edit').val(identificateur);
+	  	$('#restaurateur_mdp_edit').val(mot_de_passe);
+	}
+
   return{
-    	app_module_log:app_module_log,
+      app_module_log:app_module_log,
       signin:signin,
       join:join,
       app_admin_hide:app_admin_hide,
@@ -93,5 +102,6 @@ app = (function(){
       app_add_menu:app_add_menu,
       app_menus:app_menus,
       app_menu_preparation:app_menu_preparation,
+      restaurateur_form_values:restaurateur_form_values,
 	}
 })();

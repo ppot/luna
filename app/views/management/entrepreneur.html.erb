@@ -42,48 +42,41 @@
          <div class="dashboard-body">
           <div class="dashboard">
             <div  id="add-restaurateur" class="row">
-                 <div  class="large-4 columns group">
-                <span class="add-title">Ajout d'un restaurateur</span>
-                <div class="row">
-                  <div class="large-8 columns">
-                    <input type="text" placeholder="nom d'utilisateur"/>
-                  </div>
-                  <div class="large-8 columns">
-                  <input type="text" placeholder="nom" />
-                  </div>
-                  <div class="large-8 columns">
-                  <input type="text" placeholder="prénom" />
-                  </div>
-                  <div class="large-8 columns">
-                  <input type="password" placeholder="mot de passe" />
-                  </div>
-                  <div class="large-8 columns">
-                   <select>
-                     <option id="2" selected>AUCUN</option>
-                    <option id="1" >THAI express</option>
-                    <option id="2">MCDO</option>
-                    <option id="3">PFK</option>
-                    <option id="4">CAFE ECOLE</option>
-                  </select>
-                  </div>
-                  <div class="add">
-                     <a class="admin-btn-style" href="" >Ajouter restaurateur</a>
-                  </div>
-                </div>
+                <div  class="large-6 columns group">
+                <span class="add-title large-6 columns ">Ajout d'un restaurateur</span>
+                <!--*********************** ajouter Restaurateur ******************************-->
+                <% form_restaurants_array = @restaurants.map { |i| [i.nom, i.id] } %>
+                <% form_restaurants_array.insert(0, [" ","-1"]) #on place un élément vide dans le select%>
+                <%= form_for @nouveau_restaurateur, url: {action: "saisirInformations"}, html:{class: "large-6 columns"}  do |f| %>
+                    <%= f.text_field :nom, :placeholder => "nom", :class => "large-4 columns" %>
+                    <%= f.text_field :prenom, :placeholder => "prenom", :class => "large-4 columns" %>
+                    <%= f.text_field :identificateur, :placeholder => "nom d'utilisateur", :class => "large-4 columns" %>
+                    <%= f.password_field :mot_de_passe, :placeholder => "mot de passe", :class => "large-4 columns" %>
+                    <%= select_tag(:restaurant, options_for_select(form_restaurants_array, 0)) %>
+                    <%= f.submit "Ajouter restaurateur", :class => "admin-btn-style" %>   
+                <% end %>
               </div>
-               <div class="large-8 columns group dashboard-table">
-                  <table>
+               <div class="large-6 columns group dashboard-table">
+                  
+               <table>
                   <tr class="table-title">
                     <th>Utilisateur</th>
+                    <th>Mot de passe</th>
                     <th>Nom</th>
                     <th>Prénom</th>
                     <th>Restaurant</th>
                   </tr>
+                  <% @restaurateur.each do |r| %>
+                  
                   <tr>
-                    <td>mrluna</td>
-                    <td>Potvin</td>
-                    <td>Philipe</td>
+                    <td><%= r.identificateur %></td>
+
+                    <td><%= r.mot_de_passe %></td>
+                    <td><%= r.nom %></td>
+                    <td><%= r.prenom %></td>
+          
                     <td>
+                    <!--*********************** adresse restau à faire ******************************-->
                       <address>
                         <strong>Mc-Donald</strong><br>
                           795 Folsom Ave, Suite 600<br>
@@ -92,73 +85,34 @@
                       </address>
                     </td>
                   </tr>
-                  <tr>
-                    <td>mrluna</td>
-                    <td>Potvin</td>
-                    <td>Philipe</td>
-                    <td>
-                      <address>
-                        <strong>Mc-Donald</strong><br>
-                          795 Folsom Ave, Suite 600<br>
-                          San Francisco, CA 94107<br>
-                        <abbr title="Phone">P:</abbr> (123) 456-7890
-                      </address>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>mrluna</td>
-                    <td>Potvin</td>
-                    <td>Philipe</td>
-                    <td>
-                      <address>
-                        <strong>Mc-Donald</strong><br>
-                          795 Folsom Ave, Suite 600<br>
-                          San Francisco, CA 94107<br>
-                        <abbr title="Phone">P:</abbr> (123) 456-7890
-                      </address>
-                    </td>
-                  </tr>
-                </table>
+                  <% end %>
+              </table>
               </div>
             </div>
             <div id="add-restaurant" class="row">
-                 <div  class="large-3 columns group">
+                 <div  class="large-4 columns group">
                 <span class="add-title">Ajout d'un restaurant</span>
                 <div class="row">
-                  <div class="large-10 columns">
-                      <input type="text" placeholder="nom du restaurant" />
-                  </div>
-                  <div class="large-10 columns">
-                    <input type="text" placeholder="numéro" />
-                  </div>
-                  <div class="large-10 columns">
-                   <input type="text" placeholder="rue" />
-                  </div>
-                  <div class="large-10 columns">
-               <input type="text" placeholder="ville" />
-                  </div>
-                  <div class="large-10 columns">
-                  <input type="text" placeholder="code postale" />
-
-                  </div>
-                  <div class="large-10 columns">
-                   <input type="tel" placeholder="téléphone" />
-                    </div>
-                    <div class="large-10 columns">
-                   <select>
-                     <option id="2" selected>AUCUN</option>
-                    <option id="1">BOB</option>
-                    <option id="2">BACON</option>
-                    <option id="3">123</option>
-                    <option id="4">ti jow</option>
-                  </select>
-                    </div>
-                  <div class="add">
-                     <a class="admin-btn-style" href="" >Ajouter restaurant</a>
-                  </div>
+   <!-- *************************ajouter restaurant ************************************************-->
+                    <% #construction du tableau qui sera passé pour le select du formulaire%> 
+                      
+                  <% form_select_array = @restaurateur.map {|i| ["#{i.nom} #{i.prenom}",i.id] } %>
+                  <% form_select_array.insert(0, [" ","-1"]) #on place un élément vide dans le select%>
+                  <%= form_for @nouveau_restaurant, url: {action: "saisirInformationsRestaurant"}, html:{class: "large-4 columns"}  do |r| %>
+                    <%= r.text_field :nom, :placeholder => "nom", :class => "large-4 columns" %>
+                    <%= fields_for :adresse, @nouveau_restaurant.adresse do |r_adresse| %>
+                        <%= r_adresse.text_field :no_maison, :placeholder => "numéro de maison", :class => "large-4 columns" %>
+                        <%= r_adresse.text_field :rue, :placeholder => "rue", :class => "large-4 columns" %>
+                        <%= r_adresse.password_field :ville, :placeholder => "ville", :class => "large-4 columns" %>
+                        <%= r_adresse.text_field :telephone, :placeholder => "téléphone", :class => "large-4 columns" %>
+                        <%= r_adresse.text_field :code_postal, :placeholder => "code postal", :class => "large-4 columns" %>
+                    <% end %>                  
+                    <%= select_tag(:restaurateur, options_for_select(form_select_array, 10)) %>
+                    <%= r.submit "Ajouter restaurant", :class => "admin-btn-style" %>   
+                <% end %>
               </div>
             </div>
-             <div class="large-9 columns group dashboard-table">
+             <div class="large-8 columns group dashboard-table">
               <table>
                 <tr class="table-title">
                   <th>Restaurateur</th>
@@ -247,95 +201,58 @@
                 </table>
               </div>
             </div>
-    <!-- gerer -->
+    <!-- ******************************* gerer Restaurateur ********************************-->
     <div  id="gerer-restaurateur" class="row">
                <div class="large-8 columns group dashboard-table">
                   <table>
-                  <tr class="table-title">
-                    <th></th>
-                    <th>Utilisateur</th>
-                    <th>Nom</th>
-                    <th>Prénom</th>
-                    <th>Restaurant</th>
-                  </tr>
-                  <tr>
-                     <td><div><a class="hunt-btn-style" href="#">Suprimmer</a></div><br/><div>
-                  <a class="hunt-btn-style" href="#">Edition</a></div></td>
-                    <td>mrluna</td>
-                    <td>Potvin</td>
-                    <td>Philipe</td>
-                    <td>
-                      <address>
-                        <strong>Mc-Donald</strong><br>
-                          795 Folsom Ave, Suite 600<br>
-                          San Francisco, CA 94107<br>
-                        <abbr title="Phone">P:</abbr> (123) 456-7890
-                      </address>
-                    </td>
-                  </tr>
-                  <tr>
-                     <td><div><a class="hunt-btn-style" href="#">Suprimmer</a></div><br/><div>
-                  <a class="hunt-btn-style" href="#">Edition</a></div></td>
-                    <td>mrluna</td>
-                    <td>Potvin</td>
-                    <td>Philipe</td>
-                    <td>
-                      <address>
-                        <strong>Mc-Donald</strong><br>
-                          795 Folsom Ave, Suite 600<br>
-                          San Francisco, CA 94107<br>
-                        <abbr title="Phone">P:</abbr> (123) 456-7890
-                      </address>
-                    </td>
-                  </tr>
-                  <tr>
-                     <td><div><a class="hunt-btn-style" href="#">Suprimmer</a></div><br/><div>
-                  <a class="hunt-btn-style" href="#">Edition</a></div></td>
-                    <td>mrluna</td>
-                    <td>Potvin</td>
-                    <td>Philipe</td>
-                    <td>
-                      <address>
-                        <strong>Mc-Donald</strong><br>
-                          795 Folsom Ave, Suite 600<br>
-                          San Francisco, CA 94107<br>
-                        <abbr title="Phone">P:</abbr> (123) 456-7890
-                      </address>
-                    </td>
-                  </tr>
-                </table>
+                      <tr class="table-title">
+                        <th><!--vide valide--></th>
+                        <th>Utilisateur</th>
+                        <th>Mot de passe</th>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Restaurant</th>
+                      </tr>
+                      <% @restaurateur.each do |r| %>
+                      <tr>
+                         <td><div><%= link_to "Supprimer", {controller: "management" ,action: "supprimerRestaurateur", id: r.id}, class: "hunt-btn-style" %></div><br/>
+                            <div><%= link_to "Modifier", "javascript:;", onclick: "app.restaurateur_form_values(#{r.id}, \'#{r.nom}\', \'#{r.prenom}\', \'#{r.identificateur}\', \'#{r.mot_de_passe}\');", class: "hunt-btn-style modifierRestaurateur_btn,return false;"%></div>
+                        </td>
+                        <td><%= r.identificateur %></td>
+                        <td><%= r.mot_de_passe %></td>
+                        <td><%= r.nom %></td>
+                        <td><%= r.prenom %></td>
+
+                        <td>
+                          <address>
+                            <strong>Mc-Donald</strong><br>
+                              795 Folsom Ave, Suite 600<br>
+                              San Francisco, CA 94107<br>
+                            <abbr title="Phone">P:</abbr> (123) 456-7890
+                          </address>
+                        </td>
+                      </tr>
+                      <% end %>
+                    </table>
               </div>
-                    <div  class="large-4 columns group">
+               <!-- ******************************* Modifier restaurateur ********************************-->
+                <div  class="large-4 columns group">
                 <span class="add-title">Edition restaurateur</span>
-                <div class="row">
-                  <div class="large-8 columns">
-                    <input type="text" placeholder="nom d'utilisateur"/>
-                  </div>
-                  <div class="large-8 columns">
-                  <input type="text" placeholder="nom" />
-                  </div>
-                  <div class="large-8 columns">
-                  <input type="text" placeholder="prénom" />
-                  </div>
-                  <div class="large-8 columns">
-                  <input type="password" placeholder="mot de passe" />
-                  </div>
-                  <div class="large-8 columns">
-                  <select>
-                     <option id="2" selected>AUCUN</option>
-                    <option id="1" >THAI express</option>
-                    <option id="2">MCDO</option>
-                    <option id="3">PFK</option>
-                    <option id="4">CAFE ECOLE</option>
-                  </select>
-                  </div>
-                    <div class="mod">
-                     <a class="admin-btn-style" href="" > Edition</a>
-                  </div>
+                <div class="row" id="mofifierRestaurateur_form">
+                  <!--*********************** Modifier Restaurateur ******************************-->
+                  <%= form_for @nouveau_restaurateur, url: {action: "modifierRestaurateur", id: "1"}, html:{class: "large-6 columns"}  do |f| %>
+                      <%= f.hidden_field :id, :id =>"restaurateur_id_edit", :value => "un id" %>
+                      <%= f.text_field :nom, :placeholder => "nom", :class => "large-4 columns", :id =>"restaurateur_nom_edit" %>
+                      <%= f.text_field :prenom, :placeholder => "prenom", :class => "large-4 columns", :id =>"restaurateur_prenom_edit" %>
+                      <%= f.text_field :identificateur, :placeholder => "nom d'utilisateur", :class => "large-4 columns", :id =>"restaurateur_identificateur_edit" %>
+                      <%= f.password_field :mot_de_passe, :placeholder => "mot de passe", :class => "large-4 columns", :id => "restaurateur_mdp_edit" %>
+                      <%= select_tag(:restaurant, options_for_select(form_restaurants_array, 0), :id => "restaurateur_restaurant_edit") %>
+                  <%= f.submit "Ajouter restaurateur", :class => "admin-btn-style" %>   
+                  <% end %>
                 </div>
               </div>
             </div>
-            <!-- gerer restaurant -->
+            <!-- ******************************* gerer restaurant ************************-->
             <div  id="gerer-restaurant" class="row">
                <div class="large-8 columns group dashboard-table">
                   <table>
@@ -424,7 +341,7 @@
                 </div>
               </div>
             </div>
-                        <!-- livreur -->
+            <!-- ************************************ livreur ******************************************-->
               <div id="gerer-livreur" class="row">
 
               <div class="large-8 columns group dashboard-table">
@@ -498,3 +415,4 @@
           </div>
    </div>
 </div>
+
