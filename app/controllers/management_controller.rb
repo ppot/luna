@@ -13,7 +13,7 @@ class ManagementController < ApplicationController
     end
 
     #fonction pour ajouter un restaurateur
-    def saisirInformations
+def saisirInformations
         restaurateur = Restaurateur.new(utilisateur_params)
         #Utilisattion des fonctions prédéfinis de rails
         #Pas de nécessité de créer Restaurateur.setInfo comme dans le RDCU1 
@@ -29,13 +29,12 @@ class ManagementController < ApplicationController
     end
 
     def supprimerRestaurateur
-        
-        Restaurateur.find(params[:id]).destroy
-        redirect_to :action => "entrepreneur" 
 
+        res = Restaurateur.find(params[:id]).destroy
+        redirect_to :action => "entrepreneur"
     end
 
-    def modifierRestaurateur
+def modifierRestaurateur
         restaurateur = Restaurateur.find(params[:id])
         if restaurateur.update_attributes(utilisateur_params)
 
@@ -67,10 +66,8 @@ class ManagementController < ApplicationController
   end
 
   def supprimerLivreur
-    
     Livreur.find(params[:id]).destroy
     redirect_to :action => "entrepreneur" 
-
   end
 
   def modifierLivreur
@@ -90,14 +87,17 @@ class ManagementController < ApplicationController
        @restaurant_adresse = @nouveau_restaurant.build_adresse(adresse_params)    #va creer une adresse avec la cle etrangere de restaurant
        @restaurant_adresse.principale = true
 
+        #Utilisattion des fonctions prédéfinis de rails
+        #Pas de nécessité de créer Restaurateur.setInfo comme dans le RDCU1
+
         if @nouveau_restaurant.save
             @restaurant_adresse.save
             @nouveau_restaurant.update(:restaurateur_id => params[:restaurateur]) unless params[:restaurateur] == "-1"
             redirect_to :action => "entrepreneur", notice: "add was successfully"
         else
             redirect_to :action => "entrepreneur", alert: "add was not successfully"
-        end 
-  end 
+        end
+  end
 
   def supprimerRestaurant
       restaurant = Restaurant.find(params[:id]).destroy
@@ -169,4 +169,3 @@ class ManagementController < ApplicationController
   end
 
 end
-
