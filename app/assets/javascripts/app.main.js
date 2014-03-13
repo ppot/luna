@@ -90,7 +90,7 @@ app = (function(){
 	  	$('#form_modifierRestaurateur').attr('action', '/modifierRestaurateur/'+ id);
 	  	//Il faut mettre le _path d'un restaurateur comme varaible pour ne pas devoir harcoder l'url du controller
 	}
-
+	//return function
   return{
       app_module_log:app_module_log,
       signin:signin,
