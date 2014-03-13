@@ -7,11 +7,13 @@ class ManagementController < ApplicationController
 
     def saisirInformations
         restaurateur = Restaurateur.new(restaurateur_params)
-        restaurant = Restaurant.find(params[:restaurant])
+        
+        if params[:restaurant] != "-1"
+          restaurant = Restaurant.find(params[:restaurant])
+        end
         #Utilisattion des fonctions prédéfinis de rails
         #Pas de nécessité de créer Restaurateur.setInfo comme dans le RDCU1 
         if restaurateur.save
-            restaurant.update(restaurateur_id: restaurateur.id)
             redirect_to :action => "entrepreneur", notice: "add was successfully"
         else
             redirect_to :action => "entrepreneur", alert: "add was not successfully"
@@ -56,7 +58,7 @@ class ManagementController < ApplicationController
 
   def restaurateur
   end
-  
+
   def saisirInformationsRestaurant
        @nouveau_restaurant = Restaurant.new(restaurant_params)
        @restaurant_adresse = @nouveau_restaurant.build_adresse(adresse_params)
