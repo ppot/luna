@@ -80,11 +80,15 @@ app = (function(){
 
 	function restaurateur_form_values(id, nom, prenom, identificateur, mot_de_passe ) {
 		//Cette fonctio place les valeur de la table vers un formulaire pour modifier un restaurateur
-		$('#restaurateur_id_edit').val(id);	//id creer par rails
+		//$('#restaurateur_id_edit').val(id);	//id creer par rails
 		$('#restaurateur_nom_edit').val(nom);
 	  	$('#restaurateur_prenom_edit').val(prenom);
 	  	$('#restaurateur_identificateur_edit').val(identificateur);
 	  	$('#restaurateur_mdp_edit').val(mot_de_passe);
+
+	  	//pour modifier l'url de l'action du formulaire
+	  	$('#form_modifierRestaurateur').attr('action', '/modifierRestaurateur/'+ id);
+	  	//Il faut mettre le _path d'un restaurateur comme varaible pour ne pas devoir harcoder l'url du controller
 	}
 
   return{

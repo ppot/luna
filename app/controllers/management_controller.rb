@@ -27,28 +27,28 @@ class ManagementController < ApplicationController
 
     def modifierRestaurateur
         restaurateur = Restaurateur.find(params[:id])
-        restaurateur.update_attributes(restaurateur_params)
-        restaurant_modification = Restaurant.find(params[:restaurant])
-        #puisqu'on recoit l'information complete du client, la commande save est quivalante a celle de modification
-        if params[:restaurant] != "-1"
-            restaurant_modification.update(restaurateur_id: restaurateur.id)
-            redirect_to :action => "entrepreneur", notice: "add was successfully"
-        else
-            redirect_to :action => "entrepreneur", alert: "add was not successfully"
+        if restaurateur.update_attributes(restaurateur_params)
+            msg = "modification of restaurateur was successfully "
+
+          #puisqu'on recoit l'information complete du client, la commande save est quivalante a celle de modification
+          if params[:restaurant] != "-1"
+              restaurant_modification = Restaurant.find(params[:restaurant])
+              restaurant_modification.update(restaurateur_id: restaurateur.id)
+              redirect_to :action => "entrepreneur", notice: "modification was successfully"
+          else
+              redirect_to :action => "entrepreneur", alert: "modification of restaurant was not successfull"
+          end
+
         end 
-        # reference
-        # respond_to do |format|
-        #     if @restaurateur_modification != nil
-        #       format.json { render json: @restaurateur_modification, status: :created}
-        #     end
-        # end
+
     end
 
   def entrepreneur
   	@restaurateur = Restaurateur.all
   	@nouveau_restaurateur = Restaurateur.new
-    @nouveau_restaurant = Restaurant.new
     @restaurants = Restaurant.all
+    @nouveau_restaurant = Restaurant.new
+
   end
 
   def livraison
@@ -56,6 +56,7 @@ class ManagementController < ApplicationController
 
   def restaurateur
   end
+  
   def saisirInformationsRestaurant
        @nouveau_restaurant = Restaurant.new(restaurant_params)
        @restaurant_adresse = @nouveau_restaurant.build_adresse(adresse_params)
