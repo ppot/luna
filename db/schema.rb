@@ -95,6 +95,8 @@ ActiveRecord::Schema.define(version: 20140306143527) do
     t.string  "nom",             limit: 25, null: false
   end
 
+  add_index "restaurants", ["restaurateur_id"], name: "index_restaurants_on_restaurateur_id", unique: true, using: :btree
+
   create_table "utilisateurs", force: true do |t|
     t.string   "identificateur", limit: 30, null: false
     t.string   "mot_de_passe",   limit: 20, null: false

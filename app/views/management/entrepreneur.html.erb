@@ -66,8 +66,7 @@
                     <th>Prénom</th>
                     <th>Restaurant</th>
                   </tr>
-                  <% @restaurateur.each do |r| %>
-                  
+                  <% @restaurateur.each do |r| %>               
                   <tr>
                     <td><%= r.identificateur %></td>
 
@@ -78,10 +77,14 @@
                     <td>
                     <!--*********************** adresse restau à faire ******************************-->
                       <address>
-                        <strong>Mc-Donald</strong><br>
-                          795 Folsom Ave, Suite 600<br>
-                          San Francisco, CA 94107<br>
-                        <abbr title="Phone">P:</abbr> (123) 456-7890
+                      <% if r.restaurant != nil # on verifi si le restaurateur possede un restaurant%>
+                        <strong><%= r.restaurant.nom %></strong><br>
+                          <%= r.restaurant.adresse.no_maison %> <%= r.restaurant.adresse.rue %><br>
+                          <%= r.restaurant.adresse.ville %>, <%= r.restaurant.adresse.code_postal %><br>
+                        <abbr title="Phone">P:</abbr> <%= r.restaurant.adresse.telephone %>
+                      <% else %>
+                        <p>restaurant requis</p>
+                      <% end # fin if r.restaurant %>
                       </address>
                     </td>
                   </tr>
@@ -94,9 +97,9 @@
                 <span class="add-title">Ajout d'un restaurant</span>
                 <div class="row">
    <!-- *************************ajouter restaurant ************************************************-->
-                    <% #construction du tableau qui sera passé pour le select du formulaire%> 
+                  <% #construction du tableau qui sera passé pour le select du formulaire%> 
                       
-                  <% form_select_array = @restaurateur.map {|i| ["#{i.nom} #{i.prenom}",i.id] } %>
+                  <% form_select_array = @restaurateurs_sans_restaurants.map {|i| ["#{i.nom} #{i.prenom}",i.id] } %>
                   <% form_select_array.insert(0, [" ","-1"]) #on place un élément vide dans le select%>
                   <%= form_for @nouveau_restaurant, url: {action: "saisirInformationsRestaurant"}, html:{class: "large-4 columns"}  do |r| %>
                     <%= r.text_field :nom, :placeholder => "nom", :class => "large-4 columns" %>
@@ -112,6 +115,7 @@
                 <% end %>
               </div>
             </div>
+    <!-- *************************Table qui montre les ajouts de restaurants*************************************-->
              <div class="large-8 columns group dashboard-table">
               <table>
                 <tr class="table-title">
@@ -123,33 +127,19 @@
                   <th>Ville</th>
                   <th>Code postale</th>
                 </tr>
+                <% @restaurants_restaurateurs.each do |r| %>  
                 <tr>
-                  <td>Incognito Daou</td>
-                  <td>Pate-Palo</td>
-                  <td>514-333-0000</td>
-                  <td>10222</td>
-                  <td>St-Michel</td>
-                  <td>Montréal</td>
-                  <td>h4g 3n9</td>
+                  <td><% if r.restaurateur != nil %>
+                          <%= "#{r.restaurateur.nom}" + " " + "#{r.restaurateur.prenom}"%></td>
+                      <% end %>
+                  <td><%= r.nom %></td>
+                  <td><%= r.adresse.telephone %></td>
+                  <td><%= r.adresse.no_maison %></td>
+                  <td><%= r.adresse.rue %></td>
+                  <td><%= r.adresse.ville %></td>
+                  <td><%= r.adresse.code_postal %></td>
                 </tr>
-                <tr>
-                  <td>Incognito Daou</td>
-                  <td>Pate-Palo</td>
-                  <td>514-333-0000</td>
-                  <td>10222</td>
-                  <td>St-Michel</td>
-                  <td>Montréal</td>
-                  <td>h4g 3n9</td>
-                </tr>
-                <tr>
-                  <td>Incognito Daou</td>
-                  <td>Pate-Palo</td>
-                  <td>514-333-0000</td>
-                  <td>10222</td>
-                  <td>St-Michel</td>
-                  <td>Montréal</td>
-                  <td>h4g 3n9</td>
-                </tr>
+                <% end %>
               </table>
               </div>
             </div>
@@ -216,7 +206,7 @@
                       <% @restaurateur.each do |r| %>
                       <tr>
                          <td><div><%= link_to "Supprimer", {controller: "management" ,action: "supprimerRestaurateur", id: r.id}, class: "hunt-btn-style" %></div><br/>
-                            <div><%= link_to "Modifier", "javascript:;", onclick: "app.restaurateur_form_values(#{r.id}, \'#{r.nom}\', \'#{r.prenom}\', \'#{r.identificateur}\', \'#{r.mot_de_passe}\');", class: "hunt-btn-style modifierRestaurateur_btn,return false;"%></div>
+                            <div><%= link_to "Modifier", "javascript:;", onclick: "app.restaurateur_form_values(#{r.id}, \'#{r.nom}\', \'#{r.prenom}\', \'#{r.identificateur}\', \'#{r.mot_de_passe}\');", class: "hunt-btn-style modifierRestaurateur_btn"%></div>
                         </td>
                         <td><%= r.identificateur %></td>
                         <td><%= r.mot_de_passe %></td>
@@ -225,10 +215,14 @@
 
                         <td>
                           <address>
-                            <strong>Mc-Donald</strong><br>
-                              795 Folsom Ave, Suite 600<br>
-                              San Francisco, CA 94107<br>
-                            <abbr title="Phone">P:</abbr> (123) 456-7890
+                            <% if r.restaurant != nil # on verifi si le restaurateur possede un restaurant%>
+                              <strong><%= r.restaurant.nom %></strong><br>
+                                <%= r.restaurant.adresse.no_maison %> <%= r.restaurant.adresse.rue %><br>
+                                <%= r.restaurant.adresse.ville %>, <%= r.restaurant.adresse.code_postal %><br>
+                              <abbr title="Phone">P:</abbr> <%= r.restaurant.adresse.telephone %>
+                            <% else %>
+                              <p>restaurant requis</p>
+                            <% end # fin if r.restaurant %>
                           </address>
                         </td>
                       </tr>
@@ -259,56 +253,34 @@
                 <tr class="table-title">
                   <th></th>
                   <th>Restaurateur</th>
-                  <th>Nom</th>
-                  <th>Numéro</th>
                   <th>Adresse</th>
                 </tr>
+                <% @restaurants_restaurateurs.each do |r| %>
                 <tr>
-                   <td><div><a class="hunt-btn-style" href="#">Suprimmer</a></div><br/><div>
-                  <a class="hunt-btn-style" href="#">Edition</a></div></td>
-                  <td>Incognito Daou</td>
-                  <td>Pate-Palo</td>
-                  <td>10222</td>
+                   <td><div><%= link_to "Supprimer", {controller: "management" ,action: "supprimerRestaurant", id: r.id}, class: "hunt-btn-style" %></div><br/>
+                            <div><%= link_to "Modifier", "javascript:;", onclick: "app.restaurateur_form_values(#{r.id}, \'#{r.nom}\');", class: "hunt-btn-style modifierRestaurateur_btn;"%>
+                        </div>
+                    </td>
+                  <td><%if r.restaurateur != nil %>
+                          <%= "#{r.restaurateur.nom}" + " " + "#{r.restaurateur.prenom}" %>
+                      <% else %>
+                      <p>Restaurateur requis</p>
+                      <% end %>
+                  </td>
                  <td>
                       <address>
-                        <strong>Mc-Donald</strong><br>
-                          795 Folsom Ave, Suite 600<br>
-                          San Francisco, CA 94107<br>
-                        <abbr title="Phone">P:</abbr> (123) 456-7890
-                      </address>
-                    </td>
-
-                </tr>
-                <tr>
-                   <td><div><a class="hunt-btn-style" href="#">Suprimmer</a></div><br/><div>
-                  <a class="hunt-btn-style" href="#">Edition</a></div></td>
-                  <td>Incognito Daou</td>
-                  <td>Pate-Palo</td>
-                  <td>10222</td>
-                  <td>
-                      <address>
-                        <strong>Mc-Donald</strong><br>
-                          795 Folsom Ave, Suite 600<br>
-                          San Francisco, CA 94107<br>
-                        <abbr title="Phone">P:</abbr> (123) 456-7890
+                        <% if r.adresse != nil %>
+                          <strong><%= r.nom %></strong><br>
+                            <%= r.adresse.no_maison %> <%= r.adresse.rue %><br>
+                            <%= r.adresse.ville %>, <%= r.adresse.code_postal %><br>
+                          <abbr title="Phone">P:</abbr> <%= r.adresse.telephone %>
+                        <% else %>
+                          <p>restaurant requis</p>
+                        <% end # fin if r.restaurant %>
                       </address>
                     </td>
                 </tr>
-                <tr>
-                   <td><div><a class="hunt-btn-style" href="#">Suprimmer</a></div><br/><div>
-                  <a class="hunt-btn-style" href="#">Modifier</a></div></td>
-                  <td>Incognito Daou</td>
-                  <td>Pate-Palo</td>
-                  <td>10222</td>
-                  <td>
-                      <address>
-                        <strong>Mc-Donald</strong><br>
-                          795 Folsom Ave, Suite 600<br>
-                          San Francisco, CA 94107<br>
-                        <abbr title="Phone">P:</abbr> (123) 456-7890
-                      </address>
-                    </td>
-                </tr>
+                <% end #fin de la boucle%>
                 </table>
               </div>
                     <div  class="large-4 columns group">

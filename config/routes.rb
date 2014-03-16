@@ -9,6 +9,7 @@ LOG::Application.routes.draw do
   post "management/saisirInformations" 
   post "management/saisirInformationsRestaurant" 
   post "management/modifierRestaurateur"
+  get "management/supprimerRestaurant"
 
   get "management/livraison"
   get "management/restaurateur"
