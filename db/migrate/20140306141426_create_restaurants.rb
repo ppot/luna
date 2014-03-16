@@ -4,6 +4,7 @@ class CreateRestaurants < ActiveRecord::Migration
           t.integer :restaurateur_id,  null: true
           t.string  :nom,             limit: 25, null: false
       end
+      add_index :restaurants, :restaurateur_id, :unique => true
   end
     
   def down
