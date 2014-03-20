@@ -8,11 +8,13 @@ class ManagementController < ApplicationController
       @restaurants = Restaurant.where(restaurateur_id: nil) #on veut les restaurants qui n'ont pas de restaurateur d'assigne
       @nouveau_restaurant = Restaurant.new
       @restaurants_restaurateurs = Restaurant.all
+      @nouveau_livreur = Livreur.new
+      @livreurs = Livreur.all
     end
 
     #fonction pour ajouter un restaurateur
     def saisirInformations
-        restaurateur = Restaurateur.new(restaurateur_params)
+        restaurateur = Restaurateur.new(utilisateur_params)
         #Utilisattion des fonctions prédéfinis de rails
         #Pas de nécessité de créer Restaurateur.setInfo comme dans le RDCU1 
         if restaurateur.save
@@ -35,7 +37,7 @@ class ManagementController < ApplicationController
 
     def modifierRestaurateur
         restaurateur = Restaurateur.find(params[:id])
-        if restaurateur.update_attributes(restaurateur_params)
+        if restaurateur.update_attributes(utilisateur_params)
 
           #modification des parametres du restaurateur
           if params[:restaurant] != "-1"
@@ -51,11 +53,34 @@ class ManagementController < ApplicationController
         end 
 
     end
-
-  def livraison
+    
+  #fonction pour ajouter un restaurateur
+  def saisirInformationsLivreur
+      livreur = Livreur.new(utilisateur_params)
+      #Utilisattion des fonctions prédéfinis de rails
+      #Pas de nécessité de créer Restaurateur.setInfo comme dans le RDCU1 
+      if livreur.save
+          redirect_to  :action => "entrepreneur", notice: "add was successfully"
+      else
+          redirect_to  :action => "entrepreneur", alert: "add was not successfully"
+      end 
   end
 
-  def restaurateur
+  def supprimerLivreur
+    
+    Livreur.find(params[:id]).destroy
+    redirect_to :action => "entrepreneur" 
+
+  end
+
+  def modifierLivreur
+    livreur = Livreur.find(params[:id])
+    if livreur.update_attributes(utilisateur_params)
+        redirect_to :action => "entrepreneur", notice: "modification was successfully"
+    else
+        redirect_to :action => "entrepreneur", alert: "modification of restaurant was not successfull"
+    end
+
   end
 
   #---------------------Section pour le restaurant-----------------------
@@ -80,22 +105,33 @@ class ManagementController < ApplicationController
   end
 
   def modifierRestaurant
-      #a implementer
+      restaurant = Restaurant.find(params[:id])
+        if restaurant.update_attributes(utilisateur_params)
+           restaurant_adresse = restaurant.adresse.update_attributes(adresse_params)
+          if params[:restaurateur] != "-1"
+              restaurateur_modification = Restaurateur.find(params[:restaurateur])
+              restaurateur_modification.restaurant.update(restaurateur_id: nil) unless restaurateur_modification.restaurant.nil?
+              restaurant.update(restaurateur_id: params[:restaurateur])
+ 
+              redirect_to :action => "entrepreneur", notice: "modification was successfully"
+          else
+              redirect_to :action => "entrepreneur", alert: "modification of restaurant was not successfull"
+          end
+
+        end
   end
 
   #obtention des permissions sur les parametres
-  def restaurateur_params
-      params.require(:utilisateur).permit(:identificateur, :mot_de_passe, :nom, :prenom)
-  end
   def restaurant_params
       params.require(:restaurant).permit! #facon courte de tout permettre
   end
+
   def adresse_params
       params.require(:adresse).permit!
   end
 
-  def restaurateur_modif_params
-      params.require(:utilisateur).permit(:id, :identificateur, :mot_de_passe, :nom, :prenom)
+  def utilisateur_params
+      params.require(:utilisateur).permit(:identificateur, :mot_de_passe, :nom, :prenom)
   end
 
 end
