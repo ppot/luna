@@ -6,9 +6,16 @@ LOG::Application.routes.draw do
   get "management/ajouterRestaurateur"
   get "management/supprimerRestaurateur"
   get "management/entrepreneur"
-  post "management/saisirInformations" 
+  get "management/supprimerRestaurant"
   post "management/saisirInformationsRestaurant" 
   post "management/modifierRestaurateur"
+  post "management/saisirInformations" 
+  get "modifierRestaurant/:id", to: 'management#modifierRestaurant'
+
+  post "management/modifierLivreur"
+  post "management/saisirInformationsLivreur" 
+  get "management/supprimerLivreur"
+  get "modifierLivreur/:id", to: 'management#modifierLivreur'
 
   get "management/livraison"
   get "management/restaurateur"
@@ -20,7 +27,7 @@ LOG::Application.routes.draw do
   get "app/login"
   get "app/logout"
 
-  post 'modifierRestaurateur/:id' => 'management#modifierRestaurateur'
+
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

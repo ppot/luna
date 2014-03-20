@@ -90,6 +90,29 @@ app = (function(){
 	  	$('#form_modifierRestaurateur').attr('action', '/modifierRestaurateur/'+ id);
 	  	//Il faut mettre le _path d'un restaurateur comme varaible pour ne pas devoir harcoder l'url du controller
 	}
+
+	function restaurant_form_values(id, nom, no_maison, rue, ville, code_postal, telephone) {
+		$('#restaurant_nom_edit').val(nom);
+	  	$('#restaurant_no_maison_edit').val(no_maison);
+	  	$('#restaurant_rue_edit').val(rue);
+	  	$('#restaurant_ville_edit').val(ville);
+	  	$('#restaurant_code_postal_edit').val(code_postal);
+	  	$('#restaurant_telephone_edit').val(telephone);
+
+	  	//pour modifier l'url de l'action du formulaire
+	  	$('#form_modifierRestaurant').attr('action', '/modifierRestaurant/'+ id);
+	}
+	function livreur_form_values(id, nom, prenom, identificateur, mot_de_passe ) {
+
+		$('#livreur_nom_edit').val(nom);
+	  	$('#livreur_prenom_edit').val(prenom);
+	  	$('#livreur_identificateur_edit').val(identificateur);
+	  	$('#livreur_mdp_edit').val(mot_de_passe);
+
+	  	//pour modifier l'url de l'action du formulaire
+	  	$('#form_modifierLivreur').attr('action', '/modifierLivreur/'+ id);
+	  	//Il faut mettre le _path d'un restaurateur comme varaible pour ne pas devoir harcoder l'url du controller
+	}
 	//return function
   return{
       app_module_log:app_module_log,
@@ -107,5 +130,7 @@ app = (function(){
       app_menus:app_menus,
       app_menu_preparation:app_menu_preparation,
       restaurateur_form_values:restaurateur_form_values,
+      restaurant_form_values:restaurant_form_values,
+      livreur_form_values:livreur_form_values,
 	}
 })();

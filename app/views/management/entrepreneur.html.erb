@@ -66,8 +66,7 @@
                     <th>Prénom</th>
                     <th>Restaurant</th>
                   </tr>
-                  <% @restaurateur.each do |r| %>
-                  
+                  <% @restaurateur.each do |r| %>               
                   <tr>
                     <td><%= r.identificateur %></td>
 
@@ -78,10 +77,14 @@
                     <td>
                     <!--*********************** adresse restau à faire ******************************-->
                       <address>
-                        <strong>Mc-Donald</strong><br>
-                          795 Folsom Ave, Suite 600<br>
-                          San Francisco, CA 94107<br>
-                        <abbr title="Phone">P:</abbr> (123) 456-7890
+                      <% if r.restaurant != nil # on verifi si le restaurateur possede un restaurant%>
+                        <strong><%= r.restaurant.nom %></strong><br>
+                          <%= r.restaurant.adresse.no_maison %> <%= r.restaurant.adresse.rue %><br>
+                          <%= r.restaurant.adresse.ville %>, <%= r.restaurant.adresse.code_postal %><br>
+                        <abbr title="Phone">P:</abbr> <%= r.restaurant.adresse.telephone %>
+                      <% else %>
+                        <p>restaurant requis</p>
+                      <% end # fin if r.restaurant %>
                       </address>
                     </td>
                   </tr>
@@ -94,16 +97,16 @@
                 <span class="add-title">Ajout d'un restaurant</span>
                 <div class="row">
    <!-- *************************ajouter restaurant ************************************************-->
-                    <% #construction du tableau qui sera passé pour le select du formulaire%> 
+                  <% #construction du tableau qui sera passé pour le select du formulaire%> 
                       
-                  <% form_select_array = @restaurateur.map {|i| ["#{i.nom} #{i.prenom}",i.id] } %>
+                  <% form_select_array = @restaurateurs_sans_restaurants.map {|i| ["#{i.nom} #{i.prenom}",i.id] } %>
                   <% form_select_array.insert(0, [" ","-1"]) #on place un élément vide dans le select%>
                   <%= form_for @nouveau_restaurant, url: {action: "saisirInformationsRestaurant"}, html:{class: "large-4 columns"}  do |r| %>
                     <%= r.text_field :nom, :placeholder => "nom", :class => "large-4 columns" %>
                     <%= fields_for :adresse, @nouveau_restaurant.adresse do |r_adresse| %>
                         <%= r_adresse.text_field :no_maison, :placeholder => "numéro de maison", :class => "large-4 columns" %>
                         <%= r_adresse.text_field :rue, :placeholder => "rue", :class => "large-4 columns" %>
-                        <%= r_adresse.password_field :ville, :placeholder => "ville", :class => "large-4 columns" %>
+                        <%= r_adresse.text_field :ville, :placeholder => "ville", :class => "large-4 columns" %>
                         <%= r_adresse.text_field :telephone, :placeholder => "téléphone", :class => "large-4 columns" %>
                         <%= r_adresse.text_field :code_postal, :placeholder => "code postal", :class => "large-4 columns" %>
                     <% end %>                  
@@ -112,6 +115,7 @@
                 <% end %>
               </div>
             </div>
+    <!-- *************************Table qui montre les ajouts de restaurants*************************************-->
              <div class="large-8 columns group dashboard-table">
               <table>
                 <tr class="table-title">
@@ -123,33 +127,19 @@
                   <th>Ville</th>
                   <th>Code postale</th>
                 </tr>
+                <% @restaurants_restaurateurs.each do |r| %>  
                 <tr>
-                  <td>Incognito Daou</td>
-                  <td>Pate-Palo</td>
-                  <td>514-333-0000</td>
-                  <td>10222</td>
-                  <td>St-Michel</td>
-                  <td>Montréal</td>
-                  <td>h4g 3n9</td>
+                  <td><% if r.restaurateur != nil %>
+                          <%= "#{r.restaurateur.nom}" + " " + "#{r.restaurateur.prenom}"%></td>
+                      <% end %>
+                  <td><%= r.nom %></td>
+                  <td><%= r.adresse.telephone %></td>
+                  <td><%= r.adresse.no_maison %></td>
+                  <td><%= r.adresse.rue %></td>
+                  <td><%= r.adresse.ville %></td>
+                  <td><%= r.adresse.code_postal %></td>
                 </tr>
-                <tr>
-                  <td>Incognito Daou</td>
-                  <td>Pate-Palo</td>
-                  <td>514-333-0000</td>
-                  <td>10222</td>
-                  <td>St-Michel</td>
-                  <td>Montréal</td>
-                  <td>h4g 3n9</td>
-                </tr>
-                <tr>
-                  <td>Incognito Daou</td>
-                  <td>Pate-Palo</td>
-                  <td>514-333-0000</td>
-                  <td>10222</td>
-                  <td>St-Michel</td>
-                  <td>Montréal</td>
-                  <td>h4g 3n9</td>
-                </tr>
+                <% end %>
               </table>
               </div>
             </div>
@@ -159,45 +149,32 @@
                  <div  class="large-4 columns group">
                 <span class="add-title">Ajout d'un livreur</span>
                 <div class="row">
-                  <div class="large-8 columns">
-                    <input type="text" placeholder="nom d'utilisateur"/>
-                  </div>
-                  <div class="large-8 columns">
-                  <input type="text" placeholder="nom" />
-                  </div>
-                  <div class="large-8 columns">
-                  <input type="text" placeholder="prénom" />
-                  </div>
-                  <div class="large-8 columns">
-                  <input type="password" placeholder="mot de passe" />
-                  </div>
-                  <div class="add">
-                     <a class="admin-btn-style" href="" >Ajouter livreur</a>
-                  </div>
+                  <!--*********************** ajouter Livreur ******************************-->
+                <%= form_for @nouveau_livreur, url: {action: "saisirInformationsLivreur"}, html:{class: "large-6 columns"}  do |f| %>
+                    <%= f.text_field :nom, :placeholder => "nom", :class => "large-4 columns" %>
+                    <%= f.text_field :prenom, :placeholder => "prenom", :class => "large-4 columns" %>
+                    <%= f.text_field :identificateur, :placeholder => "nom d'utilisateur", :class => "large-4 columns" %>
+                    <%= f.password_field :mot_de_passe, :placeholder => "mot de passe", :class => "large-4 columns" %>
+                    <%= f.submit "Ajouter livreur", :class => "admin-btn-style" %>   
+                <% end %>
                 </div>
               </div>
               <div class="large-8 columns group dashboard-table">
                   <table>
                   <tr class="table-title">
                     <th>Utilisateur</th>
+                    <th>Mot de passe</th>
                     <th>Nom</th>
                     <th>Prénom</th>
-                  </tr>
+                  </tr>       
+                  <% @livreurs.each do |l| %>  
                   <tr>
-                    <td>mrluna</td>
-                    <td>Potvin</td>
-                    <td>Philipe</td>
+                    <td><%= l.identificateur %></td>
+                    <td><%= l.mot_de_passe %></td>
+                    <td><%= l.nom %></td>
+                    <td><%= l.prenom %></td>
                   </tr>
-                  <tr>
-                    <td>mrluna</td>
-                    <td>Potvin</td>
-                    <td>Philipe</td>
-                  </tr>
-                  <tr>
-                    <td>mrluna</td>
-                    <td>Potvin</td>
-                    <td>Philipe</td>
-                  </tr>
+                  <% end %>
                 </table>
               </div>
             </div>
@@ -216,7 +193,7 @@
                       <% @restaurateur.each do |r| %>
                       <tr>
                          <td><div><%= link_to "Supprimer", {controller: "management" ,action: "supprimerRestaurateur", id: r.id}, class: "hunt-btn-style" %></div><br/>
-                            <div><%= link_to "Modifier", "javascript:;", onclick: "app.restaurateur_form_values(#{r.id}, \'#{r.nom}\', \'#{r.prenom}\', \'#{r.identificateur}\', \'#{r.mot_de_passe}\');", class: "hunt-btn-style modifierRestaurateur_btn,return false;"%></div>
+                            <div><%= link_to "Modifier", "javascript:;", onclick: "app.restaurateur_form_values(#{r.id}, \'#{r.nom}\', \'#{r.prenom}\', \'#{r.identificateur}\', \'#{r.mot_de_passe}\');", class: "hunt-btn-style modifierRestaurateur_btn"%></div>
                         </td>
                         <td><%= r.identificateur %></td>
                         <td><%= r.mot_de_passe %></td>
@@ -225,10 +202,14 @@
 
                         <td>
                           <address>
-                            <strong>Mc-Donald</strong><br>
-                              795 Folsom Ave, Suite 600<br>
-                              San Francisco, CA 94107<br>
-                            <abbr title="Phone">P:</abbr> (123) 456-7890
+                            <% if r.restaurant != nil # on verifi si le restaurateur possede un restaurant%>
+                              <strong><%= r.restaurant.nom %></strong><br>
+                                <%= r.restaurant.adresse.no_maison %> <%= r.restaurant.adresse.rue %><br>
+                                <%= r.restaurant.adresse.ville %>, <%= r.restaurant.adresse.code_postal %><br>
+                              <abbr title="Phone">P:</abbr> <%= r.restaurant.adresse.telephone %>
+                            <% else %>
+                              <p>restaurant requis</p>
+                            <% end # fin if r.restaurant %>
                           </address>
                         </td>
                       </tr>
@@ -259,89 +240,58 @@
                 <tr class="table-title">
                   <th></th>
                   <th>Restaurateur</th>
-                  <th>Nom</th>
-                  <th>Numéro</th>
                   <th>Adresse</th>
                 </tr>
+                <% @restaurants_restaurateurs.each do |r| %>
                 <tr>
-                   <td><div><a class="hunt-btn-style" href="#">Suprimmer</a></div><br/><div>
-                  <a class="hunt-btn-style" href="#">Edition</a></div></td>
-                  <td>Incognito Daou</td>
-                  <td>Pate-Palo</td>
-                  <td>10222</td>
+                   <td><div><%= link_to "Supprimer", {controller: "management" ,action: "supprimerRestaurant", id: r.id}, class: "hunt-btn-style" %></div><br/>
+                            <div><%= link_to "Modifier", "javascript:;", onclick: "app.restaurant_form_values(#{r.id}, \'#{r.nom}\', \'#{r.adresse.no_maison}\', \'#{r.adresse.rue}\', \'#{r.adresse.ville}\', \'#{r.adresse.code_postal}\', \'#{r.adresse.telephone}\');", class: "hunt-btn-style modifierRestaurateur_btn;"%>
+                        </div>
+                    </td>
+                  <td><%if r.restaurateur != nil %>
+                          <%= "#{r.restaurateur.nom}" + " " + "#{r.restaurateur.prenom}" %>
+                      <% else %>
+                      <p>Restaurateur requis</p>
+                      <% end %>
+                  </td>
                  <td>
                       <address>
-                        <strong>Mc-Donald</strong><br>
-                          795 Folsom Ave, Suite 600<br>
-                          San Francisco, CA 94107<br>
-                        <abbr title="Phone">P:</abbr> (123) 456-7890
-                      </address>
-                    </td>
-
-                </tr>
-                <tr>
-                   <td><div><a class="hunt-btn-style" href="#">Suprimmer</a></div><br/><div>
-                  <a class="hunt-btn-style" href="#">Edition</a></div></td>
-                  <td>Incognito Daou</td>
-                  <td>Pate-Palo</td>
-                  <td>10222</td>
-                  <td>
-                      <address>
-                        <strong>Mc-Donald</strong><br>
-                          795 Folsom Ave, Suite 600<br>
-                          San Francisco, CA 94107<br>
-                        <abbr title="Phone">P:</abbr> (123) 456-7890
+                        <% if r.adresse != nil %>
+                          <strong><%= r.nom %></strong><br>
+                            <%= r.adresse.no_maison %> <%= r.adresse.rue %><br>
+                            <%= r.adresse.ville %>, <%= r.adresse.code_postal %><br>
+                          <abbr title="Phone">P:</abbr> <%= r.adresse.telephone %>
+                        <% else %>
+                          <p>restaurant requis</p>
+                        <% end # fin if r.restaurant %>
                       </address>
                     </td>
                 </tr>
-                <tr>
-                   <td><div><a class="hunt-btn-style" href="#">Suprimmer</a></div><br/><div>
-                  <a class="hunt-btn-style" href="#">Modifier</a></div></td>
-                  <td>Incognito Daou</td>
-                  <td>Pate-Palo</td>
-                  <td>10222</td>
-                  <td>
-                      <address>
-                        <strong>Mc-Donald</strong><br>
-                          795 Folsom Ave, Suite 600<br>
-                          San Francisco, CA 94107<br>
-                        <abbr title="Phone">P:</abbr> (123) 456-7890
-                      </address>
-                    </td>
-                </tr>
+                <% end #fin de la boucle%>
                 </table>
               </div>
+              <!--*********************************modifier restaurant********************************************-->
                     <div  class="large-4 columns group">
                 <span class="add-title">Edition restaurant</span>
                 <div class="row">
-                  <div class="large-8 columns">
-                    <input type="text" placeholder="nom d'utilisateur"/>
-                  </div>
-                  <div class="large-8 columns">
-                  <input type="text" placeholder="nom" />
-                  </div>
-                  <div class="large-8 columns">
-                  <input type="text" placeholder="prénom" />
-                  </div>
-                  <div class="large-8 columns">
-                  <input type="password" placeholder="mot de passe" />
-                  </div>
-                  <div class="large-8 columns">
-                  <select>
-                     <option id="2" selected>AUCUN</option>
-                    <option id="1">BOB</option>
-                    <option id="2">BACON</option>
-                    <option id="3">123</option>
-                    <option id="4">ti jow</option>
-                  </select>
-                  </div>
-                    <div class="mod">
-                     <a class="admin-btn-style" href="" > Modifier</a>
-                  </div>
+                  <% form_select_array = @restaurateurs_sans_restaurants.map {|i| ["#{i.nom} #{i.prenom}",i.id] } %>
+                  <% form_select_array.insert(0, [" ","-1"]) #on place un élément vide dans le select%>
+                  <%= form_for @nouveau_restaurant, url: {action: "modifierRestaurant", id: "0"}, method: "get", html:{class: "large-4 columns", id: "form_modifierRestaurant" }  do |r| %>
+                    <%= r.text_field :nom, :id =>"restaurant_nom_edit", :placeholder => "nom", :class => "large-4 columns" %>
+                    <%= fields_for :adresse, @nouveau_restaurant.adresse do |r_adresse| %>
+                        <%= r_adresse.text_field :no_maison, :id =>"restaurant_no_maison_edit", :placeholder => "numéro de maison", :class => "large-4 columns" %>
+                        <%= r_adresse.text_field :rue, :id =>"restaurant_rue_edit", :placeholder => "rue", :class => "large-4 columns" %>
+                        <%= r_adresse.text_field :ville, :id =>"restaurant_ville_edit", :placeholder => "ville", :class => "large-4 columns" %>
+                        <%= r_adresse.text_field :telephone, :id =>"restaurant_telephone_edit", :placeholder => "téléphone", :class => "large-4 columns" %>
+                        <%= r_adresse.text_field :code_postal, :id =>"restaurant_code_postal_edit", :placeholder => "code postal", :class => "large-4 columns" %>
+                    <% end %>                  
+                    <%= select_tag(:restaurateur, options_for_select(form_select_array, 10)) %>
+                    <%= r.submit "Ajouter restaurant", :class => "admin-btn-style" %>   
+                <% end %>
                 </div>
               </div>
             </div>
-            <!-- ************************************ livreur ******************************************-->
+            <!-- ************************************ Gérer livreur ******************************************-->
               <div id="gerer-livreur" class="row">
 
               <div class="large-8 columns group dashboard-table">
@@ -349,51 +299,36 @@
                   <tr class="table-title">
                     <th></th>
                     <th>Utilisateur</th>
+                    <th>Mot de passe</th>
                     <th>Nom</th>
                     <th>Prénom</th>
                   </tr>
-                  <tr>
-                     <td><div><a class="hunt-btn-style" href="#">Suprimmer</a></div><br/><div>
-                  <a class="hunt-btn-style" href="#">Edition</a></div></td>
-                    <td>mrluna</td>
-                    <td>Potvin</td>
-                    <td>Philipe</td>
-                  </tr>
-                  <tr>
-                     <td><div><a class="hunt-btn-style" href="#">Suprimmer</a></div><br/><div>
-                  <a class="hunt-btn-style" href="#">Edition</a></div></td>
-                    <td>mrluna</td>
-                    <td>Potvin</td>
-                    <td>Philipe</td>
-                  </tr>
-                  <tr>
-                     <td><div><a class="hunt-btn-style" href="#">Suprimmer</a></div><br/><div>
-                  <a class="hunt-btn-style" href="#">Edition</a></div></td>
-                    <td>mrluna</td>
-                    <td>Potvin</td>
-                    <td>Philipe</td>
-                  </tr>
+                  <% @livreurs.each do |r| %>
+                      <tr>
+                         <td><div><%= link_to "Supprimer", {controller: "management" ,action: "supprimerLivreur", id: r.id}, class: "hunt-btn-style" %></div><br/>
+                            <div><%= link_to "Modifier", "javascript:;", onclick: "app.livreur_form_values(#{r.id}, \'#{r.nom}\', \'#{r.prenom}\', \'#{r.identificateur}\', \'#{r.mot_de_passe}\');", class: "hunt-btn-style modifierRestaurateur_btn"%></div>
+                        </td>
+                        <td><%= r.identificateur %></td>
+                        <td><%= r.mot_de_passe %></td>
+                        <td><%= r.nom %></td>
+                        <td><%= r.prenom %></td>
+                      </tr>
+                      <% end %>
                 </table>
               </div>
 
                  <div  class="large-4 columns group">
                 <span class="add-title">Edition livreur</span>
-                <div class="row">
-                  <div class="large-8 columns">
-                    <input type="text" placeholder="nom d'utilisateur"/>
-                  </div>
-                  <div class="large-8 columns">
-                  <input type="text" placeholder="nom" />
-                  </div>
-                  <div class="large-8 columns">
-                  <input type="text" placeholder="prénom" />
-                  </div>
-                      <div class="large-8 columns">
-                  <input type="password" placeholder="mot de passe" />
-                  </div>
-                    <div class="mod">
-                     <a class="admin-btn-style" href="" >Modifier</a>
-                  </div>
+                <div class="row" id="mofifierLivreur_form">
+                  <!--*********************** Modifier Restaurateur ******************************-->
+                  <%= form_for @nouveau_livreur, url: {action: "modifierLivreur", id: "0"}, method: "get", html:{class: "large-6 columns", id: "form_modifierLivreur" } do |f| %>
+                      <%= f.hidden_field :id, :id =>"livreur_id_edit", :value => "un id" %>
+                      <%= f.text_field :nom, :placeholder => "nom", :class => "large-4 columns", :id =>"livreur_nom_edit" %>
+                      <%= f.text_field :prenom, :placeholder => "prenom", :class => "large-4 columns", :id =>"livreur_prenom_edit" %>
+                      <%= f.text_field :identificateur, :placeholder => "nom d'utilisateur", :class => "large-4 columns", :id =>"livreur_identificateur_edit" %>
+                      <%= f.password_field :mot_de_passe, :placeholder => "mot de passe", :class => "large-4 columns", :id => "livreur_mdp_edit" %>
+                  <%= f.submit "Ajouter livreur", :class => "admin-btn-style" %>   
+                  <% end %>
                 </div>
               </div>
             </div>
