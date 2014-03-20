@@ -71,7 +71,7 @@
 #content {
   background-color: #1c1e26;  
   height: 100%;
-  padding-bottom:80px;
+  padding-bottom:250px;
 }
 #footer {
    position:absolute;
@@ -355,7 +355,6 @@ h2 {
 }
 .dashboard-back{
   position: relative;
-  /*background-color: #1c1e26;*/
   height:150px;
   width: 100%;
 }
