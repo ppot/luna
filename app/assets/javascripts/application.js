@@ -18,5 +18,5 @@
 
 //= require foundation
 
-   app.app_open();
+   app.general.app_open();
  // $(function(){ $(document).foundation(); });

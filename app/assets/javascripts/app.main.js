@@ -7,41 +7,6 @@ app = (function(){
 		join();
 	}
 
-	function app_open(){
-		$('.register-app').hide();
-		$("#oauth-error").hide();
-		$('#register-error').hide();
-	}
-
-	function app_signin () {
-		$('.login-app').show();
-		$('.register-app').hide();
-	}
-
-	function app_register () {
-		$('.login-app').hide();
-		$('.register-app').show();
-	}
-
-	function register () {
-		console.log("allo");
-		$('#register-error').show();
-		$('.register-message-error').text("oups i did it again");
-	}
-
-
-	function signin(){
-		$('#signin').show();
-		$('#register').hide();
-		$('.already-member').hide();
-	}
-
-	function join(){
-		$('#signin').hide();
-		$('#register').show();
-		$('.already-member').show();
-	}
-
 	function app_nouveau_restaurateur(){
 		app_admin_hide();
 		$('#add-restaurateur').show();
@@ -169,63 +134,160 @@ app = (function(){
 		});
 	}
 
-	function oauth(){
-		$.ajax({
-		    type: "GET",
-		    url: "/api/signin",
-		    data: {
-		    	identificateur : $('#_aka').val(),
-		    	mot_de_passe : $('#_password').val()
-		    	
-		    },
-		    dataType: "html",
-		    success: function(result){
-		        console.log(result);
-		        if(result ==	1){
-		        	redirect("/users/profile")
-		        }
-		        else{
-		        	$("#oauth-error").show();
-		        	$(".message-error").text("mauvais utilisateur ou mot de passe");
-		        }
-		    }        
-		});
-	}
+  var general=(function(){ 
 
-	function user_update(){
-		$.ajax({
-		    type: "GET",
-		    url: "/api/user_update",
-		    data: {
-		    	mot_de_passe : $('#mdp').val(),
-		    	adress:{
-		    		no_maison  :  $('#numero').val(), 
-		    		rue  :  $('#rue').val(),	
-		    		ville  :  $('#ville').val(), 
-		    		telephone  :  $('#telephone').val(), 
-		    		code_postal  :  $('#code_postale').val()
-		    	}
-		    },
-		    dataType: "html",
-		    success: function(result){
-		        console.log(result); 
-		    }        
-		});
-	}
+    function init(){
 
-	function redirect(path){
-		window.location.href =  path;
+    }
 
-	}
+    function redirect(path){
+			window.location.href =  path;
+		}
+
+		function app_open(){
+			$('.register-app').hide();
+			$("#oauth-error").hide();
+			$('#register-error').hide();
+		}
+
+		function app_signin () {
+			$('.login-app').show();
+			$('.register-app').hide();
+		}
+
+		function app_register () {
+			$('.login-app').hide();
+			$('.register-app').show();
+		}
+
+    return{
+      init:init,
+      redirect:redirect,
+      app_open:app_open,
+      app_signin:app_signin,
+      app_register:app_register,
+    }
+  })();
+
+  var users=(function(){ 
+    function init(){
+
+    }
+
+    function oauth(){
+			$.ajax({
+			    type: "GET",
+			    url: "/api/signin",
+			    data: {
+			    	identificateur : $('#_aka').val(),
+			    	mot_de_passe : $('#_password').val()
+			    	
+			    },
+			    dataType: "html",
+			    success: function(result){
+			        console.log(result);
+			        if(result ==	1){
+			        	general.redirect("/users/profile")
+			        }
+			        else{
+			        	$("#oauth-error").show();
+			        	$(".message-error").text("mauvais utilisateur ou mot de passe");
+			        }
+			    }        
+			});
+		}
+
+		function register () {
+			$('#register-error').show();
+			$('.register-message-error').text("oups i did it again");
+		}
+
+		function user_update(){
+			$.ajax({
+			    type: "GET",
+			    url: "/api/user_update",
+			    data: {
+			    	mot_de_passe : $('#mdp').val(),
+			    	adress:{
+			    		no_maison  :  $('#numero').val(), 
+			    		rue  :  $('#rue').val(),	
+			    		ville  :  $('#ville').val(), 
+			    		telephone  :  $('#telephone').val(), 
+			    		code_postal  :  $('#code_postale').val()
+			    	}
+			    },
+			    dataType: "html",
+			    success: function(result){
+			        console.log(result); 
+			    }        
+			});
+		}
+		function new_user_call(){
+			$.ajax({
+			    type: "GET",
+			    url: "/api/register",
+			    data: {
+			    	client: {
+				    	nom :  $('#inscription_nom').val(),
+				    	prenom :  $('#inscription_prenom').val(),
+				    	courriel : $('#inscription_email').val(),
+				    	identificateur : $('#inscription_identificateur').val(),
+				    	mot_de_passe : $('#inscription_motDePass').val(),
+				    	date_naissance : $('#inscription_dateNaissance').val()
+			    	},
+			    	adress:{
+			    		no_maison  :  $('#adresse_numero').val(), 
+			    		rue  :  $('#adresse_rue').val(),	
+			    		ville  :  $('#adresse_ville').val(), 
+			    		telephone  :  $('#adresse_telephone').val(), 
+			    		code_postal  :  $('#adresse_code_postale').val()
+			    	}
+			    },
+			    dataType: "html",
+			    success: function(result){
+			        console.log(result);
+			        if(result==1){
+			        	redirect("/users/profile")
+			        }
+			    }        
+			});
+		}
+
+    return{
+      init:init,
+      oauth:oauth,
+      register:register,
+      user_update:user_update,
+      new_user_call:new_user_call,
+    }
+  })();
+
+  var entrepreneur=(function(){ 
+    function init(){
+
+    }
+
+    return{
+      init:init,
+    }
+  })();
+
+  var restaurateur=(function(){ 
+    function init(){
+
+    }
+
+    return{
+      init:init,
+    }
+  })();
 	//return function
   return{
-  		app_open:app_open,
-  		app_register:app_register,
-  		app_signin:app_signin,
-  		register:register,
+  		general:general,
+  		users:users,
+  		restaurateur:restaurateur,
+  		entrepreneur:entrepreneur,
       app_module_log:app_module_log,
-      signin:signin,
-      join:join,
       app_admin_hide:app_admin_hide,
       app_nouveau_restaurateur:app_nouveau_restaurateur,
       app_nouveau_restaurant:app_nouveau_restaurant,
