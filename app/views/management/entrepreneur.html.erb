@@ -31,7 +31,6 @@
                       <li><label>Livreur</label></li>
                       <li><a class="admin-btn-style" href="javascript:app.app_nouveau_livreur();" >nouveau</a></li>
                       <li><a class="admin-btn-style" href="javascript:app.app_gerer_livreur();" >gerer</a></li>
-                     
                      </ul>
                 </div>
             </div>
@@ -65,11 +64,9 @@
                   <% @restaurateur.each do |r| %>
                   <tr>
                     <td><%= r.identificateur %></td>
-
                     <td><%= r.mot_de_passe %></td>
                     <td><%= r.nom %></td>
                     <td><%= r.prenom %></td>
-          
                     <td>
                     <!--*********************** adresse restau à faire ******************************-->
                       <address>
@@ -141,7 +138,6 @@
               </div>
             </div>
 
-
               <div id="add-livreur" class="row">
                  <div  class="large-4 columns group">
                 <span class="add-title">Ajout d'un livreur</span>
@@ -196,7 +192,6 @@
                         <td><%= r.mot_de_passe %></td>
                         <td><%= r.nom %></td>
                         <td><%= r.prenom %></td>
-
                         <td>
                           <address>
                             <% if r.restaurant != nil # on verifi si le restaurateur possede un restaurant%>
