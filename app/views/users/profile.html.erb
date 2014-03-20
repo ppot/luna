@@ -4,25 +4,17 @@
       <span class="data-title">Luna</span>
       <span class="data-menu">
         <span class="data-right">
-          <span class="user"><%= session['user'] %></span>
-          <a href="#" class="connect">Deconnection ></a>
+          <span class="user"><%= @_user.identificateur %></span>
+          <a href="/api/signout" class="connect">Deconnection</a>
         </span>
       </span>
    </div>
 
    <div id="content">
       <div class="dashboard-back">
-      <div class="dashboard-header">
-      <h1 class="dashboard-title">PHILIPPE<span class="dashboard-title-spec">PROFILE</span></h1>
-          <div class="data-admin-menu">
-<!--          <div class="data-admin">
-            <div class="data-admin-button">
-              <a class="admin-btn-style" href="javascript:app.app_nouveau_restaurateur();" >Edition information</a>
-            </div>
-          </div> -->
-         </div>
-       </div>
-
+        <div class="dashboard-header">
+          <h1 class="dashboard-title"><%= @_user.identificateur %><span class="dashboard-title-spec">PROFILE</span></h1>
+        </div>
       </div>
          <div class="dashboard-body">
           <div class="dashboard">
@@ -32,18 +24,18 @@
         <div class="large-12 columns">
           <div class="row">
           <div class="large-6 columns">
-                  <input type="password" id="inscription_motDePass" placeholder="mot de passe"/>
-                  <input type="tel"      id="telephone"     placeholder="téléphone"/>
-                  <input type="text"     id="code_postale"  placeholder="code postale"/>
+                  <input type="password" id="mdp" placeholder="mot de passe" value="<%= @_user.mot_de_passe %>"/>
+                  <input type="tel"      id="telephone"     placeholder="téléphone" value="<%= @_adresse.telephone %>"/>
+                  <input type="text"     id="code_postale"  placeholder="code postale" value="<%= @_adresse.code_postal %>"/>
             </div>
             <div class="large-6 columns">
-                   <input type="text"     id="numero"        placeholder="num"/>
-                  <input type="text"     id="rue"           placeholder="rue"/>
-                  <input type="text"     id="ville"         placeholder="ville"/>
+                   <input type="text"     id="numero"        placeholder="num" value="<%= @_adresse.no_maison %>"/>
+                  <input type="text"     id="rue"           placeholder="rue" value="<%= @_adresse.rue %>"/>
+                  <input type="text"     id="ville"         placeholder="ville" value="<%= @_adresse.ville %>"/>
 
             </div>
               </div>
-             <a class="admin-btn-style" href="" >Modifier</a>
+             <a class="admin-btn-style"  href="javascript:app.user_update()" >Modifier</a>
 
                  </div>
     </div>

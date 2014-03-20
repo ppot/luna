@@ -29,8 +29,10 @@ LOG::Application.routes.draw do
   get "users/commande"
   get "users/profile"
 
-  get "app/login"
-  get "app/logout"
+  get "api/register"
+  get "api/signin"
+  get "api/signout"
+  get "api/user_update"
 
 
 

@@ -1,5 +1,6 @@
 class ManagementController < ApplicationController
   layout 'application'
+<<<<<<< HEAD
 
     def entrepreneur  
       @restaurateur = Restaurateur.all #left join fait a l'interne grace aux has_one dans les modeles
@@ -10,6 +11,11 @@ class ManagementController < ApplicationController
       @restaurants_restaurateurs = Restaurant.all
       @nouveau_livreur = Livreur.new
       @livreurs = Livreur.all
+=======
+  
+    def ajouterRestaurateur
+         @un_restaurateur = Restaurateur.new
+>>>>>>> Design update
     end
 
     #fonction pour ajouter un restaurateur

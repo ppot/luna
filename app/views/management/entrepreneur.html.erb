@@ -13,50 +13,46 @@
       <div class="dashboard-back">
       <div class="dashboard-header">
       <h1 class="dashboard-title">DASHBOARD<span class="dashboard-title-spec">ADMIN</span></h1>
-          <div class="data-admin-menu">
-         <div class="data-admin">
-            <div class="data-admin-menu-title">Restaurateur</div>
-            <div class="data-admin-button">
-              <a class="admin-btn-style" href="javascript:app.app_nouveau_restaurateur();" >nouveau</a>
-            <a class="admin-btn-style" href="javascript:app.app_gerer_restaurateur();" >gerer</a>
-            </div>
-          </div>
-          <div class="data-admin">
-             <div class="data-admin-menu-title">Restaurant</div>
-            <div class="data-admin-button">
-            <a class="admin-btn-style" href="javascript:app.app_nouveau_restaurant();" >nouveau</a>
-             <a class="admin-btn-style" href="javascript:app.app_gerer_restaurant();" >gerer</a>
-              </div>
-          </div>
-                 <div class="data-admin">
-            <div class="data-admin-menu-title">Livreur</div>
-            <div class="data-admin-button">
-            <a class="admin-btn-style" href="javascript:app.app_nouveau_livreur();" >nouveau</a>
-             <a class="admin-btn-style" href="javascript:app.app_gerer_livreur();" >gerer</a>
-                 </div>
-          </div>
-         </div>
        </div>
 
       </div>
          <div class="dashboard-body">
           <div class="dashboard">
-            <div  id="add-restaurateur" class="row">
-                <div  class="large-6 columns group">
-                <span class="add-title large-6 columns ">Ajout d'un restaurateur</span>
+            <!-- <div class="app-management"> -->
+              <div class="management-menu">
+                <div class="data-admin">
+                    <ul class="no-bullet">
+                      <li><label>Restaurateur</label></li>
+                      <li><a class="admin-btn-style" href="javascript:app.app_nouveau_restaurateur();">nouveau</a></li>
+                      <li><a class="admin-btn-style" href="javascript:app.app_gerer_restaurateur();">gerer</a></li>
+                      <li><label>Restaurant</label></li>
+                      <li><a class="admin-btn-style" href="javascript:app.app_nouveau_restaurant();" >nouveau</a></li>
+                      <li><a class="admin-btn-style" href="javascript:app.app_gerer_restaurant();" >gerer</a></li>
+                      <li><label>Livreur</label></li>
+                      <li><a class="admin-btn-style" href="javascript:app.app_nouveau_livreur();" >nouveau</a></li>
+                      <li><a class="admin-btn-style" href="javascript:app.app_gerer_livreur();" >gerer</a></li>
+                     
+                     </ul>
+                </div>
+            </div>
+            <div class="management-content">
+
+              <div  id="add-restaurateur" class="row">
+                <div  class="large-4 columns group">
+               <span class="add-title">Ajout d'un restaurateur</span>
                 <!--*********************** ajouter Restaurateur ******************************-->
                 <% form_restaurants_array = @restaurants.map { |i| [i.nom, i.id] } %>
                 <% form_restaurants_array.insert(0, [" ","-1"]) #on place un élément vide dans le select%>
-                <%= form_for @nouveau_restaurateur, url: {action: "saisirInformations"}, html:{class: "large-6 columns"}  do |f| %>
-                    <%= f.text_field :nom, :placeholder => "nom", :class => "large-4 columns" %>
-                    <%= f.text_field :prenom, :placeholder => "prenom", :class => "large-4 columns" %>
-                    <%= f.text_field :identificateur, :placeholder => "nom d'utilisateur", :class => "large-4 columns" %>
-                    <%= f.password_field :mot_de_passe, :placeholder => "mot de passe", :class => "large-4 columns" %>
+                <%= form_for @nouveau_restaurateur, url: {action: "saisirInformations"}, html:{class: "large-10 columns"}  do |f| %>
+                    <%= f.text_field :nom, :placeholder => "nom", :class => "large-10 columns" %>
+                    <%= f.text_field :prenom, :placeholder => "prenom", :class => "large-10 columns" %>
+                    <%= f.text_field :identificateur, :placeholder => "nom d'utilisateur", :class => "large-10 columns" %>
+                    <%= f.password_field :mot_de_passe, :placeholder => "mot de passe", :class => "large-10 columns" %>
                     <%= select_tag(:restaurant, options_for_select(form_restaurants_array, 0)) %>
                     <%= f.submit "Ajouter restaurateur", :class => "admin-btn-style" %>   
                 <% end %>
               </div>
-               <div class="large-6 columns group dashboard-table">
+               <div class="large-8 columns group dashboard-table">
                   
                <table>
                   <tr class="table-title">
@@ -66,7 +62,7 @@
                     <th>Prénom</th>
                     <th>Restaurant</th>
                   </tr>
-                  <% @restaurateur.each do |r| %>               
+                  <% @restaurateur.each do |r| %>
                   <tr>
                     <td><%= r.identificateur %></td>
 
@@ -92,7 +88,8 @@
               </table>
               </div>
             </div>
-            <div id="add-restaurant" class="row">
+
+                <div id="add-restaurant" class="row">
                  <div  class="large-4 columns group">
                 <span class="add-title">Ajout d'un restaurant</span>
                 <div class="row">
@@ -101,14 +98,14 @@
                       
                   <% form_select_array = @restaurateurs_sans_restaurants.map {|i| ["#{i.nom} #{i.prenom}",i.id] } %>
                   <% form_select_array.insert(0, [" ","-1"]) #on place un élément vide dans le select%>
-                  <%= form_for @nouveau_restaurant, url: {action: "saisirInformationsRestaurant"}, html:{class: "large-4 columns"}  do |r| %>
-                    <%= r.text_field :nom, :placeholder => "nom", :class => "large-4 columns" %>
+                  <%= form_for @nouveau_restaurant, url: {action: "saisirInformationsRestaurant"}, html:{class: "large-10 columns"}  do |r| %>
+                    <%= r.text_field :nom, :placeholder => "nom", :class => "large-10 columns" %>
                     <%= fields_for :adresse, @nouveau_restaurant.adresse do |r_adresse| %>
-                        <%= r_adresse.text_field :no_maison, :placeholder => "numéro de maison", :class => "large-4 columns" %>
-                        <%= r_adresse.text_field :rue, :placeholder => "rue", :class => "large-4 columns" %>
-                        <%= r_adresse.text_field :ville, :placeholder => "ville", :class => "large-4 columns" %>
-                        <%= r_adresse.text_field :telephone, :placeholder => "téléphone", :class => "large-4 columns" %>
-                        <%= r_adresse.text_field :code_postal, :placeholder => "code postal", :class => "large-4 columns" %>
+                        <%= r_adresse.text_field :no_maison, :placeholder => "numéro de maison", :class => "large-10 columns" %>
+                        <%= r_adresse.text_field :rue, :placeholder => "rue", :class => "large-10 columns" %>
+                        <%= r_adresse.password_field :ville, :placeholder => "ville", :class => "large-10 columns" %>
+                        <%= r_adresse.text_field :telephone, :placeholder => "téléphone", :class => "large-10 columns" %>
+                        <%= r_adresse.text_field :code_postal, :placeholder => "code postal", :class => "large-10 columns" %>
                     <% end %>                  
                     <%= select_tag(:restaurateur, options_for_select(form_select_array, 10)) %>
                     <%= r.submit "Ajouter restaurant", :class => "admin-btn-style" %>   
@@ -143,18 +140,18 @@
               </table>
               </div>
             </div>
-            <!-- livreur -->
-              <div id="add-livreur" class="row">
 
+
+              <div id="add-livreur" class="row">
                  <div  class="large-4 columns group">
                 <span class="add-title">Ajout d'un livreur</span>
                 <div class="row">
                   <!--*********************** ajouter Livreur ******************************-->
-                <%= form_for @nouveau_livreur, url: {action: "saisirInformationsLivreur"}, html:{class: "large-6 columns"}  do |f| %>
-                    <%= f.text_field :nom, :placeholder => "nom", :class => "large-4 columns" %>
-                    <%= f.text_field :prenom, :placeholder => "prenom", :class => "large-4 columns" %>
-                    <%= f.text_field :identificateur, :placeholder => "nom d'utilisateur", :class => "large-4 columns" %>
-                    <%= f.password_field :mot_de_passe, :placeholder => "mot de passe", :class => "large-4 columns" %>
+                <%= form_for @nouveau_livreur, url: {action: "saisirInformationsLivreur"}, html:{class: "large-10 columns"}  do |f| %>
+                    <%= f.text_field :nom, :placeholder => "nom", :class => "large-10 columns" %>
+                    <%= f.text_field :prenom, :placeholder => "prenom", :class => "large-10 columns" %>
+                    <%= f.text_field :identificateur, :placeholder => "nom d'utilisateur", :class => "large-10 columns" %>
+                    <%= f.password_field :mot_de_passe, :placeholder => "mot de passe", :class => "large-10 columns" %>
                     <%= f.submit "Ajouter livreur", :class => "admin-btn-style" %>   
                 <% end %>
                 </div>
@@ -221,12 +218,13 @@
                 <span class="add-title">Edition restaurateur</span>
                 <div class="row" id="mofifierRestaurateur_form">
                   <!--*********************** Modifier Restaurateur ******************************-->
-                  <%= form_for @nouveau_restaurateur, url: {action: "modifierRestaurateur", id: "0"}, method: "get",html:{class: "large-6 columns", id: "form_modifierRestaurateur" } do |f| %>
+
+                  <%= form_for @nouveau_restaurateur, url: {action: "modifierRestaurateur", id: "0"}, html:{class: "large-10 columns", id: "form_modifierRestaurateur" } do |f| %>
                       <%= f.hidden_field :id, :id =>"restaurateur_id_edit", :value => "un id" %>
-                      <%= f.text_field :nom, :placeholder => "nom", :class => "large-4 columns", :id =>"restaurateur_nom_edit" %>
-                      <%= f.text_field :prenom, :placeholder => "prenom", :class => "large-4 columns", :id =>"restaurateur_prenom_edit" %>
-                      <%= f.text_field :identificateur, :placeholder => "nom d'utilisateur", :class => "large-4 columns", :id =>"restaurateur_identificateur_edit" %>
-                      <%= f.password_field :mot_de_passe, :placeholder => "mot de passe", :class => "large-4 columns", :id => "restaurateur_mdp_edit" %>
+                      <%= f.text_field :nom, :placeholder => "nom", :class => "large-10 columns", :id =>"restaurateur_nom_edit" %>
+                      <%= f.text_field :prenom, :placeholder => "prenom", :class => "large-10 columns", :id =>"restaurateur_prenom_edit" %>
+                      <%= f.text_field :identificateur, :placeholder => "nom d'utilisateur", :class => "large-10 columns", :id =>"restaurateur_identificateur_edit" %>
+                      <%= f.password_field :mot_de_passe, :placeholder => "mot de passe", :class => "large-10 columns", :id => "restaurateur_mdp_edit" %>
                       <%= select_tag(:restaurant, options_for_select(form_restaurants_array, 0), :id => "restaurateur_restaurant_edit") %>
                   <%= f.submit "Ajouter restaurateur", :class => "admin-btn-style" %>   
                   <% end %>
@@ -276,14 +274,14 @@
                 <div class="row">
                   <% form_select_array = @restaurateurs_sans_restaurants.map {|i| ["#{i.nom} #{i.prenom}",i.id] } %>
                   <% form_select_array.insert(0, [" ","-1"]) #on place un élément vide dans le select%>
-                  <%= form_for @nouveau_restaurant, url: {action: "modifierRestaurant", id: "0"}, method: "get", html:{class: "large-4 columns", id: "form_modifierRestaurant" }  do |r| %>
-                    <%= r.text_field :nom, :id =>"restaurant_nom_edit", :placeholder => "nom", :class => "large-4 columns" %>
+                  <%= form_for @nouveau_restaurant, url: {action: "modifierRestaurant", id: "0"}, method: "get", html:{class: "large-10 columns", id: "form_modifierRestaurant" }  do |r| %>
+                    <%= r.text_field :nom, :id =>"restaurant_nom_edit", :placeholder => "nom", :class => "large-10 columns" %>
                     <%= fields_for :adresse, @nouveau_restaurant.adresse do |r_adresse| %>
-                        <%= r_adresse.text_field :no_maison, :id =>"restaurant_no_maison_edit", :placeholder => "numéro de maison", :class => "large-4 columns" %>
-                        <%= r_adresse.text_field :rue, :id =>"restaurant_rue_edit", :placeholder => "rue", :class => "large-4 columns" %>
-                        <%= r_adresse.text_field :ville, :id =>"restaurant_ville_edit", :placeholder => "ville", :class => "large-4 columns" %>
-                        <%= r_adresse.text_field :telephone, :id =>"restaurant_telephone_edit", :placeholder => "téléphone", :class => "large-4 columns" %>
-                        <%= r_adresse.text_field :code_postal, :id =>"restaurant_code_postal_edit", :placeholder => "code postal", :class => "large-4 columns" %>
+                        <%= r_adresse.text_field :no_maison, :id =>"restaurant_no_maison_edit", :placeholder => "numéro de maison", :class => "large-10 columns" %>
+                        <%= r_adresse.text_field :rue, :id =>"restaurant_rue_edit", :placeholder => "rue", :class => "large-10 columns" %>
+                        <%= r_adresse.text_field :ville, :id =>"restaurant_ville_edit", :placeholder => "ville", :class => "large-10 columns" %>
+                        <%= r_adresse.text_field :telephone, :id =>"restaurant_telephone_edit", :placeholder => "téléphone", :class => "large-10 columns" %>
+                        <%= r_adresse.text_field :code_postal, :id =>"restaurant_code_postal_edit", :placeholder => "code postal", :class => "large-10 columns" %>
                     <% end %>                  
                     <%= select_tag(:restaurateur, options_for_select(form_select_array, 10)) %>
                     <%= r.submit "Ajouter restaurant", :class => "admin-btn-style" %>   
@@ -291,9 +289,10 @@
                 </div>
               </div>
             </div>
-            <!-- ************************************ Gérer livreur ******************************************-->
-              <div id="gerer-livreur" class="row">
 
+
+            <!-- ************************************ livreur ******************************************-->
+              <div id="gerer-livreur" class="row">
               <div class="large-8 columns group dashboard-table">
                   <table>
                   <tr class="table-title">
@@ -321,17 +320,23 @@
                 <span class="add-title">Edition livreur</span>
                 <div class="row" id="mofifierLivreur_form">
                   <!--*********************** Modifier Restaurateur ******************************-->
-                  <%= form_for @nouveau_livreur, url: {action: "modifierLivreur", id: "0"}, method: "get", html:{class: "large-6 columns", id: "form_modifierLivreur" } do |f| %>
+                  <%= form_for @nouveau_livreur, url: {action: "modifierLivreur", id: "0"}, method: "get", html:{class: "large-10 columns", id: "form_modifierLivreur" } do |f| %>
                       <%= f.hidden_field :id, :id =>"livreur_id_edit", :value => "un id" %>
-                      <%= f.text_field :nom, :placeholder => "nom", :class => "large-4 columns", :id =>"livreur_nom_edit" %>
-                      <%= f.text_field :prenom, :placeholder => "prenom", :class => "large-4 columns", :id =>"livreur_prenom_edit" %>
-                      <%= f.text_field :identificateur, :placeholder => "nom d'utilisateur", :class => "large-4 columns", :id =>"livreur_identificateur_edit" %>
-                      <%= f.password_field :mot_de_passe, :placeholder => "mot de passe", :class => "large-4 columns", :id => "livreur_mdp_edit" %>
+                      <%= f.text_field :nom, :placeholder => "nom", :class => "large-10 columns", :id =>"livreur_nom_edit" %>
+                      <%= f.text_field :prenom, :placeholder => "prenom", :class => "large-10 columns", :id =>"livreur_prenom_edit" %>
+                      <%= f.text_field :identificateur, :placeholder => "nom d'utilisateur", :class => "large-10 columns", :id =>"livreur_identificateur_edit" %>
+                      <%= f.password_field :mot_de_passe, :placeholder => "mot de passe", :class => "large-10 columns", :id => "livreur_mdp_edit" %>
                   <%= f.submit "Ajouter livreur", :class => "admin-btn-style" %>   
                   <% end %>
                 </div>
               </div>
             </div>
+
+
+            </div>
+            <!-- </div> -->
+
+
          </div>
     </div>
    </div>
