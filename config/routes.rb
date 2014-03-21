@@ -8,6 +8,7 @@ LOG::Application.routes.draw do
   get "management/entrepreneur"
   get "management/supprimerRestaurant"
   post "management/saisirInformationsRestaurant" 
+
   post "management/saisirInformations" 
   get "modifierRestaurateur/:id", to: 'management#modifierRestaurateur'
   get "modifierRestaurant/:id", to: 'management#modifierRestaurant'
@@ -17,6 +18,7 @@ LOG::Application.routes.draw do
   post "management/saisirInformationsLivreur" 
   get "management/supprimerLivreur"
 
+  get "modifierLivreur/:id", to: 'management#modifierLivreur'
 
   get "management/livraison"
   get "management/restaurateur"

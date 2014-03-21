@@ -106,6 +106,7 @@ class ManagementController < ApplicationController
 
   def modifierRestaurant
       restaurant = Restaurant.find(params[:id])
+
         if restaurant.update_attributes(restaurant_params)
            restaurant_adresse = restaurant.adresse.update_attributes(adresse_params)
           if params[:restaurateur] != "-1"
