@@ -122,6 +122,39 @@ class ManagementController < ApplicationController
         end
   end
 
+  #-----------------------------Section du livrerur---------------------------
+  def livraison  
+      @commandes = Commande.where(status_pret: true, livreur_id: nil).order(heure_de_commande: :asc)   #on récupère toutes les commandes prêtes qui n'ont pas été livrés
+  end
+
+  def livraisonDetails
+      commande_actuelle = Commande.find(params[:id])
+      adresse_client = Adresse.where(:client_id => commande_actuelle.client_id, :principale => true) #adresse du client
+      #requete pour optenir l'adresse du restaurant
+      adresse_restaurant = Adresse.find_by_sql "SELECT * FROM adresses INNER JOIN restaurants ON adresses.adresseable_id = restaurants.id 
+                                                                        INNER JOIN menus ON restaurants.id = menus.id
+                                                                        INNER JOIN plats ON menus.id = plats.id
+                                                                        INNER JOIN commandes_plats ON plats.id = commandes_plats.plat_id
+                                                                        AND commandes_plats.commande_id = #{commande_actuelle.id}"
+      respond_to do |format|
+        format.html 
+        format.json { render :json => { :adresse_client => adresse_client, :adresse_restaurant => adresse_restaurant } }
+      end
+  end
+
+  def livrerCommande
+      d = Date.today.to_formatted_s(:rfc822)  #2014-03-22
+      t = Time.now.strftime("%I:%M%p") #formatage de l'heure actuelle
+      livraison = Livraison.new(:commande_id => params[:id],:date_de_livraison => d, :heure_de_livraison => t)
+      if livraison.save
+          Commande.update(:params[:id], :livreur_id => '1')     #param session requis
+          redirect_to :action => "livraison", notice: "Livraison enregistré"
+      else
+          redirect_to :action => "livraison", alert: "enregistrement échoué"
+      end
+
+  end
+
   #obtention des permissions sur les parametres
   def restaurant_params
       params.require(:restaurant).permit! #facon courte de tout permettre

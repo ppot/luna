@@ -21,6 +21,8 @@ LOG::Application.routes.draw do
   get "modifierLivreur/:id", to: 'management#modifierLivreur'
 
   get "management/livraison"
+  get "livrerCommande/:id", to: 'management#livrerCommande'
+  get "livraisonDetails/:id", to: 'management#livraisonDetails'
   get "management/restaurateur"
 
 
