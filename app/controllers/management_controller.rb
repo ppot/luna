@@ -1,6 +1,6 @@
 class ManagementController < ApplicationController
   layout 'application'
-<<<<<<< HEAD
+  include API
 
     def entrepreneur  
       @restaurateur = Restaurateur.all #left join fait a l'interne grace aux has_one dans les modeles
@@ -11,15 +11,11 @@ class ManagementController < ApplicationController
       @restaurants_restaurateurs = Restaurant.all
       @nouveau_livreur = Livreur.new
       @livreurs = Livreur.all
-=======
-  
-    def ajouterRestaurateur
-         @un_restaurateur = Restaurateur.new
->>>>>>> Design update
+      @_user = current_client
     end
 
     #fonction pour ajouter un restaurateur
-def saisirInformations
+  def saisirInformations
         restaurateur = Restaurateur.new(utilisateur_params)
         #Utilisattion des fonctions prédéfinis de rails
         #Pas de nécessité de créer Restaurateur.setInfo comme dans le RDCU1 
@@ -32,7 +28,7 @@ def saisirInformations
         else
             redirect_to  :action => "entrepreneur", alert: "add was not successfully"
         end 
-    end
+  end
 
     def supprimerRestaurateur
 
@@ -40,7 +36,7 @@ def saisirInformations
         redirect_to :action => "entrepreneur"
     end
 
-def modifierRestaurateur
+  def modifierRestaurateur
         restaurateur = Restaurateur.find(params[:id])
         if restaurateur.update_attributes(utilisateur_params)
 
@@ -56,9 +52,8 @@ def modifierRestaurateur
           end
 
         end 
+  end
 
-    end
-    
   #fonction pour ajouter un restaurateur
   def saisirInformationsLivreur
       livreur = Livreur.new(utilisateur_params)
@@ -83,7 +78,6 @@ def modifierRestaurateur
     else
         redirect_to :action => "entrepreneur", alert: "modification of restaurant was not successfull"
     end
-
   end
 
   #---------------------Section pour le restaurant-----------------------

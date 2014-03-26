@@ -3,8 +3,9 @@
    <div id="header" class="fixed">
       <span class="data-title">Luna</span>
       <span class="data-menu">
-        <span class="data-right">
-          <a href="#" class="connect">Deconnection ></a>
+          <span class="data-right">
+          <span class="user"><%= @_user.identificateur %></span>
+          <a href="/api/signout" class="connect">Deconnection</a>
         </span>
       </span>
    </div>

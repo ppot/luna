@@ -1,6 +1,56 @@
 
 <% if session[:current_user_id] != nil %>
-<h1> allo </h1>
+<div class="app-background">
+    <span class="app">app</span>
+    <span class="session"><%= @_user.identificateur %>    <a href="/api/signout" class="connect">Deconnection</a></span>
+    <span class="app-main-title">Luna</span>
+    <div>
+      <div class="openid">
+        <select>
+          <option id="2" selected>AUCUN</option>
+          <option id="1">BOB</option>
+          <option id="2">BACON</option>
+          <option id="3">123</option>
+          <option id="4">ti jow</option>
+        </select>
+      </div>
+
+      <div>
+        <div class="plats">
+                <div class="menu">
+        <div>
+          <span>Menu : So Awsome</span>
+        </div>
+      </div>
+             <span>TRIO BURGER <span class="bill-price">15$</span></span><br/>
+            <span>BOISSONS <span class="bill-price">1$</span></span><br/>
+            <span>FRITES <span class="bill-price">2$</span></span><br/><br/>
+        </div>
+        <div class="plats">
+        <div class="menu">
+          <span>Votre commande</span>
+        </div>
+        <!--   <div>
+           <span class="">votre commande</span>
+          </div> -->
+             <span>TRIO BURGER <span class="bill-price">15$</span></span><br/>
+            <span>BOISSONS <span class="bill-price">1$</span></span><br/>
+            <span>FRITES <span class="bill-price">2$</span></span><br/><br/>
+            <span>TOTAL<span class="bill-price">18$</span></span>
+        </div>
+      </div>
+    </div>
+     <div class="plats todo">
+    <span>Todo</span>
+    <ul>
+      <li>Shopping cart</li>
+      <li>William github validation</li>
+      <li>Menu option  => Content add</li>
+      <li>Menu option =>  Content qte value</li>
+      <li>User option  management</li>
+    </ul>
+  </div>
+</div>
 <% else %>
   <div class="app-background">
     <div class="login-app">
@@ -24,7 +74,7 @@
                 <div class="large-12 columns">
                   <div class="push-management-center">
                   <a class="management-btn-style" href="javascript:app.users.oauth()">sign in</a>
-                   <a class="management-btn-style" href="javascript:app.general.app_register()">Register</a>
+                   <a class="management-btn-style" href="javascript:app.general .app_register()">Register</a>
                   </div>
                 </div>
             </div>
