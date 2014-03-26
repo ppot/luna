@@ -1,5 +1,5 @@
 class Restaurateur < Utilisateur
-	has_one :restaurant #pareil que on delete cascade set null
+	has_one :restaurant, dependent: :nullify #pareil que on delete cascade set null
 	accepts_nested_attributes_for :restaurant
 	has_one :adresse, through: :restaurant
 	def self.model_name
