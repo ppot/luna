@@ -1,7 +1,7 @@
 module API
 	def current_client
 	  	if session[:current_user_id] != nil 
-	  		_user = Client.find(session[:current_user_id])
+	  		_user = Utilisateur.find(session[:current_user_id])
 	  	else
 	  		nil
 	  	end
@@ -13,7 +13,7 @@ module API
 
 	def auth(aka,password)
 		if aka != "" && password != ""
-	  		_user = Client.where("identificateur = ? AND mot_de_passe = ?", aka, password)
+	  		_user = Utilisateur.where("identificateur = ? AND mot_de_passe = ?", aka, password)
 	  	end
 	end
 

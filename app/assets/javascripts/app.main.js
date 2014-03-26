@@ -302,8 +302,5 @@ app = (function(){
       restaurateur_form_values:restaurateur_form_values,
       restaurant_form_values:restaurant_form_values,
       livreur_form_values:livreur_form_values,
-      new_user_call:new_user_call,
-      oauth:oauth,
-      user_update:user_update,
 	}
 })();
