@@ -99,9 +99,9 @@
                   <%= form_for @nouveau_restaurant, url: {action: "saisirInformationsRestaurant"}, html:{class: "large-10 columns"}  do |r| %>
                     <%= r.text_field :nom, :placeholder => "nom", :class => "large-10 columns" %>
                     <%= fields_for :adresse, @nouveau_restaurant.adresse do |r_adresse| %>
-                        <%= r_adresse.text_field :no_maison, :placeholder => "numéro de maison", :class => "large-10 columns" %>
+                        <%= r_adresse.text_field :no_maison, :placeholder => "numéro", :class => "large-10 columns" %>
                         <%= r_adresse.text_field :rue, :placeholder => "rue", :class => "large-10 columns" %>
-                        <%= r_adresse.password_field :ville, :placeholder => "ville", :class => "large-10 columns" %>
+                        <%= r_adresse.text_field :ville, :placeholder => "ville", :class => "large-10 columns" %>
                         <%= r_adresse.text_field :telephone, :placeholder => "téléphone", :class => "large-10 columns" %>
                         <%= r_adresse.text_field :code_postal, :placeholder => "code postal", :class => "large-10 columns" %>
                     <% end %>                  
@@ -187,7 +187,7 @@
                       <% @restaurateur.each do |r| %>
                       <tr>
                          <td><div><%= link_to "Supprimer", {controller: "management" ,action: "supprimerRestaurateur", id: r.id}, class: "hunt-btn-style" %></div><br/>
-                            <div><%= link_to "Modifier", "javascript:;", onclick: "app.restaurateur_form_values(#{r.id}, \'#{r.nom}\', \'#{r.prenom}\', \'#{r.identificateur}\', \'#{r.mot_de_passe}\');", class: "hunt-btn-style modifierRestaurateur_btn"%></div>
+                            <div><%= link_to "Modifier", "javascript:;", onclick: "app.entrepreneur.restaurateur_form_values(#{r.id}, \'#{r.nom}\', \'#{r.prenom}\', \'#{r.identificateur}\', \'#{r.mot_de_passe}\');", class: "hunt-btn-style modifierRestaurateur_btn"%></div>
                         </td>
                         <td><%= r.identificateur %></td>
                         <td><%= r.mot_de_passe %></td>
@@ -239,7 +239,7 @@
                 <% @restaurants_restaurateurs.each do |r| %>
                 <tr>
                    <td><div><%= link_to "Supprimer", {controller: "management" ,action: "supprimerRestaurant", id: r.id}, class: "hunt-btn-style" %></div><br/>
-                            <div><%= link_to "Modifier", "javascript:;", onclick: "app.restaurant_form_values(#{r.id}, \'#{r.nom}\', \'#{r.adresse.no_maison}\', \'#{r.adresse.rue}\', \'#{r.adresse.ville}\', \'#{r.adresse.code_postal}\', \'#{r.adresse.telephone}\');", class: "hunt-btn-style modifierRestaurateur_btn;"%>
+                            <div><%= link_to "Modifier", "javascript:;", onclick: "app.entrepreneur.restaurant_form_values(#{r.id}, \'#{r.nom}\', \'#{r.adresse.no_maison}\', \'#{r.adresse.rue}\', \'#{r.adresse.ville}\', \'#{r.adresse.code_postal}\', \'#{r.adresse.telephone}\');", class: "hunt-btn-style modifierRestaurateur_btn;"%>
                         </div>
                     </td>
                   <td><%if r.restaurateur != nil %>
@@ -301,7 +301,7 @@
                   <% @livreurs.each do |r| %>
                       <tr>
                          <td><div><%= link_to "Supprimer", {controller: "management" ,action: "supprimerLivreur", id: r.id}, class: "hunt-btn-style" %></div><br/>
-                            <div><%= link_to "Modifier", "javascript:;", onclick: "app.livreur_form_values(#{r.id}, \'#{r.nom}\', \'#{r.prenom}\', \'#{r.identificateur}\', \'#{r.mot_de_passe}\');", class: "hunt-btn-style modifierRestaurateur_btn"%></div>
+                            <div><%= link_to "Modifier", "javascript:;", onclick: "app.entrepreneur.livreur_form_values(#{r.id}, \'#{r.nom}\', \'#{r.prenom}\', \'#{r.identificateur}\', \'#{r.mot_de_passe}\');", class: "hunt-btn-style modifierRestaurateur_btn"%></div>
                         </td>
                         <td><%= r.identificateur %></td>
                         <td><%= r.mot_de_passe %></td>

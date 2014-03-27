@@ -66,43 +66,6 @@ app = (function(){
 		$('#menu-preparation').hide();
 	}
 
-	function restaurateur_form_values(id, nom, prenom, identificateur, mot_de_passe ) {
-		//Cette fonctio place les valeur de la table vers un formulaire pour modifier un restaurateur
-		//$('#restaurateur_id_edit').val(id);	//id creer par rails
-		$('#restaurateur_nom_edit').val(nom);
-	  	$('#restaurateur_prenom_edit').val(prenom);
-	  	$('#restaurateur_identificateur_edit').val(identificateur);
-	  	$('#restaurateur_mdp_edit').val(mot_de_passe);
-
-	  	//pour modifier l'url de l'action du formulaire
-	  	$('#form_modifierRestaurateur').attr('action', '/modifierRestaurateur/'+ id);
-	  	//Il faut mettre le _path d'un restaurateur comme varaible pour ne pas devoir harcoder l'url du controller
-	}
-
-	function restaurant_form_values(id, nom, no_maison, rue, ville, code_postal, telephone) {
-		$('#restaurant_nom_edit').val(nom);
-	  	$('#restaurant_no_maison_edit').val(no_maison);
-	  	$('#restaurant_rue_edit').val(rue);
-	  	$('#restaurant_ville_edit').val(ville);
-	  	$('#restaurant_code_postal_edit').val(code_postal);
-	  	$('#restaurant_telephone_edit').val(telephone);
-
-	  	//pour modifier l'url de l'action du formulaire
-	  	$('#form_modifierRestaurant').attr('action', '/modifierRestaurant/'+ id);
-	}
-
-	function livreur_form_values(id, nom, prenom, identificateur, mot_de_passe ) {
-
-		$('#livreur_nom_edit').val(nom);
-	  	$('#livreur_prenom_edit').val(prenom);
-	  	$('#livreur_identificateur_edit').val(identificateur);
-	  	$('#livreur_mdp_edit').val(mot_de_passe);
-
-	  	//pour modifier l'url de l'action du formulaire
-	  	$('#form_modifierLivreur').attr('action', '/modifierLivreur/'+ id);
-	  	//Il faut mettre le _path d'un restaurateur comme varaible pour ne pas devoir harcoder l'url du controller
-	}
-
   var general=(function(){ 
 
     function init(){
@@ -155,7 +118,7 @@ app = (function(){
 			    dataType: "html",
 			    success: function(result){
 			        console.log(result);
-			        if(result ==	1){
+			        if(result == 1){
 			        	general.redirect("/users/profile")
 			        }
 			        else{
@@ -237,8 +200,49 @@ app = (function(){
 
     }
 
+    function restaurateur_form_values(id, nom, prenom, identificateur, mot_de_passe ) {
+		//Cette fonctio place les valeur de la table vers un formulaire pour modifier un restaurateur
+		//$('#restaurateur_id_edit').val(id);	//id creer par rails
+		$('#restaurateur_nom_edit').val(nom);
+	  	$('#restaurateur_prenom_edit').val(prenom);
+	  	$('#restaurateur_identificateur_edit').val(identificateur);
+	  	$('#restaurateur_mdp_edit').val(mot_de_passe);
+
+	  	//pour modifier l'url de l'action du formulaire
+	  	$('#form_modifierRestaurateur').attr('action', '/modifierRestaurateur/'+ id);
+	  	//Il faut mettre le _path d'un restaurateur comme varaible pour ne pas devoir harcoder l'url du controller
+	}
+
+	function restaurant_form_values(id, nom, no_maison, rue, ville, code_postal, telephone) {
+		$('#restaurant_nom_edit').val(nom);
+	  	$('#restaurant_no_maison_edit').val(no_maison);
+	  	$('#restaurant_rue_edit').val(rue);
+	  	$('#restaurant_ville_edit').val(ville);
+	  	$('#restaurant_code_postal_edit').val(code_postal);
+	  	$('#restaurant_telephone_edit').val(telephone);
+
+	  	//pour modifier l'url de l'action du formulaire
+	  	$('#form_modifierRestaurant').attr('action', '/modifierRestaurant/'+ id);
+	}
+
+    function livreur_form_values(id, nom, prenom, identificateur, mot_de_passe ) {
+
+		$('#livreur_nom_edit').val(nom);
+	  	$('#livreur_prenom_edit').val(prenom);
+	  	$('#livreur_identificateur_edit').val(identificateur);
+	  	$('#livreur_mdp_edit').val(mot_de_passe);
+
+	  	//pour modifier l'url de l'action du formulaire
+	  	$('#form_modifierLivreur').attr('action', '/modifierLivreur/'+ id);
+	  	//Il faut mettre le _path d'un restaurateur comme varaible pour ne pas devoir harcoder l'url du controller
+	}
+
+
     return{
       init:init,
+      restaurateur_form_values:restaurateur_form_values,
+      restaurant_form_values:restaurant_form_values,
+      livreur_form_values:livreur_form_values,
     }
   })();
 
@@ -256,21 +260,19 @@ app = (function(){
   		general:general,
   		users:users,
   		restaurateur:restaurateur,
-  		entrepreneur:entrepreneur,
-      app_module_log:app_module_log,
-      app_admin_hide:app_admin_hide,
-      app_nouveau_restaurateur:app_nouveau_restaurateur,
-      app_nouveau_restaurant:app_nouveau_restaurant,
-      app_nouveau_livreur:app_nouveau_livreur,
-      app_gerer_restaurateur:app_gerer_restaurateur,
-      app_gerer_restaurant:app_gerer_restaurant,
-      app_gerer_livreur:app_gerer_livreur,
-      app_menus_hide:app_menus_hide,
-      app_add_menu:app_add_menu,
-      app_menus:app_menus,
-      app_menu_preparation:app_menu_preparation,
-      restaurateur_form_values:restaurateur_form_values,
-      restaurant_form_values:restaurant_form_values,
-      livreur_form_values:livreur_form_values,
+	  	entrepreneur:entrepreneur,
+	  	
+		app_module_log:app_module_log,
+		app_admin_hide:app_admin_hide,
+		app_nouveau_restaurateur:app_nouveau_restaurateur,
+		app_nouveau_restaurant:app_nouveau_restaurant,
+		app_nouveau_livreur:app_nouveau_livreur,
+		app_gerer_restaurateur:app_gerer_restaurateur,
+		app_gerer_restaurant:app_gerer_restaurant,
+		app_gerer_livreur:app_gerer_livreur,
+		app_menus_hide:app_menus_hide,
+		app_add_menu:app_add_menu,
+		app_menus:app_menus,
+		app_menu_preparation:app_menu_preparation,
 	}
 })();

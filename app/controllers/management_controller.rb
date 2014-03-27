@@ -11,7 +11,7 @@ class ManagementController < ApplicationController
       @restaurants_restaurateurs = Restaurant.all
       @nouveau_livreur = Livreur.new
       @livreurs = Livreur.all
-      # @_user = current_client
+      @_user = current_client
     end
 
     #fonction pour ajouter un restaurateur
