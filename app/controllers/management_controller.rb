@@ -11,7 +11,7 @@ class ManagementController < ApplicationController
       @restaurants_restaurateurs = Restaurant.all
       @nouveau_livreur = Livreur.new
       @livreurs = Livreur.all
-      @_user = current_client
+      # @_user = current_client
     end
 
     #fonction pour ajouter un restaurateur
@@ -148,11 +148,12 @@ class ManagementController < ApplicationController
       livraison = Livraison.new(:commande_id => params[:id],:date_de_livraison => d, :heure_de_livraison => t)
       if livraison.save
           Commande.update(:params[:id], :livreur_id => '1')     #param session requis
-          redirect_to :action => "livraison", notice: "Livraison enregistré"
+          redirect_to :action => "livraison"
+          # redirect_to :action => "livraison", notice: "Livraison enregistré"
       else
-          redirect_to :action => "livraison", alert: "enregistrement échoué"
+          # redirect_to :action => "livraison", alert: "enregistrement échoué"
+          redirect_to :action => "livraison"
       end
-
   end
 
   #obtention des permissions sur les parametres

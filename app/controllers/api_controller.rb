@@ -18,11 +18,16 @@ include  API
   end
 
   def register
-    client = Client.new(client_params)
-    client.created_at=DateTime.now
-      if client.save
+    user = Client.new(client_params)
+    user.created_at=DateTime.now
+    # user.type = ;
+      if user.save
+        infos = Info.new(infos_params)
+        infos.client_id = user.id
+        infos.created_at = user.created_at
+
         adress = Adresse.new(adress_params) 
-        adress.adresseable_id  =  client.id 
+        adress.adresseable_id  =  user.id 
         adress.principale  =  true
 
         if adress.no_maison != nil
@@ -30,7 +35,7 @@ include  API
             p adress
         end
 
-          session[:current_user_id]  = client.id
+          session[:current_user_id]  = user.id
           render json: 1
 
       else
@@ -39,9 +44,11 @@ include  API
   end
 
   def client_params
-      params.require(:client).permit(:identificateur, :mot_de_passe, :nom, :prenom, :courriel, :date_naissance)
+      params.require(:utilisateur).permit(:identificateur, :mot_de_passe, :nom, :prenom)
   end
-
+  def infos_params
+      params.require(:infos).permit(:courriel, :date_naissance)
+  end
   def adress_params
       params.require(:adress).permit(:no_maison, :rue, :ville, :telephone, :code_postal)
   end

@@ -103,37 +103,6 @@ app = (function(){
 	  	//Il faut mettre le _path d'un restaurateur comme varaible pour ne pas devoir harcoder l'url du controller
 	}
 
-	function new_user_call(){
-		$.ajax({
-		    type: "GET",
-		    url: "/api/register",
-		    data: {
-		    	client: {
-			    	nom :  $('#inscription_nom').val(),
-			    	prenom :  $('#inscription_prenom').val(),
-			    	courriel : $('#inscription_email').val(),
-			    	identificateur : $('#inscription_identificateur').val(),
-			    	mot_de_passe : $('#inscription_motDePass').val(),
-			    	date_naissance : $('#inscription_dateNaissance').val()
-		    	},
-		    	adress:{
-		    		no_maison  :  $('#adresse_numero').val(), 
-		    		rue  :  $('#adresse_rue').val(),	
-		    		ville  :  $('#adresse_ville').val(), 
-		    		telephone  :  $('#adresse_telephone').val(), 
-		    		code_postal  :  $('#adresse_code_postale').val()
-		    	}
-		    },
-		    dataType: "html",
-		    success: function(result){
-		        console.log(result);
-		        if(result==1){
-		        	redirect("/users/profile")
-		        }
-		    }        
-		});
-	}
-
   var general=(function(){ 
 
     function init(){
@@ -198,8 +167,41 @@ app = (function(){
 		}
 
 		function register () {
-			$('#register-error').show();
-			$('.register-message-error').text("oups i did it again");
+			$.ajax({
+			    type: "GET",
+			    url: "/api/register",
+			    data: {
+			    	utilisateur: {
+				    	nom :  $('#inscription_nom').val(),
+				    	prenom :  $('#inscription_prenom').val(),
+				    	identificateur : $('#inscription_identificateur').val(),
+				    	mot_de_passe : $('#inscription_motDePass').val(),
+
+			    	},
+			    	infos:{
+			    		courriel : $('#inscription_email').val(),
+				    	date_naissance : $('#inscription_dateNaissance').val()
+			    	},
+			    	adress:{
+			    		no_maison  :  $('#adresse_numero').val(), 
+			    		rue  :  $('#adresse_rue').val(),	
+			    		ville  :  $('#adresse_ville').val(), 
+			    		telephone  :  $('#adresse_telephone').val(), 
+			    		code_postal  :  $('#adresse_code_postale').val()
+			    	}
+			    },
+			    dataType: "html",
+			    success: function(result){
+			        console.log(result);
+			        if(result==1){
+			        	general.redirect("/users/profile")
+			        }
+			        else{
+						$('#register-error').show();
+						$('.register-message-error').text("oups i did it again");
+			        }
+			    }        
+			});
 		}
 
 		function user_update(){
@@ -222,44 +224,12 @@ app = (function(){
 			    }        
 			});
 		}
-		function new_user_call(){
-			$.ajax({
-			    type: "GET",
-			    url: "/api/register",
-			    data: {
-			    	client: {
-				    	nom :  $('#inscription_nom').val(),
-				    	prenom :  $('#inscription_prenom').val(),
-				    	courriel : $('#inscription_email').val(),
-				    	identificateur : $('#inscription_identificateur').val(),
-				    	mot_de_passe : $('#inscription_motDePass').val(),
-				    	date_naissance : $('#inscription_dateNaissance').val()
-			    	},
-			    	adress:{
-			    		no_maison  :  $('#adresse_numero').val(), 
-			    		rue  :  $('#adresse_rue').val(),	
-			    		ville  :  $('#adresse_ville').val(), 
-			    		telephone  :  $('#adresse_telephone').val(), 
-			    		code_postal  :  $('#adresse_code_postale').val()
-			    	}
-			    },
-			    dataType: "html",
-			    success: function(result){
-			        console.log(result);
-			        if(result==1){
-			        	redirect("/users/profile")
-			        }
-			    }        
-			});
-		}
-
-    return{
-      init:init,
-      oauth:oauth,
-      register:register,
-      user_update:user_update,
-      new_user_call:new_user_call,
-    }
+	    return{
+	      init:init,
+	      oauth:oauth,
+	      register:register,
+	      user_update:user_update,
+	    }
   })();
 
   var entrepreneur=(function(){ 
