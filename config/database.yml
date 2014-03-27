@@ -19,7 +19,7 @@ development:
   encoding: unicode
   database: luna
   pool: 5
-  username: Wily
+  username:
   password:
   host: localhost
 

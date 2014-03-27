@@ -17,6 +17,4 @@
 //= require_tree .
 
 //= require foundation
-//
-app.app_module_log();
  // $(function(){ $(document).foundation(); });

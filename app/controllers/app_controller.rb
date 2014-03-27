@@ -1,16 +1,8 @@
 class AppController < ApplicationController
   layout 'application'
+  include API
+  
   def index
+     @_user = current_client
   end
-
-  def login
-    session[:user]="bob"
-    redirect_to :action => 'index'
-  end
-
-  def logout
-    session[:user] = nil
-    redirect_to :action => 'index'
-  end
-
 end

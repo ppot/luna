@@ -1,5 +1,5 @@
-<script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
-
+<!-- <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+ -->
 <!-- Navigation -->
 <div id="wrapper">
    <div id="header" class="fixed">
@@ -29,6 +29,22 @@
       </div>
          <div class="dashboard-body">
           <div class="dashboard">
+            <div class="management-menu">
+                <div class="data-admin">
+           <!--          <ul class="no-bullet">
+                      <li><label>Restaurateur</label></li>
+                      <li><a class="admin-btn-style" href="javascript:app.app_nouveau_restaurateur();">nouveau</a></li>
+                      <li><a class="admin-btn-style" href="javascript:app.app_gerer_restaurateur();">gerer</a></li>
+                      <li><label>Restaurant</label></li>
+                      <li><a class="admin-btn-style" href="javascript:app.app_nouveau_restaurant();" >nouveau</a></li>
+                      <li><a class="admin-btn-style" href="javascript:app.app_gerer_restaurant();" >gerer</a></li>
+                      <li><label>Livreur</label></li>
+                      <li><a class="admin-btn-style" href="javascript:app.app_nouveau_livreur();" >nouveau</a></li>
+                      <li><a class="admin-btn-style" href="javascript:app.app_gerer_livreur();" >gerer</a></li>   
+                     </ul> -->
+                </div>
+            </div>
+            <div class="management-content">
               <div id="add-restaurant" class="row">
              <div class="large-9 columns group dashboard-table">
               <table>
@@ -91,11 +107,16 @@
             </div>
             <div  class="row">
                <div class="large-10 columns group dashboard-table">
+              
+            </div>
+
+       <!--      <div  class="row">
+               <div class="large-8 columns group dashboard-table">
              <div class="left">Votre position :</div><br/>
             <div id="directionsPanel" style="float:right;width:30%;height 100%"></div>
             <div id="map_canvas" style="height:400px"></div>
           </div>
-            </div>
+            </div> -->
          </div>
 
     </div>
@@ -114,33 +135,33 @@
           </div>
    </div>
 </div>
-    <script>
-      var directionsService = new google.maps.DirectionsService();
+    // <script>
+    //   var directionsService = new google.maps.DirectionsService();
 
-      function initialize() {
-        directionsDisplay = new google.maps.DirectionsRenderer();
-        var mapOptions = {
-          zoom: 10,
-          center: new google.maps.LatLng(45.5086, -73.5539)
-        };
-        var map = new google.maps.Map(map_canvas, mapOptions);
-        directionsDisplay.setMap(map);
-        directionsDisplay.setPanel(document.getElementById('directions-panel'));
-      }
+    //   function initialize() {
+    //     directionsDisplay = new google.maps.DirectionsRenderer();
+    //     var mapOptions = {
+    //       zoom: 10,
+    //       center: new google.maps.LatLng(45.5086, -73.5539)
+    //     };
+    //     var map = new google.maps.Map(map_canvas, mapOptions);
+    //     directionsDisplay.setMap(map);
+    //     directionsDisplay.setPanel(document.getElementById('directions-panel'));
+    //   }
 
-      function calcRoute(commande_zip, restaurant_zip) {
+    //   function calcRoute(commande_zip, restaurant_zip) {
 
-        var request = {
-          origin: restaurant_zip,   //code postale du livreur
-          destination: commande_zip,  //code postale de la commande
-          travelMode: google.maps.TravelMode.DRIVING
-        };
-        directionsService.route(request, function(response, status) {
-          if (status == google.maps.DirectionsStatus.OK) {
-            directionsDisplay.setDirections(response);
-            //alert(response);
-          }
-        });
-      }
-      google.maps.event.addDomListener(window, 'load', initialize);
-    </script>
+    //     var request = {
+    //       origin: restaurant_zip,   //code postale du livreur
+    //       destination: commande_zip,  //code postale de la commande
+    //       travelMode: google.maps.TravelMode.DRIVING
+    //     };
+    //     directionsService.route(request, function(response, status) {
+    //       if (status == google.maps.DirectionsStatus.OK) {
+    //         directionsDisplay.setDirections(response);
+    //         //alert(response);
+    //       }
+    //     });
+    //   }
+    //   google.maps.event.addDomListener(window, 'load', initialize);
+    // </script>

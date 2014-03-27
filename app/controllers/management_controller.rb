@@ -1,5 +1,6 @@
 class ManagementController < ApplicationController
   layout 'application'
+  include API
 
     def entrepreneur  
       @restaurateur = Restaurateur.all #left join fait a l'interne grace aux has_one dans les modeles
@@ -10,10 +11,11 @@ class ManagementController < ApplicationController
       @restaurants_restaurateurs = Restaurant.all
       @nouveau_livreur = Livreur.new
       @livreurs = Livreur.all
+      @_user = current_client
     end
 
     #fonction pour ajouter un restaurateur
-    def saisirInformations
+  def saisirInformations
         restaurateur = Restaurateur.new(utilisateur_params)
         #Utilisattion des fonctions prédéfinis de rails
         #Pas de nécessité de créer Restaurateur.setInfo comme dans le RDCU1 
@@ -26,16 +28,15 @@ class ManagementController < ApplicationController
         else
             redirect_to  :action => "entrepreneur", alert: "add was not successfully"
         end 
-    end
+  end
 
     def supprimerRestaurateur
-        
-        Restaurateur.find(params[:id]).destroy
-        redirect_to :action => "entrepreneur" 
 
+        res = Restaurateur.find(params[:id]).destroy
+        redirect_to :action => "entrepreneur"
     end
 
-    def modifierRestaurateur
+  def modifierRestaurateur
         restaurateur = Restaurateur.find(params[:id])
         if restaurateur.update_attributes(utilisateur_params)
 
@@ -51,9 +52,8 @@ class ManagementController < ApplicationController
           end
 
         end 
+  end
 
-    end
-    
   #fonction pour ajouter un restaurateur
   def saisirInformationsLivreur
       livreur = Livreur.new(utilisateur_params)
@@ -67,10 +67,8 @@ class ManagementController < ApplicationController
   end
 
   def supprimerLivreur
-    
     Livreur.find(params[:id]).destroy
     redirect_to :action => "entrepreneur" 
-
   end
 
   def modifierLivreur
@@ -80,7 +78,6 @@ class ManagementController < ApplicationController
     else
         redirect_to :action => "entrepreneur", alert: "modification of restaurant was not successfull"
     end
-
   end
 
   #---------------------Section pour le restaurant-----------------------
@@ -90,14 +87,17 @@ class ManagementController < ApplicationController
        @restaurant_adresse = @nouveau_restaurant.build_adresse(adresse_params)    #va creer une adresse avec la cle etrangere de restaurant
        @restaurant_adresse.principale = true
 
+        #Utilisattion des fonctions prédéfinis de rails
+        #Pas de nécessité de créer Restaurateur.setInfo comme dans le RDCU1
+
         if @nouveau_restaurant.save
             @restaurant_adresse.save
             @nouveau_restaurant.update(:restaurateur_id => params[:restaurateur]) unless params[:restaurateur] == "-1"
             redirect_to :action => "entrepreneur", notice: "add was successfully"
         else
             redirect_to :action => "entrepreneur", alert: "add was not successfully"
-        end 
-  end 
+        end
+  end
 
   def supprimerRestaurant
       restaurant = Restaurant.find(params[:id]).destroy
@@ -148,11 +148,12 @@ class ManagementController < ApplicationController
       livraison = Livraison.new(:commande_id => params[:id],:date_de_livraison => d, :heure_de_livraison => t)
       if livraison.save
           Commande.update(:params[:id], :livreur_id => '1')     #param session requis
-          redirect_to :action => "livraison", notice: "Livraison enregistré"
+          redirect_to :action => "livraison"
+          # redirect_to :action => "livraison", notice: "Livraison enregistré"
       else
-          redirect_to :action => "livraison", alert: "enregistrement échoué"
+          # redirect_to :action => "livraison", alert: "enregistrement échoué"
+          redirect_to :action => "livraison"
       end
-
   end
 
   #obtention des permissions sur les parametres
@@ -169,4 +170,3 @@ class ManagementController < ApplicationController
   end
 
 end
-

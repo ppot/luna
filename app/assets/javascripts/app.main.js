@@ -7,18 +7,6 @@ app = (function(){
 		join();
 	}
 
-	function signin(){
-		$('#signin').show();
-		$('#register').hide();
-		$('.already-member').hide();
-	}
-
-	function join(){
-		$('#signin').hide();
-		$('#register').show();
-		$('.already-member').show();
-	}
-
 	function app_nouveau_restaurateur(){
 		app_admin_hide();
 		$('#add-restaurateur').show();
@@ -78,7 +66,141 @@ app = (function(){
 		$('#menu-preparation').hide();
 	}
 
-	function restaurateur_form_values(id, nom, prenom, identificateur, mot_de_passe ) {
+  var general=(function(){ 
+
+    function init(){
+
+    }
+
+    function redirect(path){
+			window.location.href =  path;
+		}
+
+		function app_open(){
+			$('.register-app').hide();
+			$("#oauth-error").hide();
+			$('#register-error').hide();
+		}
+
+		function app_signin () {
+			$('.login-app').show();
+			$('.register-app').hide();
+		}
+
+		function app_register () {
+			$('.login-app').hide();
+			$('.register-app').show();
+		}
+
+    return{
+      init:init,
+      redirect:redirect,
+      app_open:app_open,
+      app_signin:app_signin,
+      app_register:app_register,
+    }
+  })();
+
+  var users=(function(){ 
+    function init(){
+
+    }
+
+    function oauth(){
+			$.ajax({
+			    type: "GET",
+			    url: "/api/signin",
+			    data: {
+			    	identificateur : $('#_aka').val(),
+			    	mot_de_passe : $('#_password').val()
+			    	
+			    },
+			    dataType: "html",
+			    success: function(result){
+			        console.log(result);
+			        if(result == 1){
+			        	general.redirect("/users/profile")
+			        }
+			        else{
+			        	$("#oauth-error").show();
+			        	$(".message-error").text("mauvais utilisateur ou mot de passe");
+			        }
+			    }        
+			});
+		}
+
+		function register () {
+			$.ajax({
+			    type: "GET",
+			    url: "/api/register",
+			    data: {
+			    	utilisateur: {
+				    	nom :  $('#inscription_nom').val(),
+				    	prenom :  $('#inscription_prenom').val(),
+				    	identificateur : $('#inscription_identificateur').val(),
+				    	mot_de_passe : $('#inscription_motDePass').val(),
+
+			    	},
+			    	infos:{
+			    		courriel : $('#inscription_email').val(),
+				    	date_naissance : $('#inscription_dateNaissance').val()
+			    	},
+			    	adress:{
+			    		no_maison  :  $('#adresse_numero').val(), 
+			    		rue  :  $('#adresse_rue').val(),	
+			    		ville  :  $('#adresse_ville').val(), 
+			    		telephone  :  $('#adresse_telephone').val(), 
+			    		code_postal  :  $('#adresse_code_postale').val()
+			    	}
+			    },
+			    dataType: "html",
+			    success: function(result){
+			        console.log(result);
+			        if(result==1){
+			        	general.redirect("/users/profile")
+			        }
+			        else{
+						$('#register-error').show();
+						$('.register-message-error').text("oups i did it again");
+			        }
+			    }        
+			});
+		}
+
+		function user_update(){
+			$.ajax({
+			    type: "GET",
+			    url: "/api/user_update",
+			    data: {
+			    	mot_de_passe : $('#mdp').val(),
+			    	adress:{
+			    		no_maison  :  $('#numero').val(), 
+			    		rue  :  $('#rue').val(),	
+			    		ville  :  $('#ville').val(), 
+			    		telephone  :  $('#telephone').val(), 
+			    		code_postal  :  $('#code_postale').val()
+			    	}
+			    },
+			    dataType: "html",
+			    success: function(result){
+			        console.log(result); 
+			    }        
+			});
+		}
+	    return{
+	      init:init,
+	      oauth:oauth,
+	      register:register,
+	      user_update:user_update,
+	    }
+  })();
+
+  var entrepreneur=(function(){ 
+    function init(){
+
+    }
+
+    function restaurateur_form_values(id, nom, prenom, identificateur, mot_de_passe ) {
 		//Cette fonctio place les valeur de la table vers un formulaire pour modifier un restaurateur
 		//$('#restaurateur_id_edit').val(id);	//id creer par rails
 		$('#restaurateur_nom_edit').val(nom);
@@ -102,7 +224,8 @@ app = (function(){
 	  	//pour modifier l'url de l'action du formulaire
 	  	$('#form_modifierRestaurant').attr('action', '/modifierRestaurant/'+ id);
 	}
-	function livreur_form_values(id, nom, prenom, identificateur, mot_de_passe ) {
+
+    function livreur_form_values(id, nom, prenom, identificateur, mot_de_passe ) {
 
 		$('#livreur_nom_edit').val(nom);
 	  	$('#livreur_prenom_edit').val(prenom);
@@ -113,24 +236,43 @@ app = (function(){
 	  	$('#form_modifierLivreur').attr('action', '/modifierLivreur/'+ id);
 	  	//Il faut mettre le _path d'un restaurateur comme varaible pour ne pas devoir harcoder l'url du controller
 	}
-	//return function
-  return{
-      app_module_log:app_module_log,
-      signin:signin,
-      join:join,
-      app_admin_hide:app_admin_hide,
-      app_nouveau_restaurateur:app_nouveau_restaurateur,
-      app_nouveau_restaurant:app_nouveau_restaurant,
-      app_nouveau_livreur:app_nouveau_livreur,
-      app_gerer_restaurateur:app_gerer_restaurateur,
-      app_gerer_restaurant:app_gerer_restaurant,
-      app_gerer_livreur:app_gerer_livreur,
-      app_menus_hide:app_menus_hide,
-      app_add_menu:app_add_menu,
-      app_menus:app_menus,
-      app_menu_preparation:app_menu_preparation,
+
+
+    return{
+      init:init,
       restaurateur_form_values:restaurateur_form_values,
       restaurant_form_values:restaurant_form_values,
       livreur_form_values:livreur_form_values,
+    }
+  })();
+
+  var restaurateur=(function(){ 
+    function init(){
+
+    }
+
+    return{
+      init:init,
+    }
+  })();
+	//return function
+  return{
+  		general:general,
+  		users:users,
+  		restaurateur:restaurateur,
+	  	entrepreneur:entrepreneur,
+	  	
+		app_module_log:app_module_log,
+		app_admin_hide:app_admin_hide,
+		app_nouveau_restaurateur:app_nouveau_restaurateur,
+		app_nouveau_restaurant:app_nouveau_restaurant,
+		app_nouveau_livreur:app_nouveau_livreur,
+		app_gerer_restaurateur:app_gerer_restaurateur,
+		app_gerer_restaurant:app_gerer_restaurant,
+		app_gerer_livreur:app_gerer_livreur,
+		app_menus_hide:app_menus_hide,
+		app_add_menu:app_add_menu,
+		app_menus:app_menus,
+		app_menu_preparation:app_menu_preparation,
 	}
 })();

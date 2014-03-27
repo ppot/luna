@@ -1,89 +1,135 @@
-<div class="app-index"></div>
-         <div id="overlay">
-        <div class="row">
-        <div class="large-12 columns layout-header">
-          <span class="layout-title">Luna</span>
-          <span class="layout-menu already-member">Deja membre?<a class="hunt-btn-style" href="javascript:app.signin();">se connecter</a></span>
-        </div>
-        <div id="signin">
-            <div class="large-6 columns group">
-               <div class="large-12 columns">
-                <p>Fine bouche?</br> Ferveur gastronome?</br>
-                Degusteur assidue?</p>
-                <p>N'attender plus! Rejoinez-nous et profiter de notre services de livraison supreme!</p>
-              </div>
-              <div class="control-group">
-             <a class="hunt-btn-style" href="javascript:app.join();" >rejoindre</a>
-           </div>
-            </div>
-            <div class="large-6 columns group">
-         <div class="large-12 columns">
-          <h2>Connecter votre account</h2>
-        </div>
-        <div class="large-12 columns">
-          <div class="row">
-            <div class="large-8 columns push-center">
-          <input type="email" id="exampleInputEmail1"  placeholder="entrer votre email"/>
 
-        <input type="password" id="exampleInputPassword1" placeholder="mot de passe"/>
+<% if session[:current_user_id] != nil %>
+<div class="app-background">
+    <span class="app">app</span>
+    <span class="session"><%= @_user.identificateur %>    <a href="/api/signout" class="connect">Deconnection</a></span>
+    <span class="app-main-title">Luna</span>
+    <div>
+      <div class="openid">
+        <select>
+          <option id="2" selected>AUCUN</option>
+          <option id="1">BOB</option>
+          <option id="2">BACON</option>
+          <option id="3">123</option>
+          <option id="4">ti jow</option>
+        </select>
+      </div>
+
+      <div>
+        <div class="plats">
+                <div class="menu">
+        <div>
+          <span>Menu : So Awsome</span>
+        </div>
+      </div>
+             <span>TRIO BURGER <span class="bill-price">15$</span></span><br/>
+            <span>BOISSONS <span class="bill-price">1$</span></span><br/>
+            <span>FRITES <span class="bill-price">2$</span></span><br/><br/>
+        </div>
+        <div class="plats">
+        <div class="menu">
+          <span>Votre commande</span>
+        </div>
+        <!--   <div>
+           <span class="">votre commande</span>
+          </div> -->
+             <span>TRIO BURGER <span class="bill-price">15$</span></span><br/>
+            <span>BOISSONS <span class="bill-price">1$</span></span><br/>
+            <span>FRITES <span class="bill-price">2$</span></span><br/><br/>
+            <span>TOTAL<span class="bill-price">18$</span></span>
+        </div>
       </div>
     </div>
+     <div class="plats todo">
+    <span>Todo</span>
+    <ul>
+      <li>Menu option  => Content add</li>
+      <li>Menu option =>  Content qte value</li>
+      <li>User option  management</li>
+    </ul>
   </div>
-       <div class="large-12 columns">
-        <div class="control-group">
-          <div class="data-element" id="data-create-team-error">
-            <label id="data-error-create-team-label" class="data-label"></label>
-             </div>
-             <a class="hunt-btn-style" href="" >j'entre</a>
-
-                 </div>
-                 </div>
-      </div>
-            </div>
-           <div id="register">
-                        <div class="large-6 columns group">
-             <div class="large-12 columns">
-                <p>Fine bouche?</br> Ferveur gastronome?</br>
-                Degusteur assidue?</p>
-                <p>N'attender plus! Rejoinez-nous et profiter de notre services de livraison supreme!</p>
-                <p>Profiter d'experiences innoubliables</p>
-              </div>
-            </div>
-            <div class="large-6 columns group">
-        <div class="large-12 columns">
+</div>
+<% else %>
+  <div class="app-background">
+    <div class="login-app">
           <div class="row">
-          <div class="large-6 columns">
-                  <input type="text"     id="inscription_nom"      placeholder="nom"/>
-                  <input type="text"     id="inscription_prenom"   placeholder="prenom"/>
-                  <input type="email"    id="inscription_email"    placeholder="adresse courriel"/>
-                  <input type="text"     id="inscription_utilisateur"  placeholder="nom d'utilisateur"/>
-                  <input type="password" id="inscription_motDePass" placeholder="mot de passe"/>
+            <div class="large-12 columns">
+               <div class="row login-management-header">
+                 <span class="layout-management-title">Luna</span>
+              </div>
+              <div class="row">
+                 <span class="layout-management-p">Hello. Please login.</span>
+              </div>
+              <div class="row">
+                <div class="large-10 columns">
+                  <input type="text" id="_aka"  placeholder="identifiant"/>
+
+                  <input type="password" id="_password" placeholder="password"/>
+                  <div id="oauth-error" class="alert-danger">
+                      <p class="message-error"></p>
+                    </div>
+                </div>
+                <div class="large-12 columns">
+                  <div class="push-management-center">
+                  <a class="management-btn-style" href="javascript:app.users.oauth()">sign in</a>
+                   <a class="management-btn-style" href="javascript:app.general.app_register()">Register</a>
+                  </div>
+                </div>
             </div>
+          </div>
+        </div>
+    </div>
+      <div class="register-app">
+          <div class="row">
+            <div class="large-8 columns">
+               <div class="row login-management-header">
+                 <span class="layout-app-title">Luna</span>
+              </div>
+              <div class="row">
+                 <span class="layout-management-p">Hello. Please register.</span>
+              </div>
+              <div class="row">
+                        <div class="large-12 columns">
+            <div class="row">
             <div class="large-6 columns">
-                 <input type="text"     id="dataNaissanc"  placeholder="date de naissance"/>
-                <div class="large-6 columns">
-                  <input type="text"     id="numero"        placeholder="num"/>
+                    <input type="text"     id="inscription_nom"      placeholder="nom"/>
+                    <input type="text"     id="inscription_prenom"   placeholder="prenom"/>
+                    <input type="email"    id="inscription_email"    placeholder="adresse courriel"/>
+                    <input type="text"     id="inscription_identificateur"  placeholder="nom d'utilisateur"/>
+                    <input type="password" id="inscription_motDePass" placeholder="mot de passe"/>
+               
+              </div>
+              <div class="large-6 columns">
+                  <input type="text"     id="inscription_dateNaissance"  placeholder="date de naissance"/>
+                  <div class="large-4 columns">
+                    <input type="text"     id="adresse_numero"        placeholder="num"/>
+                  </div>
+                   <div class="large-8 columns">
+                    <input type="text"     id="adresse_code_postale"  placeholder="code postale"/>
+                  </div>
+                    <input type="text"     id="adresse_rue"           placeholder="rue"/>
+                    <input type="text"     id="adresse_ville"         placeholder="ville"/>
+                    <input type="tel"      id="adresse_telephone"     placeholder="téléphone"/>
+              </div>
+              <div class="large-12 columns">
+                   <div id="register-error" class="alert-danger">
+                      <p class="register-message-error"></p>
+                    </div>
+              </div>
+      </div>
+                <div class="large-12 columns">
+                  <div class="push-app-center">
+                  <a class="management-btn-style" href="javascript:app.users.register()">Save me</a>
+                   <a class="management-btn-style" href="javascript:app.general.app_signin()">sign in</a>
+                  </div>
                 </div>
-                 <div class="large-6 columns">
-                  <input type="text"     id="rue"           placeholder="rue"/>
-                </div>
-                  <input type="text"     id="ville"         placeholder="ville"/>
-                  <input type="tel"      id="telephone"     placeholder="téléphone"/>
-                  <input type="text"     id="code_postale"  placeholder="code postale"/>
             </div>
+          </div>
+        </div>
     </div>
   </div>
-       <div class="large-12 columns">
-        <div class="control-group">
-          <div class="data-element" id="data-create-team-error">
-            <label id="data-error-create-team-label" class="data-label"></label>
-             </div>
-             <a class="hunt-btn-style" href="" >je m'inscrit</a>
+  <script type="text/javascript">
+      app.general.app_open();
+  </script>
+<% end %>
 
-                 </div>
-                 </div>
-      </div>
-           </div>
-        </div>
-
-        </div>
