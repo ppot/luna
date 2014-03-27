@@ -17,6 +17,4 @@
 //= require_tree .
 
 //= require foundation
-
-   app.general.app_open();
  // $(function(){ $(document).foundation(); });

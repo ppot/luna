@@ -7,6 +7,11 @@
 
     <%= stylesheet_link_tag    "application" %>
     <%= javascript_include_tag "vendor/modernizr" %>
+
+    <%= javascript_include_tag "application" %>
+    <%= javascript_include_tag "jquery.min" %>
+    <%= javascript_include_tag "app.main" %>
+    
     <%= csrf_meta_tags %>
 
   </head>
@@ -14,9 +19,6 @@
 
     <%= yield %>
 
-    <%= javascript_include_tag "application" %>
-    <%= javascript_include_tag "jquery.min" %>
-    <%= javascript_include_tag "app.main" %>
 
   </body>
 </html>
