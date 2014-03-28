@@ -7,6 +7,10 @@ module API
 	  	end
   	end
 
+  	def getRestaurateurRestaurant
+  		_restaurant = Restaurant.where("restaurateur_id = ?",session[:current_user_id])
+  	end
+  	
   	def client_adresse
   		_adresse = Adresse.where("adresseable_id =? AND principale = true",session[:current_user_id])
   	end

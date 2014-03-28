@@ -33,7 +33,14 @@ LOG::Application.routes.draw do
   get "api/signin"
   get "api/signout"
   get "api/user_update"
-
+  get "api/listRestaurants"
+  get "api/getRestaurantForRestaurateur"
+  get "api/getRetaurantMenu"
+  get "api/bindMenu"
+  get "api/createPlat"
+  get "api/listPlat"
+  get "api/plat"
+  get "api/modPlat"
 
 
   # The priority is based upon order of creation: first created -> highest priority.

@@ -14,6 +14,9 @@ class ManagementController < ApplicationController
       @_user = current_client
     end
 
+    def restaurateur
+    end
+
     #fonction pour ajouter un restaurateur
   def saisirInformations
         restaurateur = Restaurateur.new(utilisateur_params)

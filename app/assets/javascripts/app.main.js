@@ -91,6 +91,19 @@ app = (function(){
 			$('.login-app').hide();
 			$('.register-app').show();
 		}
+		function app_restaurants(){
+			$.ajax({
+			    type: "GET",
+			    url: "/api/listRestaurants",
+			    dataType: "html",
+			    success: function(result){
+			    	$.each($.parseJSON(result), function(idx, obj) {
+			    		$('.lstRestaurants').append('<option id="'+obj.id+'">'+obj.nom+'</option>');
+						console.log(obj);
+					});
+			    }        
+			});
+		}
 
     return{
       init:init,
@@ -98,6 +111,7 @@ app = (function(){
       app_open:app_open,
       app_signin:app_signin,
       app_register:app_register,
+      app_restaurants:app_restaurants
     }
   })();
 
@@ -120,6 +134,15 @@ app = (function(){
 			        console.log(result);
 			        if(result == 1){
 			        	general.redirect("/users/profile")
+			        }
+			        else if(result == 2){
+			        	general.redirect("/management/restaurateur")
+			        }
+			        else if(result == 3){
+			        	general.redirect("/management/livraison")
+			        }
+			        else if(result == 4){
+			        	general.redirect("/management/entrepreneur")
 			        }
 			        else{
 			        	$("#oauth-error").show();
@@ -248,14 +271,199 @@ app = (function(){
 
   var restaurateur=(function(){ 
     function init(){
-
+  		$('#menu-form').hide();
     }
+
+    function getRestaurant(){
+          $.ajax({
+              type: "GET",
+              url: "/api/getRestaurantForRestaurateur",
+              dataType: "html",
+              success: function(result){
+              	 restaurant = $.parseJSON(result)
+                if(restaurant != null){
+                  $('#resto').text(" " + restaurant.nom);
+              	}
+              	else{
+                  	$('#resto').text(" Aucun restaurant");
+              	}
+              }        
+          });
+    }
+
+    function getMenu(){
+          $.ajax({
+              type: "GET",
+              url: "/api/getRetaurantMenu",
+              dataType: "html",
+              success: function(result){
+              	menu = $.parseJSON(result)
+              	console.log(menu)
+                if(menu != null){
+                  $('#menu').text(" " + menu.nom);
+                  $('#newMenu').hide();
+                  $('#menu-form').hide();
+                  $('#id-newPlat').show();
+                  $('#plats-form').show();
+                  $('#nouveau-plat').hide();
+                  $('#informations-plat').hide();
+                  $('#modifier-plat').hide();
+              	}
+              	else{
+                  	$('#menu').text(" Aucun menu");
+                  	$('#plats-form').hide();
+                  	$('#id-newPlat').hide();
+              	}
+              }        
+          });
+    }
+
+    function bindMenu(){
+	 $.ajax({
+          type: "GET",
+          url: "/api/bindMenu",
+          data:{
+          	nom: $('#resto_menu').val(),
+          },
+          dataType: "html",
+          success: function(result){
+          	menu = $.parseJSON(result);
+          	console.log(menu);
+          	getMenu();
+          }        
+      });
+    }
+
+    function newMenu(){
+    	$('#menu-form').show();
+    }
+
+    function newPlat(){
+    	 $('#nouveau-plat').show();
+    }
+
+    function modPlat(id){
+    	$('#modifier-plat').show();
+    	$.ajax({
+			type: "GET",
+			url: "/api/plat",
+			data:{
+				id: id,
+			},
+			dataType: "html",
+			success: function(result){
+				plat = $.parseJSON(result);
+				$("#plat_mod-nom").val(plat.nom);
+				$("#plat_mod-description").val(plat.description);
+				$("#plat_mod-prix").val(plat.prix);
+				$("#plat_mod-action").attr("href","javascript:app.restaurateur.modifierPlat("+plat.id+")");
+			}        
+      	});
+    }
+
+    function informationPlat(id){
+    	$('#informations-plat').show();
+    	$('#modifier-plat').hide();
+    	$.ajax({
+			type: "GET",
+			url: "/api/plat",
+			data:{
+				id: id,
+			},
+			dataType: "html",
+			success: function(result){
+				plat = $.parseJSON(result);
+				$("#info-nom-plat").text(plat.nom);
+				$("#info-prix-plat").text(plat.prix+"$");
+				$("#info-description-plat").text(plat.description);
+			}        
+      	});
+    }
+
+    function createPlat(){
+   		$.ajax({
+          type: "GET",
+          url: "/api/createPlat",
+          data:{
+          	nom: $('#plat_nom').val(),
+          	prix: $('#plat_prix').val(),
+          	description: $('#plat_description').val(),
+          },
+          dataType: "html",
+          success: function(result){
+          	plat = $.parseJSON(result);
+          	console.log(plat);
+          	if(plat != 0){
+          		$("#ul-plats").append('<li id="'+plat.id+'"><a href="javascript:app.restaurateur.informationPlat('+obj.id+')">'+plat.nom+'</a><span class="spacing">'+plat.prix+'$<a class="admin-btn-style" href="javascript:app.restaurateur.modPlat('+obj.id+')">modifier</a></span> </li>');
+          		$('#nouveau-plat').hide();
+          		$('#plat_nom').val("");
+          		$('#plat_prix').val("");
+          		$('#plat_description').val("");
+          	}
+          }        
+     	});
+    }
+    function modifierPlat(id){
+   		$.ajax({
+          type: "GET",
+          url: "/api/modPlat",
+          data:{
+          	id:id,
+          	nom: $("#plat_mod-nom").val(),
+          	prix: $("#plat_mod-prix").val(),
+          	description: $("#plat_mod-description").val(),
+          },
+          dataType: "html",
+          success: function(result){
+          	plat = $.parseJSON(result);
+          	console.log(plat);
+          	if(plat != 0){
+          		$("#"+plat.id).html('<a href="javascript:app.restaurateur.informationPlat('+obj.id+')">'+plat.nom+'</a><span class="spacing right">'+plat.prix+'$<a class="admin-btn-style" href="javascript:app.restaurateur.modPlat('+obj.id+')">modifier</a></span>');
+          		$("#info-nom-plat").text("");
+				$("#info-prix-plat").text("");
+				$("#info-description-plat").text("");
+				$("#plat_mod-action").attr("href","#");
+				$('#informations-plat').hide();
+                $('#modifier-plat').hide();
+          	}
+          }        
+     	});
+    }
+
+    function getPlats(){
+    	$.ajax({
+          type: "GET",
+          url: "/api/listPlat",
+          data:{
+          	nom: $('#resto_menu').val(),
+          },
+          dataType: "html",
+          success: function(result){
+			$.each($.parseJSON(result), function(idx, obj) {
+				$("#ul-plats").append('<li id="'+obj.id+'"><a href="javascript:app.restaurateur.informationPlat('+obj.id+')">'+obj.nom+'</a><span class="spacing right">'+obj.prix+'$<a class="admin-btn-style" href="javascript:app.restaurateur.modPlat('+obj.id+')">modifier</a></span> </li>');
+			});
+
+          }        
+      	});
+    }
+
 
     return{
       init:init,
+      getRestaurant:getRestaurant,
+      newMenu:newMenu,
+      getMenu:getMenu,
+      getPlats:getPlats,
+      bindMenu:bindMenu,
+      newPlat:newPlat,
+      modPlat:modPlat,
+      informationPlat:informationPlat,
+      createPlat:createPlat,
+      modifierPlat:modifierPlat,
     }
   })();
-	//return function
+
+  //return function
   return{
   		general:general,
   		users:users,

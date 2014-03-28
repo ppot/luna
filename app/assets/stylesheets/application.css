@@ -488,6 +488,11 @@ h2 {
   width: 90%;
 }
 
+.resto-menu{
+    float: left;
+    font-size: 20px;
+}
+
 .add{
   float: left;
   margin-left: 10%;
@@ -496,4 +501,9 @@ h2 {
 .mod{
     float: left;
     margin-left: 25%;
+}
+
+.spacing{
+  margin-left: 5px;
+  margin-right: 5px;
 }
