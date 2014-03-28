@@ -1,4 +1,5 @@
 class ManagementController < ApplicationController
+  skip_before_filter :verify_authenticity_token
   layout 'application'
   include API
 
@@ -23,25 +24,40 @@ class ManagementController < ApplicationController
         restaurateur = Restaurateur.new(utilisateur_params)
         #Utilisattion des fonctions prédéfinis de rails
         #Pas de nécessité de créer Restaurateur.setInfo comme dans le RDCU1 
+      respond_to do |format|
         if restaurateur.save
           if params[:restaurant] != "-1"  #un restaurant a ete selectionne
             restaurant = Restaurant.find(params[:restaurant])
             restaurant.update(restaurateur_id: restaurateur.id)
-          end
-            redirect_to  :action => "entrepreneur", notice: "add was successfully"
+            
+            format.html
+            format.js   { render :nothing => true }
+            format.json { render :json => { :response => "1", :restaurateur => restaurateur, :restaurant_nom => restaurant.nom, :restaurant_adresse => restaurant.adresse } }
+          else
+            format.json { render :json => { :response => "2", :restaurateur => restaurateur} } #restaurateur créé sans restaurant
+          end         
         else
-            redirect_to  :action => "entrepreneur", alert: "add was not successfully"
+            format.json { render :json => { :response => "0", :errors => restaurateur.errors } }
         end 
+      end
+        
   end
 
     def supprimerRestaurateur
 
-        res = Restaurateur.find(params[:id]).destroy
-        redirect_to :action => "entrepreneur"
+        res = Restaurateur.find(params[:id])
+        respond_to do |format|
+          if res.destroy
+            format.json { render :json => { :response => "1"} }
+          else
+            format.json { render :json => { :response => "0"} }
+          end
+        end
     end
 
   def modifierRestaurateur
-        restaurateur = Restaurateur.find(params[:id])
+      restaurateur = Restaurateur.find(params[:id])
+      respond_to do |format|
         if restaurateur.update_attributes(utilisateur_params)
 
           #modification des parametres du restaurateur
@@ -50,12 +66,18 @@ class ManagementController < ApplicationController
               restaurateur.restaurant.update(restaurateur_id: nil) unless restaurateur.restaurant.nil?
               restaurant_modification.update(restaurateur_id: restaurateur.id)
 
-              redirect_to :action => "entrepreneur", notice: "modification was successfully"
+            format.html
+            format.js   { render :nothing => true }
+            format.json { render :json => { :response => "1", :restaurateur => restaurateur, :restaurant_nom => restaurant_modification.nom, :restaurant_adresse => restaurant_modification.adresse } }
           else
-              redirect_to :action => "entrepreneur", alert: "modification of restaurant was not successfull"
-          end
+            format.json { render :json => { :response => "2", :restaurateur => restaurateur, :restaurant_nom => restaurateur.restaurant.nom, :restaurant_adresse => restaurateur.restaurant.adresse} }
+          end         
+        
+        else
+            format.json { render :json => { :response => "0", :errors => restaurateur.errors } }
 
         end 
+      end
   end
 
   #fonction pour ajouter un restaurateur
@@ -126,7 +148,7 @@ class ManagementController < ApplicationController
         end
   end
 
-  #-----------------------------Section du livrerur---------------------------
+  #-----------------------------Section du livreur---------------------------
   def livraison  
     @commandes = Commande.where(status_pret: true, livreur_id: nil).order(heure_de_commande: :asc)   #on récupère toutes les commandes prêtes qui n'ont pas été livrés
     @_user = current_client

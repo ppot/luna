@@ -482,21 +482,136 @@ app = (function(){
 	    }
   })();
 
-  var entrepreneur=(function(){ 
+var entrepreneur=(function(){ 
     function init(){
 
     }
 
-    function restaurateur_form_values(id, nom, prenom, identificateur, mot_de_passe ) {
+    function restaurateur_new() {
+    	$.ajax({
+			    type: "POST",
+			    url: "/management/saisirInformations",
+			    data: {
+			    	utilisateur: {
+			    		nom : $('#ajouterRestaurateur_nom').val(),
+			    		prenom : $('#ajouterRestaurateur_prenom').val(),
+			    		identificateur : $('#ajouterRestaurateur_identificateur').val(),
+			    		mot_de_passe : $('#ajouterRestaurateur_mot_de_passe').val(),	
+			    	},
+			    	restaurant: $('#ajouterRestaurateur_restaurant').val()	
+			    },
+			    dataType: "json",
+			    success: function(response){
+			    	$('#add-restaurateur label').html('');
+			    	$('#restaurateur_succes').removeClass('alert-box success group');
+			        if (response.response == '1') {
+			        	adresse_client = '<address><strong>' + response.restaurant_nom + '</strong><br>' + response.restaurant_adresse.no_maison + ' ' + response.restaurant_adresse.rue + ' <br>' + response.restaurant_adresse.ville + ' , ' + response.restaurant_adresse.code_postal + ' <br><abbr title="Phone">P:</abbr>' + response.restaurant_adresse.telephone + ' </address>';
+			        	$('#restaurateur_succes').html('Restaurateur ajouté avec succès');
+			        	$('#restaurateurs_table').append('<tr><td>'+ response.restaurateur.identificateur + '</td><td>'+ response.restaurateur.mot_de_passe + '</td><td>' + response.restaurateur.nom + '</td><td>' + response.restaurateur.prenom + '</td><td>' + adresse_client + '</td></tr>');
+			        	$('#restaurateur_succes').addClass('alert-box success group');
+			        } else if (response.response == '2') {
+			        	$('#ajouterRestaurateur_restaurant_label').html("Création d'un restaurateur SANS restaurant");
+			        	$('#restaurateurs_table').append('<tr><td>'+ response.restaurateur.identificateur + '</td><td>'+ response.restaurateur.mot_de_passe + '</td><td>' + response.restaurateur.nom + '</td><td>' + response.restaurateur.prenom + '</td><td>restaurant requis</td></tr>');
+			        } else {	//rep 0
+			        	
+			        	for (key in response.errors) {
+						    $('#ajouterRestaurateur_'+ key +'_label').html(response.errors[key][0]);	//on place les erreurs de valiadtion dans les labels
+						}
+			        }
+			    },
+			    error: function(XMLHttpRequest, textStatus, errorThrown) { 
+        			console.log("Status: " + textStatus + "Error: " + errorThrown);
+    			}          
+			});
+    }
+
+    function restaurateur_delete(restaurateur_id) {
+    	$.ajax({
+			    type: "GET",
+			    url: "/management/supprimerRestaurateur?id=" + restaurateur_id,
+			    dataType: "json",
+			    success: function(response){
+			        if (response.response == '1') {
+			        	$('#gerer_restaurateur' + restaurateur_id).remove();
+			        } else {	//rep 0	
+			        	console.log("Le restaurateur n'a pas été suprimmé");
+			        }
+			    },
+			    error: function(XMLHttpRequest, textStatus, errorThrown) { 
+        			console.log("Status: " + textStatus + "Error: " + errorThrown);
+    			}          
+			});
+    }
+
+    function restaurateur_delete(restaurateur_id) {
+	$.ajax({
+		    type: "GET",
+		    url: "/management/supprimerRestaurateur?id=" + restaurateur_id,
+		    dataType: "json",
+		    success: function(response){
+		        if (response.response == '1') {
+		        	$('#gerer_restaurateur' + restaurateur_id).remove();
+		        } else {	//rep 0	
+		        	console.log("Le restaurateur n'a pas été suprimmé");
+		        }
+		    },
+		    error: function(XMLHttpRequest, textStatus, errorThrown) { 
+    			console.log("Status: " + textStatus + "Error: " + errorThrown);
+			}          
+		});
+    }
+
+    function restaurateur_update() {
+    	restaurateur_id = $('#restaurateur_id_edit').val();
+    	$.ajax({
+		    type: "GET",
+		    url: "/modifierRestaurateur/"+ restaurateur_id,
+		    dataType: "json",
+		    data: {
+			    	utilisateur: {
+			    		nom : $('#restaurateur_nom_edit').val(),
+			    		prenom : $('#restaurateur_prenom_edit').val(),
+			    		identificateur : $('#restaurateur_identificateur_edit').val(),
+			    		mot_de_passe : $('#restaurateur_mot_de_passe_edit').val(),	
+			    	},
+			    	restaurant: $('#restaurateur_restaurant_edit').val()	
+			    },
+		    success: function(response){
+		        $('#mofifierRestaurateur_form label').html('');
+			    	$('#restaurateur_edit_succes').removeClass('alert-box success group');
+			        if (response.response == '1') {
+			        	adresse_restaurant = '<address><strong>' + response.restaurant_nom + '</strong><br>' + response.restaurant_adresse.no_maison + ' ' + response.restaurant_adresse.rue + ' <br>' + response.restaurant_adresse.ville + ' , ' + response.restaurant_adresse.code_postal + ' <br><abbr title="Phone">P:</abbr>' + response.restaurant_adresse.telephone + ' </address>';
+			        	$('#restaurateur_edit_succes').html('Restaurateur ajouté avec succès');
+			        	$('#gerer_restaurateur'+ response.restaurateur.id).html('<td>'+ response.restaurateur.identificateur + '</td><td>'+ response.restaurateur.mot_de_passe + '</td><td>' + response.restaurateur.nom + '</td><td>' + response.restaurateur.prenom + '</td><td>' + adresse_restaurant + '</td>');
+			        	//$('#restaurateur_edit_succes').addClass('alert-box success group');
+			        } else if (response.response == '2') {
+			        	adresse_restaurant = '<address><strong>' + response.restaurant_nom + '</strong><br>' + response.restaurant_adresse.no_maison + ' ' + response.restaurant_adresse.rue + ' <br>' + response.restaurant_adresse.ville + ' , ' + response.restaurant_adresse.code_postal + ' <br><abbr title="Phone">P:</abbr>' + response.restaurant_adresse.telephone + ' </address>';
+			        	links = $('#gerer_restaurateur'+response.restaurateur.id + ' td').first().html();	
+			        	$('#gerer_restaurateur'+response.restaurateur.id).html('<td>' + links + '</td><td>'+ response.restaurateur.identificateur + '</td><td>'+ response.restaurateur.mot_de_passe + '</td><td>' + response.restaurateur.nom + '</td><td>' + response.restaurateur.prenom + '</td><td>'+adresse_restaurant+'</td>');
+			        } else {	//rep 0
+			        	
+			        	for (key in response.errors) {
+						    $('#restaurateur_'+ key +'_edit_label').html(response.errors[key][0]);	//on place les erreurs de valiadtion dans les labels
+						}
+			        }
+			    },
+			    error: function(XMLHttpRequest, textStatus, errorThrown) { 
+        			console.log("Status: " + textStatus + "Error: " + errorThrown);
+    			}             
+		});
+    }
+	
+
+    function restaurateur_form_values(id, restaurant_nom, nom, prenom, identificateur, mot_de_passe ) {
 		//Cette fonctio place les valeur de la table vers un formulaire pour modifier un restaurateur
-		//$('#restaurateur_id_edit').val(id);	//id creer par rails
 		$('#restaurateur_nom_edit').val(nom);
 	  	$('#restaurateur_prenom_edit').val(prenom);
 	  	$('#restaurateur_identificateur_edit').val(identificateur);
-	  	$('#restaurateur_mdp_edit').val(mot_de_passe);
+	  	$('#restaurateur_mot_de_passe_edit').val(mot_de_passe);
 
 	  	//pour modifier l'url de l'action du formulaire
-	  	$('#form_modifierRestaurateur').attr('action', '/modifierRestaurateur/'+ id);
+	  	$('#restaurateur_id_edit').val(id);
+	  	$('#restaurateur_restaurant_edit option:first').text(restaurant_nom);
 	  	//Il faut mettre le _path d'un restaurateur comme varaible pour ne pas devoir harcoder l'url du controller
 	}
 
@@ -524,12 +639,14 @@ app = (function(){
 	  	//Il faut mettre le _path d'un restaurateur comme varaible pour ne pas devoir harcoder l'url du controller
 	}
 
-
     return{
       init:init,
       restaurateur_form_values:restaurateur_form_values,
       restaurant_form_values:restaurant_form_values,
       livreur_form_values:livreur_form_values,
+      restaurateur_new:restaurateur_new,
+      restaurateur_delete:restaurateur_delete,
+      restaurateur_update:restaurateur_update,
     }
   })();
 
