@@ -75,7 +75,6 @@ class ManagementController < ApplicationController
         
         else
             format.json { render :json => { :response => "0", :errors => restaurateur.errors } }
-
         end 
       end
   end
@@ -109,43 +108,59 @@ class ManagementController < ApplicationController
   #---------------------Section pour le restaurant-----------------------
   #fonction pour ajouter un restaurant
   def saisirInformationsRestaurant
-       @nouveau_restaurant = Restaurant.new(restaurant_params)
-       @restaurant_adresse = @nouveau_restaurant.build_adresse(adresse_params)    #va creer une adresse avec la cle etrangere de restaurant
-       @restaurant_adresse.principale = true
+       nouveau_restaurant = Restaurant.new(restaurant_params)
+       restaurant_adresse = nouveau_restaurant.build_adresse(adresse_params)    #va creer une adresse avec la cle etrangere de restaurant
+       restaurant_adresse.principale = true
 
         #Utilisattion des fonctions prédéfinis de rails
         #Pas de nécessité de créer Restaurateur.setInfo comme dans le RDCU1
-
-        if @nouveau_restaurant.save
-            @restaurant_adresse.save
-            @nouveau_restaurant.update(:restaurateur_id => params[:restaurateur]) unless params[:restaurateur] == "-1"
-            redirect_to :action => "entrepreneur", notice: "add was successfully"
+      respond_to do |format|
+        if nouveau_restaurant.save
+            restaurant_adresse.save
+          if params[:restaurateur] != "-1"
+            nouveau_restaurant.update(:restaurateur_id => params[:restaurateur])
+            format.json { render :json => { :response => "1", :restaurant => nouveau_restaurant.nom, :restaurant_adresse => restaurant_adresse, :restaurateur => nouveau_restaurant.restaurateur.nom } }
+          else
+            format.json { render :json => { :response => "2", :restaurant => nouveau_restaurant.nom, :adresse => restaurant_adresse } }
+          end           
         else
-            redirect_to :action => "entrepreneur", alert: "add was not successfully"
+          format.json { render :json => { :response => "0", :errors => {:nom => nouveau_restaurant.errors[:nom], :adresse => nouveau_restaurant.adresse.errors } } }
         end
+      end
   end
 
   def supprimerRestaurant
-      restaurant = Restaurant.find(params[:id]).destroy
-      redirect_to :action => "entrepreneur"
+      restaurant = Restaurant.find(params[:id])
+      respond_to do |format|
+        if restaurant.destroy
+          format.json { render :json => { :response => "1"} }
+        else
+          format.json { render :json => { :response => "0"} }
+        end
+    end
   end
 
   def modifierRestaurant
       restaurant = Restaurant.find(params[:id])
-
-        if restaurant.update_attributes(restaurant_params)
-           restaurant_adresse = restaurant.adresse.update_attributes(adresse_params)
-          if params[:restaurateur] != "-1"
+      restaurant_adresse = restaurant.adresse.dup
+      respond_to do |format|
+          is_restaurant_update = restaurant.update_attributes(restaurant_params) 
+          is_adresse_update = restaurant_adresse.update_attributes(adresse_params)
+          if is_restaurant_update && is_adresse_update
+             
+            if params[:restaurateur] != "-1"
               restaurateur_modification = Restaurateur.find(params[:restaurateur])
               restaurateur_modification.restaurant.update(restaurateur_id: nil) unless restaurateur_modification.restaurant.nil?
               restaurant.update(restaurateur_id: params[:restaurateur])
- 
-              redirect_to :action => "entrepreneur", notice: "modification was successfully"
+              nom_complet = '#{restaurateur_modification.prenom}' +' '+ '#{restaurateur_modification.nom}'
+              format.json { render :json => { :response => "1", :restaurant => restaurant.nom, :adresse => restaurant_adresse, :restaurateur => nom_complet } }
           else
-              redirect_to :action => "entrepreneur", alert: "modification of restaurant was not successfull"
+              format.json { render :json => { :response => "2", :restaurant => restaurant, :adresse => restaurant_adresse } }
           end
-
+        else
+          format.json { render :json => { :response => "0", :errors => {:nom => restaurant.errors[:nom], :adresse => restaurant_adresse.errors } } }
         end
+      end
   end
 
   #-----------------------------Section du livreur---------------------------

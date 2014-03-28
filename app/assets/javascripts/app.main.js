@@ -600,6 +600,119 @@ var entrepreneur=(function(){
     			}             
 		});
     }
+
+    function restaurant_new() {
+    	$.ajax({
+			    type: "POST",
+			    url: "/management/saisirInformationsRestaurant",
+			    data: {
+			    	restaurant: {
+			    		nom : $('#restaurant_nom').val(),	
+			    	},
+			    	adresse: {
+			    		no_maison : $('#adresse_no_maison').val(),
+			    		rue : $('#adresse_rue').val(),
+			    		ville : $('#adresse_ville').val(),
+			    		telephone : $('#adresse_telephone').val(),
+			    		code_postal : $('#adresse_code_postal').val(),
+			    	},
+			    	restaurateur: $('#ajouterRestaurateur_restaurant').val()	
+			    },
+			    dataType: "json",
+			    success: function(response){
+			    	$('#add-restaurant label').html('');
+			    	$('#restaurant_succes').removeClass('alert-box success group');
+			        if (response.response == '1') {
+			        	adresse_client = '<address><strong>' + response.restaurant_nom + '</strong><br>' + response.restaurant_adresse.no_maison + ' ' + response.restaurant_adresse.rue + ' <br>' + response.restaurant_adresse.ville + ' , ' + response.restaurant_adresse.code_postal + ' <br><abbr title="Phone">P:</abbr>' + response.restaurant_adresse.telephone + ' </address>';
+			        	$('#restaurant_succes').html('Restaurateur ajouté avec succès');
+			        	$('#restaurants_table').append('<tr><td>'+ response.restaurateur.identificateur + '</td><td>'+ response.restaurateur.mot_de_passe + '</td><td>' + response.restaurateur.nom + '</td><td>' + response.restaurateur.prenom + '</td><td>' + adresse_client + '</td></tr>');
+			        	$('#restaurant_succes').addClass('alert-box success group');
+			        } else if (response.response == '2') {
+			        	$('#restaurant_succes').html("Création d'un restaurant SANS restaurateur");
+			        	$('#restaurants_table').append('<tr><td>restaurateur requis</td><td>'+ response.restaurant + '</td><td>'+ response.adresse.telephone + '</td><td>' + response.adresse.no_maison + '</td><td>' + response.adresse.rue + '</td><td>'+ response.adresse.ville + '</td><td>'+ response.adresse.code_postal + '</td></tr>');
+			        } else {	//rep 0
+			        	if(response.errors.nom.length > 0) {
+			        		$('#restaurant_nom_label').html(response.errors.nom[0]);	//on place les erreurs de valiadtion dans les labels
+			        	}
+			        	for (key in response.errors.adresse) {
+						    console.log(key);
+						    $('#adresse_'+ key +'_label').html(response.errors.adresse[key][0]);	//on place les erreurs de valiadtion dans les labels
+						}
+			        }
+			    },
+			    error: function(XMLHttpRequest, textStatus, errorThrown) { 
+        			console.log("Status: " + textStatus + "Error: " + errorThrown);
+    			}          
+			});
+    }
+
+    function restaurant_delete(restaurant_id) {
+		$.ajax({
+			    type: "GET",
+			    url: "/management/supprimerRestaurant?id=" + restaurant_id,
+			    dataType: "json",
+			    success: function(response){
+			        if (response.response == '1') {
+			        	$('#gerer_restaurant' + restaurant_id).remove();
+			        } else {	//rep 0	
+			        	console.log("Le restaurateur n'a pas été suprimmé");
+			        }
+			    },
+			    error: function(XMLHttpRequest, textStatus, errorThrown) { 
+	    			console.log("Status: " + textStatus + "Error: " + errorThrown);
+				}          
+		});
+    }
+
+    function restaurant_update() {
+    	restaurant_id = $('#restaurant_id_edit').val();
+    	$.ajax({
+		    type: "GET",
+		    url: "/modifierRestaurant/"+ restaurant_id,
+		    dataType: "json",
+		    data: {
+			    	restaurant: {
+			    		nom : $('#restaurant_nom_edit').val(),	
+			    	},
+			    	adresse: {
+			    		no_maison : $('#restaurant_no_maison_edit').val(),
+			    		rue : $('#restaurant_rue_edit').val(),
+			    		ville : $('#restaurant_ville_edit').val(),
+			    		telephone : $('#restaurant_telephone_edit').val(),
+			    		code_postal : $('#restaurant_code_postal_edit').val(),
+			    	},
+			    	restaurateur: $('#form_modifierRestaurant_restaurateur').val()	
+			    },
+		    success: function(response){
+		        $('#form_modifierRestaurant label').html('');
+			    	$('#restaurant_edit_succes').removeClass('alert-box success group');
+			        if (response.response == '1') {
+			        	adresse_restaurant = '<address><strong>' + response.restaurant.nom + '</strong><br>' + response.adresse.no_maison + ' ' + response.adresse.rue + ' <br>' + response.adresse.ville + ' , ' + response.adresse.code_postal + ' <br><abbr title="Phone">P:</abbr>' + response.adresse.telephone + ' </address>';
+			        	links = $('#gerer_restaurant'+response.restaurant.id + ' td').first().html();			 
+			        	$('#gerer_restaurant'+response.restaurant.id).html('<td>' + links + '</td><td>'+ response.restaurateur + '</td><td>'+adresse_restaurant+'</td>');
+			        	$('#restaurant_edit_succes').html('Restaurateur modifié avec succès');
+			        	$('#restaurant_edit_succes').addClass('alert-box success group');
+			        } else if (response.response == '2') {
+			        	adresse_restaurant = '<address><strong>' + response.restaurant.nom + '</strong><br>' + response.adresse.no_maison + ' ' + response.adresse.rue + ' <br>' + response.adresse.ville + ' , ' + response.adresse.code_postal + ' <br><abbr title="Phone">P:</abbr>' + response.adresse.telephone + ' </address>';
+			        	links = $('#gerer_restaurant'+response.restaurant.id + ' td').first().html();
+			        	restaurateur = ($('#form_modifierRestaurant_restaurateur').val() == '-1') ? 'restaurateur requis' : $('#form_modifierRestaurant_restaurateur').val();	
+			        	$('#gerer_restaurant'+response.restaurant.id).html('<td>' + links + '</td><td>'+ response.restaurateur + '</td><td>'+adresse_restaurant+'</td>');
+			        	$('#restaurant_edit_succes').html('Restaurateur modifié avec succès');
+			        	$('#restaurant_edit_succes').addClass('alert-box success group');
+			        } else {	//rep 0
+			        	if(response.errors.nom.length > 0) {
+			        		$('#restaurant_nom_edit_label').html(response.errors.nom[0]);	//on place les erreurs de valiadtion dans les labels
+			        	}
+			        	for (key in response.errors.adresse) {
+						    $('#restaurant_'+ key +'_edit_label').html(response.errors.adresse[key][0]);	//on place les erreurs de valiadtion dans les labels
+						}
+			        }
+			    },
+			    error: function(XMLHttpRequest, textStatus, errorThrown) { 
+        			console.log("Status: " + textStatus + "Error: " + errorThrown);
+    			}             
+		});
+    }
 	
 
     function restaurateur_form_values(id, restaurant_nom, nom, prenom, identificateur, mot_de_passe ) {
@@ -615,7 +728,7 @@ var entrepreneur=(function(){
 	  	//Il faut mettre le _path d'un restaurateur comme varaible pour ne pas devoir harcoder l'url du controller
 	}
 
-	function restaurant_form_values(id, nom, no_maison, rue, ville, code_postal, telephone) {
+	function restaurant_form_values(id, restaurateur_nom, nom, no_maison, rue, ville, code_postal, telephone) {
 		$('#restaurant_nom_edit').val(nom);
 	  	$('#restaurant_no_maison_edit').val(no_maison);
 	  	$('#restaurant_rue_edit').val(rue);
@@ -624,7 +737,8 @@ var entrepreneur=(function(){
 	  	$('#restaurant_telephone_edit').val(telephone);
 
 	  	//pour modifier l'url de l'action du formulaire
-	  	$('#form_modifierRestaurant').attr('action', '/modifierRestaurant/'+ id);
+	  	$('#restaurant_id_edit').val(id);
+	  	$('#form_modifierRestaurant_restaurateur option:first').text(restaurateur_nom);
 	}
 
     function livreur_form_values(id, nom, prenom, identificateur, mot_de_passe ) {
@@ -647,6 +761,9 @@ var entrepreneur=(function(){
       restaurateur_new:restaurateur_new,
       restaurateur_delete:restaurateur_delete,
       restaurateur_update:restaurateur_update,
+      restaurant_new:restaurant_new,
+      restaurant_delete:restaurant_delete,
+      restaurant_update:restaurant_update,
     }
   })();
 

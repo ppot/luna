@@ -96,27 +96,32 @@
                 <span class="add-title">Ajout d'un restaurant</span>
                 <div class="row">
    <!-- *************************ajouter restaurant ************************************************-->
-                  <% #construction du tableau qui sera passé pour le select du formulaire%> 
-                      
+                  <% #construction du tableau qui sera passé pour le select du formulaire%>              
                   <% form_select_array = @restaurateurs_sans_restaurants.map {|i| ["#{i.nom} #{i.prenom}",i.id] } %>
                   <% form_select_array.insert(0, [" ","-1"]) #on place un élément vide dans le select%>
-                  <%= form_for @nouveau_restaurant, url: {action: "saisirInformationsRestaurant"}, html:{class: "large-10 columns"}  do |r| %>
-                    <%= r.text_field :nom, :placeholder => "nom", :class => "large-10 columns" %>
-                    <%= fields_for :adresse, @nouveau_restaurant.adresse do |r_adresse| %>
-                        <%= r_adresse.text_field :no_maison, :placeholder => "numéro", :class => "large-10 columns" %>
-                        <%= r_adresse.text_field :rue, :placeholder => "rue", :class => "large-10 columns" %>
-                        <%= r_adresse.text_field :ville, :placeholder => "ville", :class => "large-10 columns" %>
-                        <%= r_adresse.text_field :telephone, :placeholder => "téléphone", :class => "large-10 columns" %>
-                        <%= r_adresse.text_field :code_postal, :placeholder => "code postal", :class => "large-10 columns" %>
-                    <% end %>                  
-                    <%= select_tag(:restaurateur, options_for_select(form_select_array, 10)) %>
-                    <%= r.submit "Ajouter restaurant", :class => "admin-btn-style" %>   
-                <% end %>
+                <form accept-charset="UTF-8" action="javascript:app.entrepreneur.restaurant_new(); void(0);" class="large-10 columns" id="new_restaurant">
+                        <input class="large-10 columns" id="restaurant_nom" name="restaurant[nom]" placeholder="nom" type="text" />
+                        <label class="error"   class="large-8 columns" id="restaurant_nom_label"></label>
+                        <input class="large-10 columns" id="adresse_no_maison" name="adresse[no_maison]" placeholder="numéro" type="text" />
+                        <label class="error"   class="large-8 columns" id="adresse_no_maison_label"></label>
+                        <input class="large-10 columns" id="adresse_rue" name="adresse[rue]" placeholder="rue" type="text" />
+                        <label class="error"   class="large-8 columns" id="adresse_rue_label"></label>
+                        <input class="large-10 columns" id="adresse_ville" name="adresse[ville]" placeholder="ville" type="text" />
+                        <label class="error"   class="large-8 columns" id="adresse_ville_label"></label>
+                        <input class="large-10 columns" id="adresse_telephone" name="adresse[telephone]" placeholder="téléphone" type="text" />
+                        <label class="error"   class="large-8 columns" id="adresse_telephone_label"></label>
+                        <input class="large-10 columns" id="adresse_code_postal" name="adresse[code_postal]" placeholder="code postal" type="text" />
+                        <label class="error"   class="large-8 columns" id="adresse_code_postal_label"></label>
+                    <%= select_tag(:restaurateur, options_for_select(form_select_array, 0), :id =>"restaurateur") %>
+                    <label class="error"   class="large-8 columns" id="restaurateur_label"></label>
+                    <input class="admin-btn-style" type="submit" value="Ajouter restaurant" />
+                    <label class="error"   class="large-8 columns" id="restaurant_succes"></label>
+              </form>              
               </div>
             </div>
     <!-- *************************Table qui montre les ajouts de restaurants*************************************-->
              <div class="large-8 columns group dashboard-table">
-              <table>
+              <table id="restaurants_table">
                 <tr class="table-title">
                   <th>Restaurateur</th>
                   <th>Nom</th>
@@ -252,9 +257,11 @@
                   <th>Adresse</th>
                 </tr>
                 <% @restaurants_restaurateurs.each do |r| %>
-                <tr>
-                   <td><div><%= link_to "Supprimer", {controller: "management" ,action: "supprimerRestaurant", id: r.id}, class: "hunt-btn-style" %></div><br/>
-                            <div><%= link_to "Modifier", "javascript:;", onclick: "app.entrepreneur.restaurant_form_values(#{r.id}, \'#{r.nom}\', \'#{r.adresse.no_maison}\', \'#{r.adresse.rue}\', \'#{r.adresse.ville}\', \'#{r.adresse.code_postal}\', \'#{r.adresse.telephone}\');", class: "hunt-btn-style modifierRestaurateur_btn;"%>
+                <tr id="gerer_restaurant<%=r.id%>">
+                   <td><div>
+                    <% restaurant_restaurateur_nom = r.restaurateur == nil ?  '' : r.restaurateur.nom%>
+                    <%= link_to "Supprimer", "javascript:;", onclick: "app.entrepreneur.restaurant_delete(#{r.id})", class: "hunt-btn-style" %></div><br/>
+                            <div><%= link_to "Modifier", "javascript:;", onclick: "app.entrepreneur.restaurant_form_values(#{r.id}, \'#{restaurant_restaurateur_nom}\', \'#{r.nom}\', \'#{r.adresse.no_maison}\', \'#{r.adresse.rue}\', \'#{r.adresse.ville}\', \'#{r.adresse.code_postal}\', \'#{r.adresse.telephone}\');", class: "hunt-btn-style modifierRestaurateur_btn;"%>
                         </div>
                     </td>
                   <td><%if r.restaurateur != nil %>
@@ -283,20 +290,27 @@
                     <div  class="large-4 columns group">
                 <span class="add-title">Edition restaurant</span>
                 <div class="row">
+
                   <% form_select_array = @restaurateurs_sans_restaurants.map {|i| ["#{i.nom} #{i.prenom}",i.id] } %>
                   <% form_select_array.insert(0, [" ","-1"]) #on place un élément vide dans le select%>
-                  <%= form_for @nouveau_restaurant, url: {action: "modifierRestaurant", id: "0"}, method: "get", html:{class: "large-10 columns", id: "form_modifierRestaurant" }  do |r| %>
-                    <%= r.text_field :nom, :id =>"restaurant_nom_edit", :placeholder => "nom", :class => "large-10 columns" %>
-                    <%= fields_for :adresse, @nouveau_restaurant.adresse do |r_adresse| %>
-                        <%= r_adresse.text_field :no_maison, :id =>"restaurant_no_maison_edit", :placeholder => "numéro de maison", :class => "large-10 columns" %>
-                        <%= r_adresse.text_field :rue, :id =>"restaurant_rue_edit", :placeholder => "rue", :class => "large-10 columns" %>
-                        <%= r_adresse.text_field :ville, :id =>"restaurant_ville_edit", :placeholder => "ville", :class => "large-10 columns" %>
-                        <%= r_adresse.text_field :telephone, :id =>"restaurant_telephone_edit", :placeholder => "téléphone", :class => "large-10 columns" %>
-                        <%= r_adresse.text_field :code_postal, :id =>"restaurant_code_postal_edit", :placeholder => "code postal", :class => "large-10 columns" %>
-                    <% end %>                  
-                    <%= select_tag(:restaurateur, options_for_select(form_select_array, 10)) %>
-                    <%= r.submit "Ajouter restaurant", :class => "admin-btn-style" %>   
-                <% end %>
+                <form accept-charset="UTF-8"  action="javascript:app.entrepreneur.restaurant_update(); void(0);" class="large-10 columns" id="form_modifierRestaurant" method="get">
+                        <input id="restaurant_id_edit" type="hidden" value="0">
+                        <input class="large-10 columns" id="restaurant_nom_edit" name="restaurant[nom]" placeholder="nom" type="text" />
+                        <label class="error"   class="large-8 columns" id="restaurant_nom_edit_label"></label>
+                        <input class="large-10 columns" id="restaurant_no_maison_edit" name="adresse[no_maison]" placeholder="numéro de maison" type="text" />
+                        <label class="error"   class="large-8 columns" id="restaurant_no_maison_edit_label"></label>
+                        <input class="large-10 columns" id="restaurant_rue_edit" name="adresse[rue]" placeholder="rue" type="text" />
+                        <label class="error"   class="large-8 columns" id="restaurant_rue_edit_label"></label>
+                        <input class="large-10 columns" id="restaurant_ville_edit" name="adresse[ville]" placeholder="ville" type="text" />
+                        <label class="error"   class="large-8 columns" id="restaurant_ville_edit_label"></label>
+                        <input class="large-10 columns" id="restaurant_telephone_edit" name="adresse[telephone]" placeholder="téléphone" type="text" />
+                        <label class="error"   class="large-8 columns" id="restaurant_telephone_edit_label"></label>
+                        <input class="large-10 columns" id="restaurant_code_postal_edit" name="adresse[code_postal]" placeholder="code postal" type="text" />
+                        <label class="error"   class="large-8 columns" id="restaurant_code_postal_edit_label"></label>
+                    <%= select_tag(:form_modifierRestaurant_restaurateur, options_for_select(form_select_array, 10)) %>
+                    <input class="admin-btn-style" name="commit" type="submit" value="Modifier restaurant" />
+                    <label class="error"   class="large-8 columns" id="restaurant_edit_succes"></label>   
+                </form>
                 </div>
               </div>
             </div>
