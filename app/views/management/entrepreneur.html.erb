@@ -135,6 +135,8 @@
                 <tr>
                   <td><% if r.restaurateur != nil %>
                           <%= "#{r.restaurateur.nom}" + " " + "#{r.restaurateur.prenom}"%></td>
+                      <% else %>
+                        <p>restaurateur requis</p>
                       <% end %>
                   <td><%= r.nom %></td>
                   <td><%= r.adresse.telephone %></td>
@@ -153,17 +155,22 @@
                 <span class="add-title">Ajout d'un livreur</span>
                 <div class="row">
                   <!--*********************** ajouter Livreur ******************************-->
-                <%= form_for @nouveau_livreur, url: {action: "saisirInformationsLivreur"}, html:{class: "large-10 columns"}  do |f| %>
-                    <%= f.text_field :nom, :placeholder => "nom", :class => "large-10 columns" %>
-                    <%= f.text_field :prenom, :placeholder => "prenom", :class => "large-10 columns" %>
-                    <%= f.text_field :identificateur, :placeholder => "nom d'utilisateur", :class => "large-10 columns" %>
-                    <%= f.password_field :mot_de_passe, :placeholder => "mot de passe", :class => "large-10 columns" %>
-                    <%= f.submit "Ajouter livreur", :class => "admin-btn-style" %>   
-                <% end %>
+                  <form accept-charset="UTF-8" action="javascript:app.entrepreneur.livreur_new(); void(0);" class="large-10 columns" id="new_utilisateur" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /><input name="authenticity_token" type="hidden" value="<%= form_authenticity_token%>" id="livreur_token"/></div>
+                    <input class="large-10 columns" id="utilisateur_nom" name="utilisateur[nom]" placeholder="nom" type="text" />
+                    <label class="error"   class="large-8 columns" id="utilisateur_nom_label"></label>
+                    <input class="large-10 columns" id="utilisateur_prenom" name="utilisateur[prenom]" placeholder="prenom" type="text" />
+                    <label class="error"   class="large-8 columns" id="utilisateur_prenom_label"></label>
+                    <input class="large-10 columns" id="utilisateur_identificateur" name="utilisateur[identificateur]" placeholder="nom d&#39;utilisateur" type="text" />
+                    <label class="error"   class="large-8 columns" id="utilisateur_identificateur_label"></label>
+                    <input class="large-10 columns" id="utilisateur_mot_de_passe" name="utilisateur[mot_de_passe]" placeholder="mot de passe" type="password" />
+                    <label class="error"   class="large-8 columns" id="utilisateur_mot_de_passe_label"></label>
+                    <input class="admin-btn-style" name="commit" type="submit" value="Ajouter livreur" />
+                    <label class="error"   class="large-8 columns" id="utilisateur_succes_label"></label>   
+                </form> 
                 </div>
               </div>
               <div class="large-8 columns group dashboard-table">
-                  <table>
+                  <table id="livreurs_table">
                   <tr class="table-title">
                     <th>Utilisateur</th>
                     <th>Mot de passe</th>
@@ -223,9 +230,9 @@
                     </table>
               </div>
                <!-- ******************************* Modifier restaurateur ********************************-->
-                <div  class="large-4 columns group">
-                <span class="add-title">Edition restaurateur</span>
+                <div  class="large-4 columns group">         
                 <div class="row" id="mofifierRestaurateur_form">
+                <span class="add-title">Edition restaurateur</span>
                   <!--*********************** Modifier Restaurateur ******************************-->
                   <div class="large-10 columns">
                     <% form_restaurants_array = @restaurants.map { |i| [i.nom, i.id] } %>
@@ -257,7 +264,7 @@
                   <th>Adresse</th>
                 </tr>
                 <% @restaurants_restaurateurs.each do |r| %>
-                <tr id="gerer_restaurant<%=r.id%>">
+                <tr id="gerer_restaurants<%=r.id%>">
                    <td><div>
                     <% restaurant_restaurateur_nom = r.restaurateur == nil ?  '' : r.restaurateur.nom%>
                     <%= link_to "Supprimer", "javascript:;", onclick: "app.entrepreneur.restaurant_delete(#{r.id})", class: "hunt-btn-style" %></div><br/>
@@ -267,7 +274,7 @@
                   <td><%if r.restaurateur != nil %>
                           <%= "#{r.restaurateur.nom}" + " " + "#{r.restaurateur.prenom}" %>
                       <% else %>
-                      <p>Restaurateur requis</p>
+                        <p>restaurateur requis</p>
                       <% end %>
                   </td>
                  <td>
@@ -288,12 +295,13 @@
               </div>
               <!--*********************************modifier restaurant********************************************-->
                     <div  class="large-4 columns group">
-                <span class="add-title">Edition restaurant</span>
+                
                 <div class="row">
 
                   <% form_select_array = @restaurateurs_sans_restaurants.map {|i| ["#{i.nom} #{i.prenom}",i.id] } %>
                   <% form_select_array.insert(0, [" ","-1"]) #on place un élément vide dans le select%>
-                <form accept-charset="UTF-8"  action="javascript:app.entrepreneur.restaurant_update(); void(0);" class="large-10 columns" id="form_modifierRestaurant" method="get">
+                <form accept-charset="UTF-8"  action="javascript:app.entrepreneur.restaurant_update(); void(0);" class="large-10 columns" id="form_modifierRestaurant">
+                <span class="add-title">Edition restaurant</span>
                         <input id="restaurant_id_edit" type="hidden" value="0">
                         <input class="large-10 columns" id="restaurant_nom_edit" name="restaurant[nom]" placeholder="nom" type="text" />
                         <label class="error"   class="large-8 columns" id="restaurant_nom_edit_label"></label>
@@ -319,7 +327,7 @@
             <!-- ************************************ livreur ******************************************-->
               <div id="gerer-livreur" class="row">
               <div class="large-8 columns group dashboard-table">
-                  <table>
+                  <table id="gerer_livreurs_table">
                   <tr class="table-title">
                     <th></th>
                     <th>Utilisateur</th>
@@ -328,8 +336,8 @@
                     <th>Prénom</th>
                   </tr>
                   <% @livreurs.each do |r| %>
-                      <tr>
-                         <td><div><%= link_to "Supprimer", {controller: "management" ,action: "supprimerLivreur", id: r.id}, class: "hunt-btn-style" %></div><br/>
+                      <tr id="gerer_livreurs<%=r.id%>">
+                         <td><div><%= link_to "Supprimer", "javascript:;", onclick: "app.entrepreneur.livreur_delete(#{r.id})", class: "hunt-btn-style" %></div><br/>
                             <div><%= link_to "Modifier", "javascript:;", onclick: "app.entrepreneur.livreur_form_values(#{r.id}, \'#{r.nom}\', \'#{r.prenom}\', \'#{r.identificateur}\', \'#{r.mot_de_passe}\');", class: "hunt-btn-style modifierRestaurateur_btn"%></div>
                         </td>
                         <td><%= r.identificateur %></td>
@@ -341,18 +349,23 @@
                 </table>
               </div>
 
-                 <div  class="large-4 columns group">
-                <span class="add-title">Edition livreur</span>
+                <div  class="large-4 columns group">
                 <div class="row" id="mofifierLivreur_form">
-                  <!--*********************** Modifier Restaurateur ******************************-->
-                  <%= form_for @nouveau_livreur, url: {action: "modifierLivreur", id: "0"}, method: "get", html:{class: "large-10 columns", id: "form_modifierLivreur" } do |f| %>
-                      <%= f.hidden_field :id, :id =>"livreur_id_edit", :value => "un id" %>
-                      <%= f.text_field :nom, :placeholder => "nom", :class => "large-10 columns", :id =>"livreur_nom_edit" %>
-                      <%= f.text_field :prenom, :placeholder => "prenom", :class => "large-10 columns", :id =>"livreur_prenom_edit" %>
-                      <%= f.text_field :identificateur, :placeholder => "nom d'utilisateur", :class => "large-10 columns", :id =>"livreur_identificateur_edit" %>
-                      <%= f.password_field :mot_de_passe, :placeholder => "mot de passe", :class => "large-10 columns", :id => "livreur_mdp_edit" %>
-                  <%= f.submit "Ajouter livreur", :class => "admin-btn-style" %>   
-                  <% end %>
+                  <!--*********************** Modifier Livreur ******************************-->
+                  <form accept-charset="UTF-8" action="javascript:app.entrepreneur.livreur_update(); void(0);"class="large-10 columns" id="form_modifierLivreur">
+                      <span class="add-title">Edition livreur</span>
+                      <input id="livreur_id_edit" name="utilisateur[id]" type="hidden" value="0" />
+                      <input class="large-10 columns" id="livreur_nom_edit" name="utilisateur[nom]" placeholder="nom" type="text" />
+                      <label class="error"   class="large-8 columns" id="livreur_nom_edit_label"></label>
+                      <input class="large-10 columns" id="livreur_prenom_edit" name="utilisateur[prenom]" placeholder="prenom" type="text" />
+                      <label class="error"   class="large-8 columns" id="livreur_prenom_edit_label"></label>
+                      <input class="large-10 columns" id="livreur_identificateur_edit" name="utilisateur[identificateur]" placeholder="nom d'utilisateur" type="text" />
+                      <label class="error"   class="large-8 columns" id="livreur_identificateur_edit_label"></label>
+                      <input class="large-10 columns" id="livreur_mdp_edit" name="utilisateur[mot_de_passe]" placeholder="mot de passe" type="password" />
+                      <label class="error"   class="large-8 columns" id="livreur_mot_de_passe_edit_label"></label>
+                      <input class="admin-btn-style" name="commit" type="submit" value="Modifier livreur" />  
+                      <label class="error"   class="large-8 columns" id="livreur_succes_edit_label"></label> 
+                  </form>
                 </div>
               </div>
             </div>
@@ -381,14 +394,5 @@
    </div>
 </div>
 <script type="text/javascript">
-$(document).ready(function() {
-  $('#form_ajouterRestaurateur').on('ajax:success', function(data, status, xhr) {
-    alert('succes');
-  }).on("ajax:error", function(xhr, status, error) {
-    alert('error');
-  }).on("ajax:beforeSend", function(xhr, status, error) {
-    alert('before');
-  });
-});
  app.app_nouveau_restaurateur(); 
 </script>

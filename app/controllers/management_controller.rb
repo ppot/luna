@@ -61,7 +61,7 @@ class ManagementController < ApplicationController
         if restaurateur.update_attributes(utilisateur_params)
 
           #modification des parametres du restaurateur
-          if params[:restaurant] != "-1"
+          if params[:restaurant] != "-1" 
               restaurant_modification = Restaurant.find(params[:restaurant])
               restaurateur.restaurant.update(restaurateur_id: nil) unless restaurateur.restaurant.nil?
               restaurant_modification.update(restaurateur_id: restaurateur.id)
@@ -84,24 +84,34 @@ class ManagementController < ApplicationController
       livreur = Livreur.new(utilisateur_params)
       #Utilisattion des fonctions prédéfinis de rails
       #Pas de nécessité de créer Restaurateur.setInfo comme dans le RDCU1 
+    respond_to do |format|
       if livreur.save
-          redirect_to  :action => "entrepreneur", notice: "add was successfully"
+          format.json { render :json => { :response => "1", :livreur => livreur } }
       else
-          redirect_to  :action => "entrepreneur", alert: "add was not successfully"
-      end 
+          format.json { render :json => { :response => "0", :errors => livreur.errors } }
+      end
+    end 
   end
 
   def supprimerLivreur
-    Livreur.find(params[:id]).destroy
-    redirect_to :action => "entrepreneur" 
+    livreur = Livreur.find(params[:id])
+    respond_to do |format|
+      if livreur.destroy
+        format.json { render :json => { :response => "1"} }
+      else
+        format.json { render :json => { :response => "0"} }
+      end
+    end 
   end
 
   def modifierLivreur
     livreur = Livreur.find(params[:id])
-    if livreur.update_attributes(utilisateur_params)
-        redirect_to :action => "entrepreneur", notice: "modification was successfully"
-    else
-        redirect_to :action => "entrepreneur", alert: "modification of restaurant was not successfull"
+    respond_to do |format|
+      if livreur.update_attributes(utilisateur_params)
+          format.json { render :json => { :response => "1", :livreur => livreur } }
+      else
+          format.json { render :json => { :response => "0", :errors => livreur.errors } }
+      end
     end
   end
 
@@ -117,7 +127,7 @@ class ManagementController < ApplicationController
       respond_to do |format|
         if nouveau_restaurant.save
             restaurant_adresse.save
-          if params[:restaurateur] != "-1"
+          if params[:restaurateur] != "-1" 
             nouveau_restaurant.update(:restaurateur_id => params[:restaurateur])
             format.json { render :json => { :response => "1", :restaurant => nouveau_restaurant.nom, :restaurant_adresse => restaurant_adresse, :restaurateur => nouveau_restaurant.restaurateur.nom } }
           else
@@ -152,8 +162,8 @@ class ManagementController < ApplicationController
               restaurateur_modification = Restaurateur.find(params[:restaurateur])
               restaurateur_modification.restaurant.update(restaurateur_id: nil) unless restaurateur_modification.restaurant.nil?
               restaurant.update(restaurateur_id: params[:restaurateur])
-              nom_complet = '#{restaurateur_modification.prenom}' +' '+ '#{restaurateur_modification.nom}'
-              format.json { render :json => { :response => "1", :restaurant => restaurant.nom, :adresse => restaurant_adresse, :restaurateur => nom_complet } }
+              nom_complet = "#{restaurateur_modification.prenom} #{restaurateur_modification.nom}"
+              format.json { render :json => { :response => "1", :restaurant => restaurant, :adresse => restaurant_adresse, :restaurateur => nom_complet } }
           else
               format.json { render :json => { :response => "2", :restaurant => restaurant, :adresse => restaurant_adresse } }
           end

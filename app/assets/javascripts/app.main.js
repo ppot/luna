@@ -43,6 +43,9 @@ app = (function(){
 		$('#gerer-restaurateur').hide();
 		$('#gerer-restaurant').hide();
 		$('#gerer-livreur').hide();
+		$('#form_modifierRestaurant').hide();
+		$('#form_modifierLivreur').hide();
+		$('#mofifierRestaurateur_form').hide();
 	}
 
 	function app_add_menu(){
@@ -583,11 +586,14 @@ var entrepreneur=(function(){
 			        	adresse_restaurant = '<address><strong>' + response.restaurant_nom + '</strong><br>' + response.restaurant_adresse.no_maison + ' ' + response.restaurant_adresse.rue + ' <br>' + response.restaurant_adresse.ville + ' , ' + response.restaurant_adresse.code_postal + ' <br><abbr title="Phone">P:</abbr>' + response.restaurant_adresse.telephone + ' </address>';
 			        	$('#restaurateur_edit_succes').html('Restaurateur ajouté avec succès');
 			        	$('#gerer_restaurateur'+ response.restaurateur.id).html('<td>'+ response.restaurateur.identificateur + '</td><td>'+ response.restaurateur.mot_de_passe + '</td><td>' + response.restaurateur.nom + '</td><td>' + response.restaurateur.prenom + '</td><td>' + adresse_restaurant + '</td>');
-			        	//$('#restaurateur_edit_succes').addClass('alert-box success group');
+			        	$('#restaurateur_edit_succes').html('Restaurateur modifié avec succès');
+			        	$('#restaurateur_edit_succes').addClass('alert-box success group');
 			        } else if (response.response == '2') {
 			        	adresse_restaurant = '<address><strong>' + response.restaurant_nom + '</strong><br>' + response.restaurant_adresse.no_maison + ' ' + response.restaurant_adresse.rue + ' <br>' + response.restaurant_adresse.ville + ' , ' + response.restaurant_adresse.code_postal + ' <br><abbr title="Phone">P:</abbr>' + response.restaurant_adresse.telephone + ' </address>';
 			        	links = $('#gerer_restaurateur'+response.restaurateur.id + ' td').first().html();	
 			        	$('#gerer_restaurateur'+response.restaurateur.id).html('<td>' + links + '</td><td>'+ response.restaurateur.identificateur + '</td><td>'+ response.restaurateur.mot_de_passe + '</td><td>' + response.restaurateur.nom + '</td><td>' + response.restaurateur.prenom + '</td><td>'+adresse_restaurant+'</td>');
+			        	$('#restaurateur_edit_succes').html('Restaurateur modifié avec succès');
+			        	$('#restaurateur_edit_succes').addClass('alert-box success group');
 			        } else {	//rep 0
 			        	
 			        	for (key in response.errors) {
@@ -688,17 +694,18 @@ var entrepreneur=(function(){
 			    	$('#restaurant_edit_succes').removeClass('alert-box success group');
 			        if (response.response == '1') {
 			        	adresse_restaurant = '<address><strong>' + response.restaurant.nom + '</strong><br>' + response.adresse.no_maison + ' ' + response.adresse.rue + ' <br>' + response.adresse.ville + ' , ' + response.adresse.code_postal + ' <br><abbr title="Phone">P:</abbr>' + response.adresse.telephone + ' </address>';
-			        	links = $('#gerer_restaurant'+response.restaurant.id + ' td').first().html();			 
-			        	$('#gerer_restaurant'+response.restaurant.id).html('<td>' + links + '</td><td>'+ response.restaurateur + '</td><td>'+adresse_restaurant+'</td>');
-			        	$('#restaurant_edit_succes').html('Restaurateur modifié avec succès');
-			        	$('#restaurant_edit_succes').addClass('alert-box success group');
+			        	links = $('#gerer_restaurants'+response.restaurant.id + ' td').first().html();		        	
+			        	$('#restaurant_edit_succes').html('Restaurant modifié avec succès');
+			        	$('#restaurant_edit_succes').addClass('alert-box success group');			        	
+			        	$('#gerer_restaurants'+ response.restaurant.id).html('<td>' + links + '</td><td>'+ response.restaurateur + '</td><td>'+ adresse_restaurant + '</td>');
+			        	
 			        } else if (response.response == '2') {
 			        	adresse_restaurant = '<address><strong>' + response.restaurant.nom + '</strong><br>' + response.adresse.no_maison + ' ' + response.adresse.rue + ' <br>' + response.adresse.ville + ' , ' + response.adresse.code_postal + ' <br><abbr title="Phone">P:</abbr>' + response.adresse.telephone + ' </address>';
-			        	links = $('#gerer_restaurant'+response.restaurant.id + ' td').first().html();
-			        	restaurateur = ($('#form_modifierRestaurant_restaurateur').val() == '-1') ? 'restaurateur requis' : $('#form_modifierRestaurant_restaurateur').val();	
-			        	$('#gerer_restaurant'+response.restaurant.id).html('<td>' + links + '</td><td>'+ response.restaurateur + '</td><td>'+adresse_restaurant+'</td>');
-			        	$('#restaurant_edit_succes').html('Restaurateur modifié avec succès');
+			        	links = $('#gerer_restaurants'+response.restaurant.id + ' td').first().html();
+			        	restaurateur = ($('#form_modifierRestaurant_restaurateur').val() == '-1') ? 'restaurateur requis' : $('#form_modifierRestaurant_restaurateur').val();		
+			        	$('#restaurant_edit_succes').html('Restaurant modifié avec succès');
 			        	$('#restaurant_edit_succes').addClass('alert-box success group');
+			        	$('#gerer_restaurants'+response.restaurant.id).html('<td>' + links + '</td><td>'+ restaurateur + '</td><td>'+adresse_restaurant+'</td>');
 			        } else {	//rep 0
 			        	if(response.errors.nom.length > 0) {
 			        		$('#restaurant_nom_edit_label').html(response.errors.nom[0]);	//on place les erreurs de valiadtion dans les labels
@@ -713,7 +720,97 @@ var entrepreneur=(function(){
     			}             
 		});
     }
+
+    function livreur_new() {
+		$.ajax({
+		    type: "POST",
+		    url: "/management/saisirInformationsLivreur",
+		    data: {
+		    	utilisateur: {
+		    		nom : $('#utilisateur_nom').val(),
+		    		prenom : $('#utilisateur_prenom').val(),
+		    		identificateur : $('#utilisateur_identificateur').val(),
+		    		mot_de_passe : $('#utilisateur_mot_de_passe').val(),	
+		    	}
+		    },
+		    dataType: "json",
+		    success: function(response){
+		    	$('#new_utilisateur label').html('');
+		    	$('#utilisateur_succes_label').removeClass('alert-box success group');
+		        if (response.response == '1') {		        	
+		        	$('#utilisateur_succes_label').html('Livreur ajouté avec succès');
+		        	$('#utilisateur_succes_label').addClass('alert-box success group');
+		        	$('#livreurs_table').append('<tr><td>'+ response.livreur.identificateur + '</td><td>'+ response.livreur.mot_de_passe + '</td><td>' + response.livreur.nom + '</td><td>' + response.livreur.prenom + '</td></tr>');
+		        } else {	//rep 0	
+		        	for (key in response.errors) {
+					    $('#utilisateur_'+ key +'_label').html(response.errors[key][0]);	//on place les erreurs de valiadtion dans les labels
+					}
+		        }
+		    },
+		    error: function(XMLHttpRequest, textStatus, errorThrown) { 
+    			console.log("Status: " + textStatus + "Error: " + errorThrown);
+			}          
+		});
+    }
 	
+    function livreur_delete(livreur_id) {
+		$.ajax({
+		    type: "GET",
+		    url: "/management/supprimerLivreur?id=" + livreur_id,
+		    dataType: "json",
+		    success: function(response){
+		        if (response.response == '1') {
+		        	$('#gerer_livreurs' + livreur_id).remove();
+		        } else {	//rep 0	
+		        	console.log("Le livreur n'a pas été suprimmé");
+		        }
+		    },
+		    error: function(XMLHttpRequest, textStatus, errorThrown) { 
+    			console.log("Status: " + textStatus + "Error: " + errorThrown);
+			}          
+		});
+    }
+
+    function livreur_update() {
+		livreur_id = $('#livreur_id_edit').val();
+		$.ajax({
+		    type: "GET",
+		    url: "/modifierLivreur/"+ livreur_id,
+		    dataType: "json",
+		    data: {
+		    	utilisateur: {
+		    		nom : $('#livreur_nom_edit').val(),
+		    		prenom : $('#livreur_prenom_edit').val(),
+		    		identificateur : $('#livreur_identificateur_edit').val(),
+		    		mot_de_passe : $('#livreur_mot_de_passe_edit').val(),	
+		    	}
+		    },
+	    success: function(response){
+	        $('#form_modifierLivreur label').html('');
+		    	$('#livreur_succes_edit_label').removeClass('alert-box success group');
+		        if (response.response == '1') {		        	
+		        	links = $('#gerer_livreurs'+response.livreur.id + ' td').first().html();		 
+		        	$('#gerer_livreurs'+response.livreur.id).html('<td>' + links + '</td><td>'+ response.livreur.identificateur + '</td><td>'+ response.livreur.mot_de_passe + '</td><td>'+ response.livreur.nom + '</td><td>'+ response.livreur.prenom + '</td>');
+		        	$('#livreur_succes_edit_label').html('Livreur modifié avec succès');
+		        	$('#livreur_succes_edit_label').addClass('alert-box success group');
+		        } else {	//rep 0
+
+		        	for (key in response.errors) {
+		        		console.log(key);
+					    $('#livreur_'+ key +'_edit_label').html(response.errors[key][0]);	//on place les erreurs de valiadtion dans les labels
+					}
+		        }
+		    },
+		    error: function(XMLHttpRequest, textStatus, errorThrown) { 
+    			console.log("Status: " + textStatus + "Error: " + errorThrown);
+			}             
+		});
+    }
+
+    function labels_hide() {
+		$('label').html('');
+		$('label').removeClass('alert-box success group');
+	}
 
     function restaurateur_form_values(id, restaurant_nom, nom, prenom, identificateur, mot_de_passe ) {
 		//Cette fonctio place les valeur de la table vers un formulaire pour modifier un restaurateur
@@ -722,10 +819,10 @@ var entrepreneur=(function(){
 	  	$('#restaurateur_identificateur_edit').val(identificateur);
 	  	$('#restaurateur_mot_de_passe_edit').val(mot_de_passe);
 
-	  	//pour modifier l'url de l'action du formulaire
 	  	$('#restaurateur_id_edit').val(id);
 	  	$('#restaurateur_restaurant_edit option:first').text(restaurant_nom);
-	  	//Il faut mettre le _path d'un restaurateur comme varaible pour ne pas devoir harcoder l'url du controller
+		$('#mofifierRestaurateur_form').show();
+		labels_hide();
 	}
 
 	function restaurant_form_values(id, restaurateur_nom, nom, no_maison, rue, ville, code_postal, telephone) {
@@ -736,9 +833,10 @@ var entrepreneur=(function(){
 	  	$('#restaurant_code_postal_edit').val(code_postal);
 	  	$('#restaurant_telephone_edit').val(telephone);
 
-	  	//pour modifier l'url de l'action du formulaire
 	  	$('#restaurant_id_edit').val(id);
 	  	$('#form_modifierRestaurant_restaurateur option:first').text(restaurateur_nom);
+	  	$('#form_modifierRestaurant').show();
+	  	labels_hide();
 	}
 
     function livreur_form_values(id, nom, prenom, identificateur, mot_de_passe ) {
@@ -747,10 +845,9 @@ var entrepreneur=(function(){
 	  	$('#livreur_prenom_edit').val(prenom);
 	  	$('#livreur_identificateur_edit').val(identificateur);
 	  	$('#livreur_mdp_edit').val(mot_de_passe);
-
-	  	//pour modifier l'url de l'action du formulaire
-	  	$('#form_modifierLivreur').attr('action', '/modifierLivreur/'+ id);
-	  	//Il faut mettre le _path d'un restaurateur comme varaible pour ne pas devoir harcoder l'url du controller
+	  	$('#livreur_id_edit').val(id);
+	  	$('#form_modifierLivreur').show();
+	  	labels_hide();
 	}
 
     return{
@@ -764,6 +861,9 @@ var entrepreneur=(function(){
       restaurant_new:restaurant_new,
       restaurant_delete:restaurant_delete,
       restaurant_update:restaurant_update,
+      livreur_new:livreur_new,
+      livreur_delete:livreur_delete,
+      livreur_update:livreur_update,
     }
   })();
 
