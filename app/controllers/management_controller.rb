@@ -174,37 +174,47 @@ class ManagementController < ApplicationController
   end
 
   #-----------------------------Section du livreur---------------------------
-  def livraison  
-    @commandes = Commande.where(status_pret: true, livreur_id: nil).order(heure_de_commande: :asc)   #on récupère toutes les commandes prêtes qui n'ont pas été livrés
-    @_user = current_client
+  def livraison   #page principale des livraisons
+      @_user = current_client  
+      @commandes = Commande.where(status_pret: true, livreur_id: nil).order(heure_de_commande: :asc)   #on récupère toutes les commandes prêtes qui n'ont pas été livrés
   end
 
   def livraisonDetails
       commande_actuelle = Commande.find(params[:id])
-      adresse_client = Adresse.where(:client_id => commande_actuelle.client_id, :principale => true) #adresse du client
+      adresse_client = Adresse.where(:adresseable_id => commande_actuelle.client_id, :adresseable_type => 'Client', :principale => true) #adresse du client
       #requete pour optenir l'adresse du restaurant
-      adresse_restaurant = Adresse.find_by_sql "SELECT * FROM adresses INNER JOIN restaurants ON adresses.adresseable_id = restaurants.id 
+      adresse_restaurant = Adresse.find_by_sql "SELECT adresses.no_maison, adresses.rue, adresses.ville, adresses.telephone, adresses.telephone, adresses.code_postal, restaurants.nom FROM adresses INNER JOIN restaurants ON adresses.adresseable_id = restaurants.id 
                                                                         INNER JOIN menus ON restaurants.id = menus.id
                                                                         INNER JOIN plats ON menus.id = plats.id
                                                                         INNER JOIN commandes_plats ON plats.id = commandes_plats.plat_id
-                                                                        AND commandes_plats.commande_id = #{commande_actuelle.id}"
-      respond_to do |format|
-        format.html 
-        format.json { render :json => { :adresse_client => adresse_client, :adresse_restaurant => adresse_restaurant } }
+                                                                        AND commandes_plats.commande_id = '#{commande_actuelle.id}'
+                                                                        AND adresses.adresseable_type = 'Restaurant'
+                                                                        "
+      if !adresse_client.nil? && !adresse_restaurant.nil?
+        respond_to do |format|
+          format.html 
+          format.json { render :json => { :response => "1", :adresse_client => adresse_client, :adresse_restaurant => adresse_restaurant } }
+        end
+      else
+        format.json { render :json => { :response => "0", :errors => 'Impossible de récupérer les adresses'} }
       end
   end
 
   def livrerCommande
-      d = Date.today.to_formatted_s(:rfc822)  #2014-03-22
-      t = Time.now.strftime("%I:%M%p") #formatage de l'heure actuelle
+      @_user = current_client
+      d = Date.today.to_formatted_s(:rfc822)  #2014-03-22 exemple
+      t = Time.now.strftime("%I:%M%p") #formatage de l'heure actuelle exemple 04:22PM
       livraison = Livraison.new(:commande_id => params[:id],:date_de_livraison => d, :heure_de_livraison => t)
-      if livraison.save
-          Commande.update(:params[:id], :livreur_id => '1')     #param session requis
-          redirect_to :action => "livraison"
-          # redirect_to :action => "livraison", notice: "Livraison enregistré"
-      else
-          # redirect_to :action => "livraison", alert: "enregistrement échoué"
-          redirect_to :action => "livraison"
+      commande = Commande.find(params[:id])
+      client = Client.find(commande.client_id)
+      respond_to do |format|
+        if livraison.save
+            Commande.update(:params[:id], :livreur_id => @_user.id)     #param session requis
+            Notifier.notifier_client(client, commande).deliver
+            format.json { render :json => { :response => "1"} }
+        else
+            format.json { render :json => { :response => "0" } }
+        end
       end
   end
 

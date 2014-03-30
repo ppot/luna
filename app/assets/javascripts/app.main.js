@@ -5,6 +5,7 @@ app = (function(){
 	  el = document.getElementById("overlay");
 	  el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
 		join();
+		google_map.init();
 	}
 
 	function app_nouveau_restaurateur(){
@@ -544,24 +545,6 @@ var entrepreneur=(function(){
         			console.log("Status: " + textStatus + "Error: " + errorThrown);
     			}          
 			});
-    }
-
-    function restaurateur_delete(restaurateur_id) {
-	$.ajax({
-		    type: "GET",
-		    url: "/management/supprimerRestaurateur?id=" + restaurateur_id,
-		    dataType: "json",
-		    success: function(response){
-		        if (response.response == '1') {
-		        	$('#gerer_restaurateur' + restaurateur_id).remove();
-		        } else {	//rep 0	
-		        	console.log("Le restaurateur n'a pas été suprimmé");
-		        }
-		    },
-		    error: function(XMLHttpRequest, textStatus, errorThrown) { 
-    			console.log("Status: " + textStatus + "Error: " + errorThrown);
-			}          
-		});
     }
 
     function restaurateur_update() {
@@ -1162,12 +1145,88 @@ var entrepreneur=(function(){
     }
   })();
 
-  //return function
+var livreur=(function(){ 
+
+    function init(){
+
+    }
+
+    function afficher_commande_details(commande, heure, plats) {
+    	$('#commande_id').html('#' + commande.id);
+    	$('#no_confirmation').html('confirmation: ' + commande.no_confirmation);
+    	$('#date_commande').html('date: ' +commande.date_de_commande + ' à ' + heure);
+    	$('#commande_plats').html(' <h5 style="color:#C0C0C0"> Commande</h5>');
+    	for (var i=0; i< plats.length; i++) {  	    
+		 	$('#commande_plats').last().append('<span>' +plats[i].nom + '<span class="bill-price">' + plats[i].prix + '$</span><br/>');
+		}
+		$('#commande_plats').last().append('<br/><span>TOTAL<span class="bill-price">' + commande.prix_total + '$</span>');
+    	$('#livraison_client').html("<a class='hunt-btn-style' href='/livrerCommande/0'>Livrer</a>");
+    	$.ajax({
+		    type: "GET",
+		    url: "/management/livraisonDetails/" + commande.id,
+		    dataType: "json",
+		    success: function(response){
+		        if (response.response == '1') {
+		        	adresse_client_template = "<h5 style='color:#C0C0C0'>Adresse du client</h5>\
+                        <strong>Client</strong><br>\
+                          "+ response.adresse_client[0].no_maison+" "+ response.adresse_client[0].rue +",<br>\
+                          "+ response.adresse_client[0].ville+", CA "+ response.adresse_client[0].code_postal+"<br>\
+                        <abbr title='Phone'>P:</abbr> "+ response.adresse_client[0].telephone+"\
+                  	</div>"
+		        	$('#adresse_client').html(adresse_client_template);
+		        	adresse_restaurant_template = "<h5 style='color:#C0C0C0'>Adresse du Restaurant</h5>\
+                        <strong>Client</strong><br>\
+                          "+ response.adresse_restaurant[0].no_maison+" "+ response.adresse_restaurant[0].rue +",<br>\
+                          "+ response.adresse_restaurant[0].ville+", CA "+ response.adresse_restaurant[0].code_postal+"<br>\
+                        <abbr title='Phone'>P:</abbr> "+ response.adresse_restaurant[0].telephone+"\
+                  	</div>"
+		        	$('#adresse_restaurant').html(adresse_restaurant_template);
+		        	$('#livraison_client').html('<a class="hunt-btn-style" href="javascript:void(0)" onclick="app.livreur.livrerCommande('+ commande.id +')">Livrer</a>');
+		        	google_map.calcRoute(response.adresse_client[0].code_postal, response.adresse_restaurant[0].code_postal);    	
+		        } else {	//rep 0	
+		        	console.log("Les adresses n'ont pas pu être loadées.");
+		        }
+		    },
+		    error: function(XMLHttpRequest, textStatus, errorThrown) { 
+    			console.log("Status: " + textStatus + "Error: " + errorThrown);
+			}          
+		});
+    }
+
+    function livrerCommande(commande_id) {
+
+    	$.ajax({
+		    type: "GET",
+		    url: "/livrerCommande/" + commande_id,
+		    dataType: "json",
+		    success: function(response){
+		        if (response.response == '1') {
+		        	$('#livraison_succes').html('Livraison enregistrée');
+				  } else {	//rep 0	
+		        	console.log("La livraison n'a pas été enregistrée.");
+		        }
+		    },
+		    error: function(XMLHttpRequest, textStatus, errorThrown) { 
+    			console.log("Status: " + textStatus + "Error: " + errorThrown);
+			}          
+		});
+    }
+
+    return{
+      init:init,
+      afficher_commande_details:afficher_commande_details,
+      livrerCommande:livrerCommande,
+    }
+  })();
+
+
+	//return function
   return{
   		general:general,
   		users:users,
   		restaurateur:restaurateur,
 	  	entrepreneur:entrepreneur,
+	  	livreur:livreur,
 	  	
 		app_module_log:app_module_log,
 		app_admin_hide:app_admin_hide,
@@ -1237,3 +1296,45 @@ function shoopingCartPlat(nom,description,menu_id,prix){
 }
 
 
+
+var google_map=(function(){ 
+
+    function init(){
+    	directionsService = new google.maps.DirectionsService();
+    	directionsDisplay = new google.maps.DirectionsRenderer();
+    	google.maps.event.addDomListener(window, 'load', initialize);
+    }
+   
+	function initialize() {
+		
+		var mapOptions = {
+		  zoom: 10,
+		  center: new google.maps.LatLng(45.5086, -73.5539)
+		};
+		var map = new google.maps.Map(map_canvas, mapOptions);
+		directionsDisplay.setMap(map);
+		directionsDisplay.setPanel(document.getElementById('directions-panel'));
+	}
+
+	function calcRoute(commande_zip, restaurant_zip) {
+
+		var request = {
+		  origin: restaurant_zip,   //code postale du livreur
+		  destination: commande_zip,  //code postale de la commande
+		  travelMode: google.maps.TravelMode.DRIVING
+		};
+		directionsService.route(request, function(response, status) {
+		  if (status == google.maps.DirectionsStatus.OK) {
+		    directionsDisplay.setDirections(response);
+		  }
+		});
+	}
+
+    //calcRoute(\'h1h3m1\', \'h2x3y2\');
+
+    return{
+      init:init,
+      initialize:initialize,
+      calcRoute:calcRoute,
+    }
+  })();

@@ -1,7 +1,7 @@
 class Restaurant < ActiveRecord::Base
 	belongs_to :restaurateur
-	has_one :menu
-	has_one :adresse, as: :adresseable
+	has_one :menu, dependent: :destroy
+	has_one :adresse, as: :adresseable, dependent: :destroy
 	accepts_nested_attributes_for :adresse
 
 	validates_presence_of :nom, message: "Le champ ne doit pas être vide"

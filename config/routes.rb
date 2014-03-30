@@ -22,7 +22,7 @@ LOG::Application.routes.draw do
 
   get "management/livraison"
   get "livrerCommande/:id", to: 'management#livrerCommande'
-  get "livraisonDetails/:id", to: 'management#livraisonDetails'
+  get "management/livraisonDetails/:id", to: 'management#livraisonDetails'
   get "management/restaurateur"
 
 

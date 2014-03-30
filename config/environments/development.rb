@@ -26,4 +26,17 @@ LOG::Application.configure do
   # This option may cause significant delays in view rendering with a large
   # number of complex assets.
   config.assets.debug = true
+
+  # Don't care if the mailer can't send
+  config.action_mailer.raise_delivery_errors = false
+  # Gmail SMTP server setup
+  ActionMailer::Base.smtp_settings = {
+    :address => "smtp.gmail.com",
+    :enable_starttls_auto => true,
+    :port => 587,
+    :authentication => :plain,
+    :user_name => "luna.restaurant.2014@gmail.com",
+    :password => 'systempass'
+  }
+
 end
