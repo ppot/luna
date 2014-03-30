@@ -1207,6 +1207,7 @@ var livreur=(function(){
 		    success: function(response){
 		        if (response.response == '1') {
 		        	$('#livraison_succes').html('Livraison enregistrée');
+		        	$('#commande' + commande_id).remove();
 				  } else {	//rep 0	
 		        	console.log("La livraison n'a pas été enregistrée.");
 		        }

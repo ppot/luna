@@ -68,7 +68,7 @@
                   <th>statut</th>
                 </tr>
                 <% @commandes.each do |c| %>               
-                  <tr><!--******************************On place le zip code client ici-->
+                  <tr id="commande<%=c.id%>"><!--******************************On place le zip code client ici-->
                     <td>
                     <%plats = c.commandes_plats.map {|c| {nom:"#{c.plat.nom}", prix:"#{c.plat.prix}", quantitee:"#{c.quantitee}"} }%>
                     <%= link_to "#{c.id}", "javascript:;", onclick: "var commande = #{c.to_json};var plats = #{plats.to_json}; app.livreur.afficher_commande_details(commande,\'#{c.heure_de_commande.strftime("%I:%M%p")}\', plats)", class: "hunt-btn-style" %></td>
