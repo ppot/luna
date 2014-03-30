@@ -71,8 +71,7 @@
                   <tr><!--******************************On place le zip code client ici-->
                     <td>
                     <%plats = c.commandes_plats.map {|c| {nom:"#{c.plat.nom}", prix:"#{c.plat.prix}", quantitee:"#{c.quantitee}"} }%>
-                    <%= link_to "#{c.id}", "javascript:;", onclick: "google_map.calcRoute(\'h1h3m1\', \'h2x3y2\');var commande = #{c.to_json};var plats = #{plats.to_json}; app.livreur.afficher_commande_details(commande,\'#{c.heure_de_commande.strftime("%I:%M%p")}\', plats)", class: "hunt-btn-style" %></td>
-                    <td><%= c.plats[0].nom %></td>
+                    <%= link_to "#{c.id}", "javascript:;", onclick: "var commande = #{c.to_json};var plats = #{plats.to_json}; app.livreur.afficher_commande_details(commande,\'#{c.heure_de_commande.strftime("%I:%M%p")}\', plats)", class: "hunt-btn-style" %></td>
                     <td><%= c.no_confirmation %></td>
                     <td><%= c.date_de_commande %></td>
                     <td><%= c.heure_de_commande.strftime("%I:%M%p") %></td>

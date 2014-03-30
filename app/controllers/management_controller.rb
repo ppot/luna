@@ -30,8 +30,6 @@ class ManagementController < ApplicationController
             restaurant = Restaurant.find(params[:restaurant])
             restaurant.update(restaurateur_id: restaurateur.id)
             
-            format.html
-            format.js   { render :nothing => true }
             format.json { render :json => { :response => "1", :restaurateur => restaurateur, :restaurant_nom => restaurant.nom, :restaurant_adresse => restaurant.adresse } }
           else
             format.json { render :json => { :response => "2", :restaurateur => restaurateur} } #restaurateur créé sans restaurant
@@ -66,11 +64,9 @@ class ManagementController < ApplicationController
               restaurateur.restaurant.update(restaurateur_id: nil) unless restaurateur.restaurant.nil?
               restaurant_modification.update(restaurateur_id: restaurateur.id)
 
-            format.html
-            format.js   { render :nothing => true }
             format.json { render :json => { :response => "1", :restaurateur => restaurateur, :restaurant_nom => restaurant_modification.nom, :restaurant_adresse => restaurant_modification.adresse } }
           else
-            format.json { render :json => { :response => "2", :restaurateur => restaurateur, :restaurant_nom => restaurateur.restaurant.nom, :restaurant_adresse => restaurateur.restaurant.adresse} }
+            format.json { render :json => { :response => "2", :restaurateur => restaurateur, :restaurant_adresse => restaurateur.restaurant.adresse} }
           end         
         
         else
@@ -152,21 +148,19 @@ class ManagementController < ApplicationController
 
   def modifierRestaurant
       restaurant = Restaurant.find(params[:id])
-      restaurant_adresse = restaurant.adresse.dup
+      restaurant_adresse = Adresse.find(restaurant.adresse.id)
       respond_to do |format|
-          is_restaurant_update = restaurant.update_attributes(restaurant_params) 
-          is_adresse_update = restaurant_adresse.update_attributes(adresse_params)
-          if is_restaurant_update && is_adresse_update
-             
+
+          if restaurant.update_attributes(restaurant_params) && restaurant_adresse.update_attributes(adresse_params)     
             if params[:restaurateur] != "-1"
               restaurateur_modification = Restaurateur.find(params[:restaurateur])
               restaurateur_modification.restaurant.update(restaurateur_id: nil) unless restaurateur_modification.restaurant.nil?
               restaurant.update(restaurateur_id: params[:restaurateur])
               nom_complet = "#{restaurateur_modification.prenom} #{restaurateur_modification.nom}"
               format.json { render :json => { :response => "1", :restaurant => restaurant, :adresse => restaurant_adresse, :restaurateur => nom_complet } }
-          else
+            else
               format.json { render :json => { :response => "2", :restaurant => restaurant, :adresse => restaurant_adresse } }
-          end
+            end
         else
           format.json { render :json => { :response => "0", :errors => {:nom => restaurant.errors[:nom], :adresse => restaurant_adresse.errors } } }
         end
@@ -183,13 +177,14 @@ class ManagementController < ApplicationController
       commande_actuelle = Commande.find(params[:id])
       adresse_client = Adresse.where(:adresseable_id => commande_actuelle.client_id, :adresseable_type => 'Client', :principale => true) #adresse du client
       #requete pour optenir l'adresse du restaurant
-      adresse_restaurant = Adresse.find_by_sql "SELECT adresses.no_maison, adresses.rue, adresses.ville, adresses.telephone, adresses.telephone, adresses.code_postal, restaurants.nom FROM adresses INNER JOIN restaurants ON adresses.adresseable_id = restaurants.id 
-                                                                        INNER JOIN menus ON restaurants.id = menus.id
-                                                                        INNER JOIN plats ON menus.id = plats.id
-                                                                        INNER JOIN commandes_plats ON plats.id = commandes_plats.plat_id
-                                                                        AND commandes_plats.commande_id = '#{commande_actuelle.id}'
-                                                                        AND adresses.adresseable_type = 'Restaurant'
-                                                                        "
+      adresse_restaurant = Adresse.find_by_sql "SELECT adresses.no_maison, adresses.rue, adresses.ville, adresses.telephone, adresses.telephone, adresses.code_postal, restaurants.nom FROM adresses 
+                                                INNER JOIN restaurants ON adresses.adresseable_id = restaurants.id 
+                                                INNER JOIN menus ON restaurants.id = menus.restaurant_id 
+                                                INNER JOIN plats ON menus.id = plats.menu_id 
+                                                INNER JOIN commandes_plats ON plats.id = commandes_plats.plat_id 
+                                                AND commandes_plats.commande_id = '#{commande_actuelle.id}' 
+                                                AND adresses.adresseable_type = 'Restaurant'
+                                                "
       if !adresse_client.nil? && !adresse_restaurant.nil?
         respond_to do |format|
           format.html 

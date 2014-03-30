@@ -268,7 +268,7 @@
                    <td><div>
                     <% restaurant_restaurateur_nom = r.restaurateur == nil ?  '' : r.restaurateur.nom%>
                     <%= link_to "Supprimer", "javascript:;", onclick: "app.entrepreneur.restaurant_delete(#{r.id})", class: "hunt-btn-style" %></div><br/>
-                            <div><%= link_to "Modifier", "javascript:;", onclick: "app.entrepreneur.restaurant_form_values(#{r.id}, \'#{restaurant_restaurateur_nom}\', \'#{r.nom}\', \'#{r.adresse.no_maison}\', \'#{r.adresse.rue}\', \'#{r.adresse.ville}\', \'#{r.adresse.code_postal}\', \'#{r.adresse.telephone}\');", class: "hunt-btn-style modifierRestaurateur_btn;"%>
+                            <div><%= link_to "Modifier", "javascript:;", onclick: "app.entrepreneur.restaurant_form_values(#{r.id}, #{r.adresse.id}, \'#{restaurant_restaurateur_nom}\', \'#{r.nom}\', \'#{r.adresse.no_maison}\', \'#{r.adresse.rue}\', \'#{r.adresse.ville}\', \'#{r.adresse.code_postal}\', \'#{r.adresse.telephone}\');", class: "hunt-btn-style modifierRestaurateur_btn;"%>
                         </div>
                     </td>
                   <td><%if r.restaurateur != nil %>
@@ -303,6 +303,7 @@
                 <form accept-charset="UTF-8"  action="javascript:app.entrepreneur.restaurant_update(); void(0);" class="large-10 columns" id="form_modifierRestaurant">
                 <span class="add-title">Edition restaurant</span>
                         <input id="restaurant_id_edit" type="hidden" value="0">
+                        <input id="restaurant_adresse_id_edit" type="hidden" value="0">
                         <input class="large-10 columns" id="restaurant_nom_edit" name="restaurant[nom]" placeholder="nom" type="text" />
                         <label class="error"   class="large-8 columns" id="restaurant_nom_edit_label"></label>
                         <input class="large-10 columns" id="restaurant_no_maison_edit" name="adresse[no_maison]" placeholder="numéro de maison" type="text" />
