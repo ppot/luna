@@ -3,28 +3,28 @@ LOG::Application.routes.draw do
   root 'app#index'
   get "app/index"
 
-  get "management/ajouterRestaurateur"
-  get "management/supprimerRestaurateur"
   get "management/entrepreneur"
-  get "management/supprimerRestaurant"
+  
+  post "management/saisirInformations"  #créer nouveau restaurateur
+  put "management/modifierRestaurateur"
+  delete "management/supprimerRestaurateur"
+
   post "management/saisirInformationsRestaurant" 
-
-  post "management/saisirInformations" 
-  get "modifierRestaurateur/:id", to: 'management#modifierRestaurateur'
-  get "modifierRestaurant/:id", to: 'management#modifierRestaurant'
-  get "modifierLivreur/:id", to: 'management#modifierLivreur'
-
-  post "management/modifierLivreur"
+  put "management/modifierRestaurant"
+  delete "management/supprimerRestaurant"
+  
+  
   post "management/saisirInformationsLivreur" 
-  get "management/supprimerLivreur"
+  put "management/modifierLivreur"
+  delete "management/supprimerLivreur"
+  #fin de la section entrepreneur
 
-  get "modifierLivreur/:id", to: 'management#modifierLivreur'
+  get "management/livraison"  #affiche les commandes à livrer
+  get "management/livraisonDetails" #affiche une commande particulière
+  post "management/livrerCommande"
+  #fin de la section des livreurs
 
-  get "management/livraison"
-  get "livrerCommande/:id", to: 'management#livrerCommande'
-  get "management/livraisonDetails/:id", to: 'management#livraisonDetails'
   get "management/restaurateur"
-
 
   get "users/commande"
   get "users/profile"

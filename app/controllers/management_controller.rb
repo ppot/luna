@@ -66,7 +66,7 @@ class ManagementController < ApplicationController
 
             format.json { render :json => { :response => "1", :restaurateur => restaurateur, :restaurant_nom => restaurant_modification.nom, :restaurant_adresse => restaurant_modification.adresse } }
           else
-            format.json { render :json => { :response => "2", :restaurateur => restaurateur, :restaurant_adresse => restaurateur.restaurant.adresse} }
+            format.json { render :json => { :response => "2", :restaurateur => restaurateur} }
           end         
         
         else

@@ -531,9 +531,12 @@ var entrepreneur=(function(){
 
     function restaurateur_delete(restaurateur_id) {
     	$.ajax({
-			    type: "GET",
-			    url: "/management/supprimerRestaurateur?id=" + restaurateur_id,
+			    type: "DELETE",
+			    url: "/management/supprimerRestaurateur/",
 			    dataType: "json",
+			    data: { 
+			    	id: restaurateur_id
+			    },
 			    success: function(response){
 			        if (response.response == '1') {
 			        	$('#gerer_restaurateur' + restaurateur_id).remove();
@@ -550,12 +553,13 @@ var entrepreneur=(function(){
     function restaurateur_update() {
     	restaurateur_id = $('#restaurateur_id_edit').val();
     	$.ajax({
-		    type: "GET",
-		    url: "/modifierRestaurateur/"+ restaurateur_id,
+		    type: "PUT",
+		    url: "/management/modifierRestaurateur/",
 		    dataType: "json",
 		    data: {
+		    		id: restaurateur_id,
 			    	utilisateur: {
-			    		id : $('#restaurateur_id_edit').val(),
+			    		id : restaurateur_id,
 			    		nom : $('#restaurateur_nom_edit').val(),
 			    		prenom : $('#restaurateur_prenom_edit').val(),
 			    		identificateur : $('#restaurateur_identificateur_edit').val(),
@@ -639,12 +643,15 @@ var entrepreneur=(function(){
 
     function restaurant_delete(restaurant_id) {
 		$.ajax({
-			    type: "GET",
-			    url: "/management/supprimerRestaurant?id=" + restaurant_id,
+			    type: "DELETE",
+			    url: "/management/supprimerRestaurant/",
+			    data: {
+			    	id: restaurant_id
+			    },
 			    dataType: "json",
 			    success: function(response){
 			        if (response.response == '1') {
-			        	$('#gerer_restaurant' + restaurant_id).remove();
+			        	$('#gerer_restaurants' + restaurant_id).remove();
 			        } else {	//rep 0	
 			        	console.log("Le restaurateur n'a pas été suprimmé");
 			        }
@@ -658,10 +665,11 @@ var entrepreneur=(function(){
     function restaurant_update() {
     	restaurant_id = $('#restaurant_id_edit').val();
     	$.ajax({
-		    type: "GET",
-		    url: "/modifierRestaurant/"+ restaurant_id,
+		    type: "PUT",
+		    url: "/management/modifierRestaurant/",
 		    dataType: "json",
 		    data: {
+		    		id: restaurant_id,
 			    	restaurant: {
 			    		id : $('#restaurant_id_edit').val(),
 			    		nom : $('#restaurant_nom_edit').val(),	
@@ -742,9 +750,12 @@ var entrepreneur=(function(){
 	
     function livreur_delete(livreur_id) {
 		$.ajax({
-		    type: "GET",
-		    url: "/management/supprimerLivreur?id=" + livreur_id,
+		    type: "DELETE",
+		    url: "/management/supprimerLivreur/",
 		    dataType: "json",
+		    data: {
+		    	id: livreur_id
+		    },
 		    success: function(response){
 		        if (response.response == '1') {
 		        	$('#gerer_livreurs' + livreur_id).remove();
@@ -761,10 +772,11 @@ var entrepreneur=(function(){
     function livreur_update() {
 		livreur_id = $('#livreur_id_edit').val();
 		$.ajax({
-		    type: "GET",
-		    url: "/modifierLivreur/"+ livreur_id,
+		    type: "PUT",
+		    url: "/management/modifierLivreur/",
 		    dataType: "json",
 		    data: {
+		    	id: livreur_id,
 		    	utilisateur: {
 		    		nom : $('#livreur_nom_edit').val(),
 		    		prenom : $('#livreur_prenom_edit').val(),
@@ -1168,8 +1180,11 @@ var livreur=(function(){
     	$('#livraison_client').html("<a class='hunt-btn-style' href='/livrerCommande/0'>Livrer</a>");
     	$.ajax({
 		    type: "GET",
-		    url: "/management/livraisonDetails/" + commande.id,
+		    url: "/management/livraisonDetails/",
 		    dataType: "json",
+		    data: {
+		    	id: commande.id
+		    },
 		    success: function(response){
 		        if (response.response == '1') {
 		        	adresse_client_template = "<h5 style='color:#C0C0C0'>Adresse du client</h5>\
@@ -1201,9 +1216,12 @@ var livreur=(function(){
     function livrerCommande(commande_id) {
 
     	$.ajax({
-		    type: "GET",
-		    url: "/livrerCommande/" + commande_id,
+		    type: "POST",
+		    url: "/management/livrerCommande",
 		    dataType: "json",
+		    data: {
+		    	id: commande_id
+		    },
 		    success: function(response){
 		        if (response.response == '1') {
 		        	$('#livraison_succes').html('Livraison enregistrée');
