@@ -4,8 +4,20 @@
       <span class="data-title">Luna</span>
       <span class="data-menu">
         <span class="data-right">
-          <span class="user"><%= @_user.identificateur %></span>
-          <a href="/api/signout" class="connect">Deconnection</a>
+          <nav>
+            <ul>
+              <li><span class="user"><%= @_user.identificateur %></span> 
+                <ul>
+                  <li><a href="/">home</a></li>
+                  <li><a href="/users/profile">profile</a></li>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                  <a href="/api/signout" class="connect">Deconnection</a>   
+              </li>
+            </ul>
+          </nav>
         </span>
       </span>
    </div>

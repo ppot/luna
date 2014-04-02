@@ -1,13 +1,30 @@
 
 <% if session[:current_user_id] != nil %>
+
+  <% if @_user.type == 'Client' %>
 <div class="app-background">
-<!--     <span class="app">app</span> -->
-    <span class="session"><span class="cart"><a href="javascript:app.general.showCart()">cart</a></span><%= @_user.identificateur %>    <a href="/api/signout" class="connect">Deconnection</a></span>
+    <span class="session">
+  <nav>
+    <ul>
+      <li><%= @_user.identificateur %> 
+        <ul>
+          <li><a href="/">home</a></li>
+          <li><a href="/users/profile">profile</a></li>
+          </li>
+        </ul>
+      </li>
+      <li>
+          <a href="/api/signout" class="connect">Deconnection</a>   
+      </li>
+    </ul>
+  </nav>
+      <span class="cart"><a href="javascript:app.general.showCart()">cart</a></span>
+    </span>
     <span class="app-main-title">Luna</span>
     <div>
       <div class="restaurantsElements">
        <div class="menus">
-                <div class="menu">
+            <div class="menu">
         <div>
           <span>List restaurants</span>
         </div>
@@ -20,7 +37,7 @@
         <div class="plats">
           <div class="menu">
               <div>
-                <span>Menu : <span id="resto-menu"></span></span>
+                <span><span id="resto-menu"></span></span>
               </div>
           </div>
           <div class="plat-lst">
@@ -86,6 +103,70 @@
       app.general.init();
       app.general.app_restaurants();
   </script>
+  <% elsif @_user.type != 'Client' %>
+  <div class="app-background">
+    <% if @_user.type == 'Restaurateur' %>
+    <span class="session">
+      <nav>
+        <ul>
+          <li><span class="user"><%= @_user.identificateur %></span> 
+            <ul>
+              <li><a href="/">home</a></li>
+              <li><a href="/management/restaurateur">restaurateur</a></li>
+              </li>
+            </ul>
+          </li>
+          <li>
+              <a href="/api/signout" class="connect">Deconnection</a>   
+          </li>
+        </ul>
+      </nav>
+    </span>
+    <% elsif @_user.type == 'Livreur' %>
+    <span class="session">
+      <nav>
+        <ul>
+          <li><span class="user"><%= @_user.identificateur %></span> 
+            <ul>
+              <li><a href="/">home</a></li>
+              <li><a href="/management/livraison">livraison</a></li>
+              </li>
+            </ul>
+          </li>
+          <li>
+              <a href="/api/signout" class="connect">Deconnection</a>   
+          </li>
+        </ul>
+      </nav>
+    </span>
+    <% elsif @_user.type == 'Entrepreneur' %>
+    <span class="session">
+      <nav>
+        <ul>
+          <li><span class="user"><%= @_user.identificateur %></span> 
+            <ul>
+              <li><a href="/">home</a></li>
+              <li><a href="/management/entrepreneur">entrepreneur</a></li>
+              </li>
+            </ul>
+          </li>
+          <li>
+              <a href="/api/signout" class="connect">Deconnection</a>   
+          </li>
+        </ul>
+      </nav>
+    </span>
+    <% end %>
+    <span class="app-main-title">Luna</span>
+    <div class="restaurantsElements">
+        <div class="menu">
+            <div>
+              <span><span id="resto-menu">tu ne peux pas commander :(</span></span>
+            </div>
+        </div>
+    </div>
+  </div>
+  <% end %>
 <% else %>
   <div class="app-background">
     <div class="login-app">

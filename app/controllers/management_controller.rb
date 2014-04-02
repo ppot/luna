@@ -15,6 +15,7 @@ class ManagementController < ApplicationController
     end
 
     def restaurateur
+        @_user = current_client
     end
 
     #fonction pour ajouter un restaurateur
@@ -127,7 +128,8 @@ class ManagementController < ApplicationController
 
   #-----------------------------Section du livrerur---------------------------
   def livraison  
-      @commandes = Commande.where(status_pret: true, livreur_id: nil).order(heure_de_commande: :asc)   #on récupère toutes les commandes prêtes qui n'ont pas été livrés
+    @commandes = Commande.where(status_pret: true, livreur_id: nil).order(heure_de_commande: :asc)   #on récupère toutes les commandes prêtes qui n'ont pas été livrés
+    @_user = current_client
   end
 
   def livraisonDetails

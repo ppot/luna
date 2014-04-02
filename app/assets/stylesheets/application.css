@@ -614,3 +614,61 @@ h2 {
   height:200px;
   overflow:scroll;
 }
+
+.clear{
+  clear: both;
+}
+
+nav ul ul {
+  display: none;
+  font-size: 14px;
+}
+
+  nav ul li:hover > ul {
+    display: block;
+  }
+nav{
+  height: 20px;
+}
+nav ul {
+  list-style: none;
+  position: relative;
+  display: inline-table;
+}
+  nav ul:after {
+    content: ""; clear: both; display: block;
+  }
+
+  nav ul li {
+    float: left;
+    padding-left: 5px;
+  }
+    nav ul li:hover {
+    }
+      nav ul li:hover a {
+        color: #fff;
+      }
+    
+    nav ul li a {
+      display: block; 
+      color: #626262; text-decoration: none;
+    }
+      
+    
+  nav ul ul {
+    position: absolute; 
+  }
+    nav ul ul li {
+      float: none; 
+    }
+      nav ul ul li a {
+
+      } 
+        nav ul ul li a:hover {
+            color: #626262; text-decoration: none;
+
+        }
+    
+  nav ul ul ul {
+    position: absolute; left: 100%; top:0;
+  }
