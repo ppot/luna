@@ -28,23 +28,20 @@ include  API
   def register
     user = Client.new(client_params)
     user.created_at=DateTime.now
-    # user.type = ;
       if user.save
         infos = Info.new(infos_params)
         infos.client_id = user.id
         infos.created_at = user.created_at
+        infos.save
 
         adress = Adresse.new(adress_params) 
-        adress.adresseable_id  =  user.id 
-        adress.principale  =  true
+        adress.adresseable_id = user.id 
+        adress.principale = true
+        adress.adresseable_type = 'Utilisateur'
+        adress.save
 
-        if adress.no_maison != nil
-            adress.save  
-            p adress
-        end
-
-          session[:current_user_id]  = user.id
-          render json: 1
+        session[:current_user_id] = user.id
+        render json: 1
 
       else
         render json: 0
@@ -66,16 +63,44 @@ include  API
   def user_update
     _user = current_client
     _user.mot_de_passe = params[:mot_de_passe]
-    # _user.update(:mot_de_passe,params[:mot_de_passe])
-    _adresse = client_adresse[0]
+    _adresse = client_adresse
     _adresse.update_attributes(adress_params)
     render json: _adresse
+  end
+
+  def adresses
+    render json:client_adresses
+  end
+
+  def nAdresse
+       _user = current_client
+      _adresse = client_adresse
+      _adresse.principale = false
+      _adresse.save
+
+      _adress = Adresse.new(adress_params)
+      _adress.principale = true
+      _adress.adresseable_type = 'Utilisateur'
+      _adress.adresseable_id = _user.id       
+      _adress.save
+
+      render json: _adress
   end
   # ===================================================
   # ========================  Restaurant Function  =========================
   def listRestaurants
     _restaurants = Restaurant.all
     render json: _restaurants
+  end
+
+  def restaurant_menu
+    _menu = Menu.find(params[:id])
+    render json: _menu
+  end
+
+  def menu_plats
+    _plats = Plat.where("menu_id = ?",params[:menu_id])
+    render json: _plats
   end
 
   def getRestaurantForRestaurateur
@@ -153,12 +178,43 @@ include  API
         _plats = Plat.where("menu_id = ?",_restaurant[0].menu.id)
         render json: _plats
       end
+    else
+      render json: -1
     end
   end
 
   def plat
     _plat = Plat.find(params[:id])
     render json:_plat
+  end
+  # ===================================================
+  # ========================  index Function  =========================
+  def confirmer_cart
+    _user = current_client
+    _confirmation = rand(36**10).to_s(36)
+    _cart = Commande.new()
+    _cart.client_id = _user.id
+    if params[:addr_id] != -1
+      _cart.adresse_id = params[:addr_id]
+    else
+     _cart.adresse_id = client_adresse     
+    end
+    _cart.no_confirmation = _confirmation
+    _cart.date_de_commande = params[:date_de_commande]
+    _cart.heure_de_commande = params[:heure_de_commande]
+    _cart.prix_total = params[:prix_total]
+    _cart.save
+    render json: _cart
+  end
+
+  def confirmer_cart_plat
+    _commandes_plat = CommandesPlat.new()
+    _commandes_plat.commande_id = params[:commande_id]
+    _commandes_plat.plat_id = params[:plat_id]
+    _commandes_plat.quantitee = params[:qte]
+    _commandes_plat.save
+
+    render json: 1
   end
   # ===================================================
 end

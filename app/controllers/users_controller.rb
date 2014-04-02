@@ -11,7 +11,7 @@ class UsersController < ApplicationController
     if @_user == nil
       redirect_to  :controller => 'app', :action => 'index'
     else
-      @_adresse  = client_adresse[0]
+      @_adresse  = client_adresse
     end
   end
 end

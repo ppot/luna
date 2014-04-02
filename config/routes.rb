@@ -41,6 +41,12 @@ LOG::Application.routes.draw do
   get "api/listPlat"
   get "api/plat"
   get "api/modPlat"
+  get "api/restaurant_menu"
+  get "api/menu_plats"
+  get "api/confirmer_cart"
+  get "api/confirmer_cart_plat"
+  get "api/nAdresse"
+  get "api/adresses"
 
 
   # The priority is based upon order of creation: first created -> highest priority.

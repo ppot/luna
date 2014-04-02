@@ -67,9 +67,12 @@ app = (function(){
 	}
 
   var general=(function(){ 
-
+  	var cart = null;
+  	var complete = false;
+  	var addrId=-1;
     function init(){
-
+  		$('.cart').hide(); //temp
+  		$('.shoopingCart').hide();
     }
 
     function redirect(path){
@@ -98,12 +101,253 @@ app = (function(){
 			    dataType: "html",
 			    success: function(result){
 			    	$.each($.parseJSON(result), function(idx, obj) {
-			    		$('.lstRestaurants').append('<option id="'+obj.id+'">'+obj.nom+'</option>');
-						console.log(obj);
+			    		$('#lstRestaurants').append('<li><a href="javascript:app.general.getFoodElements('+obj.id+')" id="'+obj.id+'">'+obj.nom+'</a></li>');
 					});
 			    }        
 			});
 		}
+
+		function getFoodElements(id){
+			  app.general.menu(id);
+              app.general.plats(id);
+		}
+
+		function menu(id){
+			$.ajax({
+				type: "GET",
+				data:{
+					id:id,
+				},
+				url: "/api/restaurant_menu",
+				dataType: "html",
+				success: function(result){
+					menu = $.parseJSON(result)
+					$('#resto-menu').text(menu.nom);
+				}        
+          	});
+		}
+
+		function plats(id){
+			$.ajax({
+				type: "GET",
+				data:{
+					menu_id:id,
+				},
+				url: "/api/menu_plats",
+				dataType: "html",
+				success: function(result){
+					$.each($.parseJSON(result), function(idx, obj) {
+						$("#ul-plats").append('<li id="'+obj.id+'"><span class="plat-nom">'+obj.nom+'</span><span class="right"><span class="spacing">'+obj.prix+'$</span><a class="c-btn-style" href="javascript:app.general.appCart('+obj.id+')">+</a></span> <br/><span>'+obj.description+'</span></li>');
+					});
+				}        
+          	});
+		}
+
+		function plat(id){
+	    	$.ajax({
+				type: "GET",
+				url: "/api/plat",
+				data:{
+					id: id,
+				},
+				dataType: "html",
+				success: function(result){
+					plat = $.parseJSON(result);
+					$("#plat-nom").text(plat.nom);
+					$("#plat-prix").text(plat.prix + "$");
+					$("#plat-description").text(plat.description);
+				}        
+	      	});
+    	}
+
+    	function appCart(id){
+    		if (cart == null){
+    			cart = new shoopingCart();
+    			$.ajax({
+					type: "GET",
+					url: "/api/plat",
+					data:{
+						id: id,
+					},
+					dataType: "html",
+					success: function(result){
+						plat = $.parseJSON(result);
+						cart.pushItem(new shoopingCartItems(id,plat));
+					} 
+	      		});
+    			$('.cart').show();
+    		}
+    		else{
+    			item = cart.find(id);
+    			if(item != null){
+    				cart.items[item].addQTE();
+    			}
+    			else{
+    				$.ajax({
+						type: "GET",
+						url: "/api/plat",
+						data:{
+							id: id,
+						},
+						dataType: "html",
+						success: function(result){
+							plat = $.parseJSON(result);
+							cart.pushItem(new shoopingCartItems(id,plat));
+						} 
+	      			});
+    			}
+    		}
+    	}
+
+    	function addQTE(id){
+    		 item = cart.find(id);
+    		 cart.items[item].addQTE();
+    		 $("#qte_"+id).html(cart.items[item].qte);
+    		 $('#tr_total').html(cart.total());
+    	}
+
+    	function removeQTE(id){
+   			item = cart.find(id);
+   			cart.items[item].minusQTE();
+
+   			if(cart.items[item].qte==0){
+   				$("#tr_"+id).remove();
+   				$('#tr_total').html(cart.total());
+   				 delete cart.remove(id);
+   			}
+   			else{
+				$("#qte_"+id).html(cart.items[item].qte);
+				$('#tr_total').html(cart.total());
+   			}
+
+
+    	}
+
+    	function completeCart(){
+    		complete = true;
+    		$('#complete_order').show();
+    		$('.adresse').hide();
+    		$('.adresses').hide();
+    		$(".cart-items").html('');
+	    	for (var i = 0; i < cart.items.length; i++) {
+	    		obplat = cart.items[i];
+				$(".cart-items").append('<tr class="tr" id="tr_'+obplat.id+'"><td>'+obplat.plat.nom+'<span class="right">qte: <span id="qte_'+obplat.id+'">'+obplat.qte+'</span></span></td><td class="bill-price">'+obplat.plat.prix+'$</td><td></td></tr>');
+			}
+			$(".cart-items").append('<tr class="tr"><td>total</td><td class="bill-price" id="tr_total">'+cart.total()+'$</td><td></td></tr>');
+
+		    var now     = new Date(); 
+		    var year    = now.getFullYear();
+		    var month   = now.getMonth()+1; 
+		    var day     = now.getDate();
+		    var hour    = now.getHours();
+		    var minute  = now.getMinutes();
+		    var second  = now.getSeconds(); 
+			$("#liv_date").val(year+'-'+month+'-'+day);
+			$("#liv_heure").val(hour+':'+minute+':'+second);
+    	}
+
+    	function confirmCart(){
+			$.ajax({
+				type: "GET",
+				url: "/api/confirmer_cart",
+				data:{
+					date_de_commande: $('#liv_date').val(),
+					heure_de_commande: $('#liv_heure').val(),
+					prix_total: cart.total(),
+					addr_id: addrId,
+				},
+				dataType: "html",
+				success: function(result){
+					order = $.parseJSON(result);
+					for (var i = 0; i < cart.items.length; i++) {
+	    				obplat = cart.items[i];
+	    				$.ajax({
+							type: "GET",
+							url: "/api/confirmer_cart_plat",
+							data:{
+								commande_id: order.id,
+								plat_id: obplat.id,
+								qte: obplat.qte,
+							},
+							dataType: "html",
+							success: function(result){
+							} 
+		  				});
+					}
+					$('#token').text(order.no_confirmation);
+					$('#order_date').text(order.date_de_commande);
+					$('#order_time').text(order.heure_de_commande);
+					$('#order_total').text(order.prix_total);
+					$('#complete_order').hide();
+				} 
+  			});
+    	}
+
+    	function showCart(){
+    		$('.shoopingCart').show();
+    		if(!complete){
+    			$('#complete_order').hide();
+    		}
+    		$(".cart-items").html('');
+	    	for (var i = 0; i < cart.items.length; i++) {
+	    		obplat = cart.items[i];
+				$(".cart-items").append('<tr class="tr" id="tr_'+obplat.id+'"><td>'+obplat.plat.nom+'<span class="right">qte: <span id="qte_'+obplat.id+'">'+obplat.qte+'</span></span></td><td class="bill-price">'+obplat.plat.prix+'$</td><td><a class="c-btn-style" href="javascript:app.general.addQTE('+obplat.id+')">+</a><a class="c-btn-style" href="javascript:app.general.removeQTE('+obplat.id+')">-</a></td></tr>');
+			}
+			$(".cart-items").append('<tr class="tr"><td>total</td><td class="bill-price" id="tr_total">'+cart.total()+'$</td><td><a class="c-btn-style" href="javascript:app.general.completeCart()">completer</a></td></tr>');
+
+    	}
+
+    	function cartClose(){
+    		$('.shoopingCart').hide();
+    		complete = false;
+    	}
+
+    	function adresses(){
+    		$('.adresses').show();
+    		$('.adresse').hide();
+    		$("#adresses_list").html('');
+    		$.ajax({
+				type: "GET",
+				url: "/api/adresses",
+				dataType: "html",
+				success: function(result){
+					console.log(result);
+					$.each($.parseJSON(result), function(idx, obj) {
+						console.log(result);
+						$("#adresses_list").append('<li id="'+obj.id+'" class="adr-li"><span class="space adr">'+obj.no_maison+'</span><span class="space adr">'+obj.rue+'</span><span class="space adr">'+obj.ville+'</span><span class="space adr">'+obj.code_postal+'</span><br/><span class="space adr">'+obj.telephone+'</span><a href="javascript:app.general.addr('+obj.id+')">select</a></li>');
+					});
+				} 
+			});
+    	}
+
+    	function nAdresse(){
+    		$('.adresse').show();
+    		$('.adresses').hide();
+    	}
+
+    	function bAdresse(){
+			$.ajax({
+				type: "GET",
+				url: "/api/nAdresse",
+				data:{
+					adress:{
+			    		no_maison  :  $('#n_adresse_numero').val(), 
+			    		rue  :  $('#n_adresse_rue').val(),	
+			    		ville  :  $('#n_adresse_ville').val(), 
+			    		telephone  :  $('#n_adresse_telephone').val(), 
+			    		code_postal  :  $('#n_adresse_code_postale').val()
+			    	}
+				},
+				dataType: "html",
+				success: function(result){
+					console.log(result);
+				} 
+			});
+    	}
+
+    	function addr(id){
+    		addrId = id;
+    	}
 
     return{
       init:init,
@@ -111,7 +355,22 @@ app = (function(){
       app_open:app_open,
       app_signin:app_signin,
       app_register:app_register,
-      app_restaurants:app_restaurants
+      app_restaurants:app_restaurants,
+      menu:menu,
+      plats:plats,
+      getFoodElements:getFoodElements,
+      plat:plat,
+      appCart:appCart,
+      showCart:showCart,
+      cartClose:cartClose,
+      addQTE:addQTE,
+      removeQTE:removeQTE,
+      completeCart:completeCart,
+      confirmCart:confirmCart,
+      adresses:adresses,
+      nAdresse:nAdresse,
+      bAdresse:bAdresse,
+      addr:addr,
     }
   })();
 
@@ -121,13 +380,13 @@ app = (function(){
     }
 
     function oauth(){
+    	value =  $('#type').find(":selected").val();
 			$.ajax({
 			    type: "GET",
 			    url: "/api/signin",
 			    data: {
 			    	identificateur : $('#_aka').val(),
-			    	mot_de_passe : $('#_password').val()
-			    	
+			    	mot_de_passe : $('#_password').val(),
 			    },
 			    dataType: "html",
 			    success: function(result){
@@ -361,25 +620,6 @@ app = (function(){
       	});
     }
 
-    function informationPlat(id){
-    	$('#informations-plat').show();
-    	$('#modifier-plat').hide();
-    	$.ajax({
-			type: "GET",
-			url: "/api/plat",
-			data:{
-				id: id,
-			},
-			dataType: "html",
-			success: function(result){
-				plat = $.parseJSON(result);
-				$("#info-nom-plat").text(plat.nom);
-				$("#info-prix-plat").text(plat.prix+"$");
-				$("#info-description-plat").text(plat.description);
-			}        
-      	});
-    }
-
     function createPlat(){
    		$.ajax({
           type: "GET",
@@ -394,7 +634,7 @@ app = (function(){
           	plat = $.parseJSON(result);
           	console.log(plat);
           	if(plat != 0){
-          		$("#ul-plats").append('<li id="'+plat.id+'"><a href="javascript:app.restaurateur.informationPlat('+obj.id+')">'+plat.nom+'</a><span class="spacing">'+plat.prix+'$<a class="admin-btn-style" href="javascript:app.restaurateur.modPlat('+obj.id+')">modifier</a></span> </li>');
+          		$("#ul-plats").append('<li id="'+plat.id+'"><span class="plat-nom">'+plat.nom+'</span><span class="spacing">'+plat.prix+'$<a class="admin-btn-style" href="javascript:app.restaurateur.modPlat('+plat.id+')">modifier</a></span> </li>');
           		$('#nouveau-plat').hide();
           		$('#plat_nom').val("");
           		$('#plat_prix').val("");
@@ -418,7 +658,7 @@ app = (function(){
           	plat = $.parseJSON(result);
           	console.log(plat);
           	if(plat != 0){
-          		$("#"+plat.id).html('<a href="javascript:app.restaurateur.informationPlat('+obj.id+')">'+plat.nom+'</a><span class="spacing right">'+plat.prix+'$<a class="admin-btn-style" href="javascript:app.restaurateur.modPlat('+obj.id+')">modifier</a></span>');
+          		$("#"+plat.id).html('<span class="plat-nom">'+plat.nom+'</span><span class="spacing right">'+plat.prix+'$<a class="admin-btn-style" href="javascript:app.restaurateur.modPlat('+plat.id+')">modifier</a></span>');
           		$("#info-nom-plat").text("");
 				$("#info-prix-plat").text("");
 				$("#info-description-plat").text("");
@@ -434,13 +674,13 @@ app = (function(){
     	$.ajax({
           type: "GET",
           url: "/api/listPlat",
-          data:{
-          	nom: $('#resto_menu').val(),
-          },
+          // data:{
+          // 	id: $('#resto_menu').val(),
+          // },
           dataType: "html",
           success: function(result){
 			$.each($.parseJSON(result), function(idx, obj) {
-				$("#ul-plats").append('<li id="'+obj.id+'"><a href="javascript:app.restaurateur.informationPlat('+obj.id+')">'+obj.nom+'</a><span class="spacing right">'+obj.prix+'$<a class="admin-btn-style" href="javascript:app.restaurateur.modPlat('+obj.id+')">modifier</a></span> </li>');
+				$("#ul-plats").append('<li id="'+obj.id+'"><span class="plat-nom">'+obj.nom+'</span><span class="spacing right">'+obj.prix+'$<a class="admin-btn-style" href="javascript:app.restaurateur.modPlat('+obj.id+')">modifier</a></span><br/><span>'+obj.description+'</span> </li>');
 			});
 
           }        
@@ -457,7 +697,6 @@ app = (function(){
       bindMenu:bindMenu,
       newPlat:newPlat,
       modPlat:modPlat,
-      informationPlat:informationPlat,
       createPlat:createPlat,
       modifierPlat:modifierPlat,
     }
@@ -484,3 +723,57 @@ app = (function(){
 		app_menu_preparation:app_menu_preparation,
 	}
 })();
+
+
+function shoopingCart(){
+	this.items = new Array();
+}
+shoopingCart.prototype.pushItem = function(item){
+	this.items.push(item);
+}
+shoopingCart.prototype.find = function(id){
+	if(this.items.length>0){
+		for (var i = 0; i < this.items.length; i++) {
+			if(this.items[i].id == id){
+				return i;
+			}
+		}
+	}
+	return null;
+}
+shoopingCart.prototype.remove = function(id){
+	if(this.items.length>0){
+		for (var i = 0; i < this.items.length; i++) {
+			if(this.items[i].id == id){
+				this.items.splice(i,1);
+			}
+		}
+	}
+}
+shoopingCart.prototype.total = function(){
+	var total = 0;
+	for (var i = 0; i < this.items.length; i++) {
+		total+=parseFloat(this.items[i].qte * this.items[i].plat.prix);
+	}
+	return total;
+}
+
+function shoopingCartItems(id,plat){
+	this.id = id;
+	this.plat = plat;
+	this.qte = 1;
+}
+shoopingCartItems.prototype.addQTE = function(){
+	this.qte += 1;
+}
+shoopingCartItems.prototype.minusQTE = function(){
+	this.qte -= 1;
+}
+function shoopingCartPlat(nom,description,menu_id,prix){
+	this.nom = nom;
+	this.prix = prix;
+	this.menu_id = menu_id;
+	this.prix = prix;
+}
+
+

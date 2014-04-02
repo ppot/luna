@@ -49,19 +49,91 @@
   right: 2.5%;
   color: #FFFFFF;
 }
-.openid{
-margin-left: 11%;
-width: 15%;
+
+.cart{
+  padding: 5px;
+  background-color:#e6e6e6;
+  margin-right:10px;
 }
+
+.cart a{
+  color: #666666;
+}
+
+.menus{
+  width: 25%;
+  color: #FFFFFF;
+  float: left;
+}
+
+
+.plats{
+  width: 30%;
+  color: #FFFFFF;
+  float: left;
+}
+
+.shoopingCart{
+  position: fixed;
+  left: 20%;
+  top:10%;
+  z-index: 1;
+  width: 60%;
+  height: 80%;
+  background-color: rgb(224, 223, 217);
+}
+
+.cartTitle{
+    font-size: 30px;
+    color: #944238;
+}
+
+.qte{
+  text-align:center
+}
+
+.shoopingCart-close{
+  position: absolute;
+  right: 0px;
+  top: 0px;
+}
+
+/*.items{
+  width: 30%;
+}*/
+
+table {
+    background-color: transparent !important;
+}
+.tr{
+    background-color: transparent !important;
+}
+
 .menu{
   color: #FFFFFF;
-  font-size: 40px;
+  font-size: 30px;
 }
-.plats{
+
+.plat{
+  color: #FFFFFF;
+  font-size: 18px;  
+}
+
+.restaurantsElements{
     margin-left: 11%;
-    width: 30%;
-    color: #FFFFFF;
-    float: left;
+}
+
+.plat-lst{
+   height:400px;
+  overflow:scroll;
+}
+
+.plat-nom{
+  color:#008cba;
+}
+
+ul{
+  list-style: none;
 }
 
 .app-main-title{
@@ -334,6 +406,21 @@ width: 15%;
   text-decoration:none;
 }
 
+.c-btn-style{
+  font-size: 12px;
+  padding:5px;
+  background: #f15743;
+  border: none;
+  color: #FFFFFF;
+}
+
+.c-btn-style:hover {
+  cursor: pointer;
+  background-color: #999999;
+  color: #ffffff;
+  text-decoration:none;
+}
+
 .management-btn-style{
   margin-top: 20px;
   margin-bottom: 10px;
@@ -506,4 +593,18 @@ h2 {
 .spacing{
   margin-left: 5px;
   margin-right: 5px;
+}
+
+.space{
+   margin-right: 3px;
+}
+
+.adr{
+  font-size: 11px;
+}
+#adresses_list{
+  margin: 0;
+  padding: 0;
+  height:200px;
+  overflow:scroll;
 }

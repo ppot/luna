@@ -1,52 +1,96 @@
 
 <% if session[:current_user_id] != nil %>
 <div class="app-background">
-    <span class="app">app</span>
-    <span class="session"><%= @_user.identificateur %>    <a href="/api/signout" class="connect">Deconnection</a></span>
+<!--     <span class="app">app</span> -->
+    <span class="session"><span class="cart"><a href="javascript:app.general.showCart()">cart</a></span><%= @_user.identificateur %>    <a href="/api/signout" class="connect">Deconnection</a></span>
     <span class="app-main-title">Luna</span>
     <div>
-      <div class="openid">
-        <select class="lstRestaurants">
-          <option id="-1" selected>AUCUN</option>
-        </select>
-      </div>
-
-      <div>
-        <div class="plats">
+      <div class="restaurantsElements">
+       <div class="menus">
                 <div class="menu">
         <div>
-          <span>Menu : So Awsome</span>
+          <span>List restaurants</span>
         </div>
       </div>
-             <span>TRIO BURGER <span class="bill-price">15$</span></span><br/>
-            <span>BOISSONS <span class="bill-price">1$</span></span><br/>
-            <span>FRITES <span class="bill-price">2$</span></span><br/><br/>
+        <div class="plat-lst">
+          <ul class="left" id="lstRestaurants">  
+          </ul>
         </div>
+       </div>
         <div class="plats">
-        <div class="menu">
-          <span>Votre commande</span>
+          <div class="menu">
+              <div>
+                <span>Menu : <span id="resto-menu"></span></span>
+              </div>
+          </div>
+          <div class="plat-lst">
+          <ul class="" id="ul-plats">                                                        
+          </ul>
         </div>
-        <!--   <div>
-           <span class="">votre commande</span>
-          </div> -->
-             <span>TRIO BURGER <span class="bill-price">15$</span></span><br/>
-            <span>BOISSONS <span class="bill-price">1$</span></span><br/>
-            <span>FRITES <span class="bill-price">2$</span></span><br/><br/>
-            <span>TOTAL<span class="bill-price">18$</span></span>
-        </div>
+       </div>
       </div>
     </div>
-     <div class="plats todo">
-    <span>Todo</span>
-    <ul>
-      <li>Menu option  => Content add</li>
-      <li>Menu option =>  Content qte value</li>
-      <li>User option  management</li>
-    </ul>
-  </div>
+    <div class="shoopingCart">
+      <span class="cartTitle">shooping cart</span><a class="shoopingCart-close c-btn-style" href="javascript:app.general.cartClose()">X</a>
+      <div class="row">
+        <!-- <div class="items large-8 columns"> -->
+        <div>
+          <table class="large-7 columns">
+              <tbody class="cart-items">
+              </tbody>
+          </table>
+        </div>
+        <div id="complete_order" class="large-5 columns">
+          <div>
+            <a class="c-btn-style" href="javascript:app.general.adresses()">adresses</a>
+            <a class="c-btn-style" href="javascript:app.general.nAdresse()">nouvelle adresse</a>
+          </div>
+          <div class="adresses">
+            <div class="large-12 columns">
+              <ul id="adresses_list">
+              <ul>
+              </div>
+          </div>
+        <div id="complete_order" class="large-10 columns">
+          <div class="adresse">
+            <div class="large-6 columns">
+              <input type="text"     id="n_adresse_numero"        placeholder="num"/>
+            </div>
+             <div class="large-9 columns">
+              <input type="text"     id="n_adresse_code_postale"  placeholder="code postale"/>
+            </div>
+            <input type="text"     id="n_adresse_rue"           placeholder="rue"/>
+            <input type="text"     id="n_adresse_ville"         placeholder="ville"/>
+            <input type="tel"      id="n_adresse_telephone"     placeholder="téléphone"/>
+            <a class="c-btn-style" href="javascript:app.general.bAdresse()">ajouter</a>
+          </div>
+          <div class="cart_dt">
+            <input type="text" id="liv_date"  placeholder="date de livraison"/>
+            <input type="text" id="liv_heure"  placeholder="heure de livraison"/>
+            <a class="c-btn-style" href="javascript:app.general.confirmCart()">confirmer</a>
+          </div>
+        </div>
+        </div>
+        <div>
+          <div id="complete_sucess" class="large-3 columns">
+            <span>confirmation:  <span id="token"></span></span>
+            <span>date: <span id="order_date"></span></span>
+            <span>heure: <span id="order_time"></span></span>
+            <span>total: <span id="order_total"></span></span>
+          </div>
+        </div>      
+      </div>
+    </div>
 </div>
  <script type="text/javascript">
+      app.general.init();
       app.general.app_restaurants();
+
+              $('#n_adresse_numero').val(317);
+              $('#n_adresse_rue').val('EDIOSON'); 
+              $('#n_adresse_ville').val('SAINT-LAMBERT');
+              $('#n_adresse_telephone').val(5145151525);
+              $('#n_adresse_code_postale').val('J4R2P8');
   </script>
 <% else %>
   <div class="app-background">
@@ -129,6 +173,22 @@
   </div>
   <script type="text/javascript">
       app.general.app_open();
+
+              $('#inscription_nom').val('Potvin');
+              $('#inscription_prenom').val('Philippe');
+              $('#inscription_identificateur').val('TooT');
+              $('#inscription_motDePass').val('bacon');
+
+            
+              $('#inscription_email').val('ph.potvin@gmail.com');
+              $('#inscription_dateNaissance').val('1992-09-22');
+            
+              $('#adresse_numero').val(317);
+              $('#adresse_rue').val('EDIOSON'); 
+              $('#adresse_ville').val('SAINT-LAMBERT');
+              $('#adresse_telephone').val(5145151525);
+              $('#adresse_code_postale').val('J4R2P8');
+            
   </script>
 <% end %>
 

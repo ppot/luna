@@ -29,39 +29,9 @@ ActiveRecord::Schema.define(version: 20140320152623) do
 
   add_index "adresses", ["telephone"], name: "index_adresses_on_telephone", using: :btree
 
-  create_table "clientInfos", force: true do |t|
-    t.integer  "client_id",                 null: false
-    t.string   "courriel",       limit: 40, null: false
-    t.date     "date_naissance",            null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "clientInfos", ["client_id"], name: "index_clientInfos_on_client_id", unique: true, using: :btree
-  add_index "clientInfos", ["courriel"], name: "index_clientInfos_on_courriel", unique: true, using: :btree
-
-  create_table "client_infos", force: true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "clients", force: true do |t|
-    t.string   "identificateur", limit: 30, null: false
-    t.string   "mot_de_passe",   limit: 20, null: false
-    t.string   "nom",            limit: 15, null: false
-    t.string   "prenom",         limit: 15, null: false
-    t.string   "courriel",       limit: 40, null: false
-    t.date     "date_naissance",            null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "clients", ["courriel"], name: "index_clients_on_courriel", unique: true, using: :btree
-  add_index "clients", ["identificateur"], name: "index_clients_on_identificateur", unique: true, using: :btree
-  add_index "clients", ["nom"], name: "index_clients_on_nom", using: :btree
-
   create_table "commandes", force: true do |t|
     t.integer "client_id",                                            null: false
+    t.integer "adresse_id",                                           null: false
     t.integer "livreur_id"
     t.string  "no_confirmation",   limit: 10,                         null: false
     t.date    "date_de_commande",                                     null: false
