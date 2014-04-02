@@ -75,7 +75,7 @@
                     <td><%= c.no_confirmation %></td>
                     <td><%= c.date_de_commande %></td>
                     <td><%= c.heure_de_commande.strftime("%I:%M%p") %></td>
-                    <td><%= c.status_pret %></td>
+                    <td>prêt</td>
                   <tr>
                 <%end%>
               </table>
@@ -113,9 +113,19 @@
 
              <div  class="row">
                <div class="large-8 columns group dashboard-table">
-             <div class="left">Votre position :</div><br/>
-            <div id="directionsPanel" style="float:right;"></div>
-            <div id="map_canvas" style="height:400px"></div>
+             <div class="left">Votre position en code postal:
+              <div>
+                <form accept-charset="UTF-8" action="javascript:google_map.validation_calcRoute(); void(0);"class="large-8 columns" id="route_de_livraison">
+                      <input id="route_de_livraison_client" type="hidden" value="0" />
+                      <input id="route_de_livraison_restaurant" type="hidden" value="0" />
+                      <input class="large-8 columns" id="route_de_livraison_livreur" placeholder="Lieu actuel" />
+                      <input class="admin-btn-style" name="commit" type="submit" value="Afficher route" />  
+                      <label class="error"   class="large-8 columns" id="route_de_livraison_error"></label> 
+                </form>
+              </div>
+             </div><br/>
+            <div id="directionsPanel" style="float:right;" class="large-8 columns"></div>
+            <div id="map_canvas" style="height:400px" class="large-8 columns"></div>
           </div>
             </div>
          </div>

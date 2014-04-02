@@ -1,0 +1,15 @@
+class Client < Utilisateur
+	has_one :info
+	has_many :commandes
+<<<<<<< HEAD
+	has_many :adresse, as: :adresseable
+	def self.model_name
+        Utilisateur.model_name
+=======
+	has_many :adresses, as: :adresseable
+	
+	def self.model_name
+    	Utilisateur.model_name
+>>>>>>> entrepreneur en ajax
+    end
+end

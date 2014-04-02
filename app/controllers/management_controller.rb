@@ -175,7 +175,7 @@ class ManagementController < ApplicationController
 
   def livraisonDetails
       commande_actuelle = Commande.find(params[:id])
-      adresse_client = Adresse.where(:adresseable_id => commande_actuelle.client_id, :adresseable_type => 'Client', :principale => true) #adresse du client
+      adresse_client = Adresse.find(commande_actuelle.adresse_id) #adresse du client
       #requete pour optenir l'adresse du restaurant
       adresse_restaurant = Adresse.find_by_sql "SELECT adresses.no_maison, adresses.rue, adresses.ville, adresses.telephone, adresses.telephone, adresses.code_postal, restaurants.nom FROM adresses 
                                                 INNER JOIN restaurants ON adresses.adresseable_id = restaurants.id 
