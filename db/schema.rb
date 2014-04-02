@@ -70,6 +70,8 @@ ActiveRecord::Schema.define(version: 20140320152623) do
     t.time    "heure_de_livraison", null: false
   end
 
+  add_index "livraisons", ["commande_id"], name: "index_livraisons_on_commande_id", unique: true, using: :btree
+
   create_table "menus", force: true do |t|
     t.integer "restaurant_id"
     t.string  "nom",           limit: 15
@@ -77,13 +79,11 @@ ActiveRecord::Schema.define(version: 20140320152623) do
 
   create_table "plats", force: true do |t|
     t.integer "menu_id"
-    t.integer "commande_id"
     t.string  "nom",         limit: 25,                         null: false
     t.decimal "prix",                   precision: 5, scale: 2, null: false
     t.text    "description"
   end
 
-  add_index "plats", ["commande_id"], name: "index_plats_on_commande_id", using: :btree
   add_index "plats", ["menu_id"], name: "index_plats_on_menu_id", using: :btree
   add_index "plats", ["nom"], name: "index_plats_on_nom", using: :btree
 
