@@ -190,14 +190,15 @@ include  API
   # ===================================================
   # ========================  index Function  =========================
   def confirmer_cart
+    p params[:addr_id]
     _user = current_client
     _confirmation = rand(36**10).to_s(36)
     _cart = Commande.new()
     _cart.client_id = _user.id
-    if params[:addr_id] != -1
+    if params[:addr_id] != '-1'
       _cart.adresse_id = params[:addr_id]
     else
-     _cart.adresse_id = client_adresse     
+     _cart.adresse_id = client_adresse.id    
     end
     _cart.no_confirmation = _confirmation
     _cart.date_de_commande = params[:date_de_commande]

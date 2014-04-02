@@ -602,6 +602,12 @@ h2 {
 .adr{
   font-size: 11px;
 }
+
+.adresses,.adresse ,.cmd{
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
 #adresses_list{
   margin: 0;
   padding: 0;

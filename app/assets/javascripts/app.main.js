@@ -73,6 +73,7 @@ app = (function(){
     function init(){
   		$('.cart').hide(); //temp
   		$('.shoopingCart').hide();
+  		$('#complete_sucess').hide();
     }
 
     function redirect(path){
@@ -229,6 +230,7 @@ app = (function(){
     		$('.adresse').hide();
     		$('.adresses').hide();
     		$(".cart-items").html('');
+    		$('#complete_sucess').hide();
 	    	for (var i = 0; i < cart.items.length; i++) {
 	    		obplat = cart.items[i];
 				$(".cart-items").append('<tr class="tr" id="tr_'+obplat.id+'"><td>'+obplat.plat.nom+'<span class="right">qte: <span id="qte_'+obplat.id+'">'+obplat.qte+'</span></span></td><td class="bill-price">'+obplat.plat.prix+'$</td><td></td></tr>');
@@ -247,6 +249,8 @@ app = (function(){
     	}
 
     	function confirmCart(){
+    		var date = $('#liv_date').val();
+    		var time = $('#liv_heure').val();
 			$.ajax({
 				type: "GET",
 				url: "/api/confirmer_cart",
@@ -275,10 +279,14 @@ app = (function(){
 		  				});
 					}
 					$('#token').text(order.no_confirmation);
-					$('#order_date').text(order.date_de_commande);
-					$('#order_time').text(order.heure_de_commande);
+					$('#order_date').text(date);
+					$('#order_time').text(time);
 					$('#order_total').text(order.prix_total);
 					$('#complete_order').hide();
+					$('#complete_sucess').show();
+					addrId = -1;
+					cart = null;
+					$('.cart').hide();
 				} 
   			});
     	}
@@ -299,6 +307,7 @@ app = (function(){
 
     	function cartClose(){
     		$('.shoopingCart').hide();
+    		$('#complete_sucess').hide();
     		complete = false;
     	}
 
@@ -311,9 +320,7 @@ app = (function(){
 				url: "/api/adresses",
 				dataType: "html",
 				success: function(result){
-					console.log(result);
 					$.each($.parseJSON(result), function(idx, obj) {
-						console.log(result);
 						$("#adresses_list").append('<li id="'+obj.id+'" class="adr-li"><span class="space adr">'+obj.no_maison+'</span><span class="space adr">'+obj.rue+'</span><span class="space adr">'+obj.ville+'</span><span class="space adr">'+obj.code_postal+'</span><br/><span class="space adr">'+obj.telephone+'</span><a href="javascript:app.general.addr('+obj.id+')">select</a></li>');
 					});
 				} 
