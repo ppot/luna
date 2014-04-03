@@ -1174,9 +1174,9 @@ var livreur=(function(){
     	$('#date_commande').html('date: ' +commande.date_de_commande + ' à ' + heure);
     	$('#commande_plats').html(' <h5 style="color:#C0C0C0"> Commande</h5>');
     	for (var i=0; i< plats.length; i++) {  	    
-		 	$('#commande_plats').last().append('<span>' +plats[i].nom + '<span class="bill-price">' + plats[i].prix + '$</span><br/>');
+		 	$('#commande_plats').last().append('<span>' +plats[i].nom + ' x '+ plats[i].quantitee + '<span class="bill-price">' + plats[i].prix + '$</span><br/>');
 		}
-		$('#commande_plats').last().append('<br/><span>TOTAL<span class="bill-price">' + commande.prix_total + '$</span>');
+		$('#commande_plats').last().append('<br/><span>total<span class="bill-price">' + commande.prix_total + '$</span>');
     	$('#livraison_client').html("<a class='hunt-btn-style' href='/livrerCommande/0'>Livrer</a>");
     	$.ajax({
 		    type: "GET",

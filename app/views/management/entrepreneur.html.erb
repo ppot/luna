@@ -58,8 +58,8 @@
               </div>
                <div class="large-8 columns group dashboard-table">
                   
-               <table id='restaurateurs_table'>
-                  <tr class="table-title">
+               <table id='restaurateurs_table' class="tble">
+                  <tr class="table-title class="tr"">
                     <th>Utilisateur</th>
                     <th>Mot de passe</th>
                     <th>Nom</th>
@@ -67,7 +67,7 @@
                     <th>Restaurant</th>
                   </tr>
                   <% @restaurateur.each do |r| %>
-                  <tr>
+                  <tr class="tr">
                     <td><%= r.identificateur %></td>
                     <td><%= r.mot_de_passe %></td>
                     <td><%= r.nom %></td>
@@ -121,8 +121,8 @@
             </div>
     <!-- *************************Table qui montre les ajouts de restaurants*************************************-->
              <div class="large-8 columns group dashboard-table">
-              <table id="restaurants_table">
-                <tr class="table-title">
+              <table id="restaurants_table" class="tble">
+                <tr class="table-title" class="tr">
                   <th>Restaurateur</th>
                   <th>Nom</th>
                   <th>Téléphone</th>
@@ -130,9 +130,9 @@
                   <th>Rue</th>
                   <th>Ville</th>
                   <th>Code postale</th>
-                </tr>
+                </tr class="tr">
                 <% @restaurants_restaurateurs.each do |r| %>  
-                <tr>
+                <tr class="tr">
                   <td><% if r.restaurateur != nil %>
                           <%= "#{r.restaurateur.nom}" + " " + "#{r.restaurateur.prenom}"%></td>
                       <% else %>
@@ -170,15 +170,15 @@
                 </div>
               </div>
               <div class="large-8 columns group dashboard-table">
-                  <table id="livreurs_table">
-                  <tr class="table-title">
+                  <table id="livreurs_table" class="tble">
+                  <tr class="table-title" class="tr">
                     <th>Utilisateur</th>
                     <th>Mot de passe</th>
                     <th>Nom</th>
                     <th>Prénom</th>
                   </tr>       
                   <% @livreurs.each do |l| %>  
-                  <tr>
+                  <tr class="tr">
                     <td><%= l.identificateur %></td>
                     <td><%= l.mot_de_passe %></td>
                     <td><%= l.nom %></td>
@@ -191,7 +191,7 @@
     <!-- ******************************* gerer Restaurateur ********************************-->
     <div  id="gerer-restaurateur" class="row">
                <div class="large-8 columns group dashboard-table">
-                  <table>
+                  <table class="tble">
                       <tr class="table-title">
                         <th><!--vide valide--></th>
                         <th>Utilisateur</th>
@@ -201,7 +201,7 @@
                         <th>Restaurant</th>
                       </tr>
                       <% @restaurateur.each do |r| %>
-                      <tr id="gerer_restaurateur<%=r.id%>">
+                      <tr id="gerer_restaurateur<%=r.id%>" class="tr">
                          <td><div>
                               <%= link_to "Supprimer","javascript:;", onclick: "app.entrepreneur.restaurateur_delete(#{r.id});", class: "hunt-btn-style" %>
                             </div><br/>
@@ -257,14 +257,14 @@
             <!-- ******************************* gerer restaurant ************************-->
             <div  id="gerer-restaurant" class="row">
                <div class="large-8 columns group dashboard-table">
-                  <table>
-                <tr class="table-title">
+                  <table class="tble">
+                <tr class="table-title" class="tr">
                   <th></th>
                   <th>Restaurateur</th>
                   <th>Adresse</th>
                 </tr>
                 <% @restaurants_restaurateurs.each do |r| %>
-                <tr id="gerer_restaurants<%=r.id%>">
+                <tr id="gerer_restaurants<%=r.id%>" class="tr">
                    <td><div>
                     <% restaurant_restaurateur_nom = r.restaurateur == nil ?  '' : r.restaurateur.nom%>
                     <%= link_to "Supprimer", "javascript:;", onclick: "app.entrepreneur.restaurant_delete(#{r.id})", class: "hunt-btn-style" %></div><br/>
@@ -328,8 +328,8 @@
             <!-- ************************************ livreur ******************************************-->
               <div id="gerer-livreur" class="row">
               <div class="large-8 columns group dashboard-table">
-                  <table id="gerer_livreurs_table">
-                  <tr class="table-title">
+                  <table id="gerer_livreurs_table" class="tble">
+                  <tr class="table-title" class="tr">
                     <th></th>
                     <th>Utilisateur</th>
                     <th>Mot de passe</th>
@@ -337,7 +337,7 @@
                     <th>Prénom</th>
                   </tr>
                   <% @livreurs.each do |r| %>
-                      <tr id="gerer_livreurs<%=r.id%>">
+                      <tr id="gerer_livreurs<%=r.id%>" class="tr">
                          <td><div><%= link_to "Supprimer", "javascript:;", onclick: "app.entrepreneur.livreur_delete(#{r.id})", class: "hunt-btn-style" %></div><br/>
                             <div><%= link_to "Modifier", "javascript:;", onclick: "app.entrepreneur.livreur_form_values(#{r.id}, \'#{r.nom}\', \'#{r.prenom}\', \'#{r.identificateur}\', \'#{r.mot_de_passe}\');", class: "hunt-btn-style modifierRestaurateur_btn"%></div>
                         </td>

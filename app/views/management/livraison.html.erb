@@ -59,7 +59,7 @@
             <div class="management-content">
               <div id="add-restaurant" class="row">
              <div class="large-9 columns group dashboard-table">
-              <table>
+              <table class="tble">
                 <tr class="table-title">
                   <th>No commande</th>
                   <th>no de confirmation</th>
@@ -68,7 +68,7 @@
                   <th>statut</th>
                 </tr>
                 <% @commandes.each do |c| %>               
-                  <tr id="commande<%=c.id%>"><!--******************************On place le zip code client ici-->
+                  <tr class="tr" id="commande<%=c.id%>"><!--******************************On place le zip code client ici-->
                     <td>
                     <%plats = c.commandes_plats.map {|c| {nom:"#{c.plat.nom}", prix:"#{c.plat.prix}", quantitee:"#{c.quantitee}"} }%>
                     <%= link_to "#{c.id}", "javascript:;", onclick: "var commande = #{c.to_json};var plats = #{plats.to_json}; app.livreur.afficher_commande_details(commande,\'#{c.heure_de_commande.strftime("%I:%M%p")}\', plats)", class: "hunt-btn-style" %></td>
