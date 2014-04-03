@@ -34,9 +34,8 @@
             <div class="management-menu">
                 <div class="data-admin">
                     <ul class="no-bullet">
-                      <li><a class="admin-btn-style" href="javascript:app.app_menus();" >Menu</a></li>
-                      <!-- <li><a class="admin-btn-style" href="javascript:app.app_add_menu();" >Nouveau menu</a></li> -->
-                      <li><a class="admin-btn-style" href="javascript:app.app_menu_preparation();" >Gerer commandes</a></li> 
+                      <li><a class="admin-btn-style" href="javascript:app.app_menus();" >menu</a></li>
+                      <li><a class="admin-btn-style" href="javascript:app.app_menu_preparation();" >commandes</a></li> 
                      </ul>
                 </div>
             </div>
@@ -52,7 +51,7 @@
                     <div class="large-12 columns group">
                       <div class="row">
                         <div  class="large-12 columns group">
-                          <span class="resto-menu" >Menu : <span id="menu"></span><a id="id-newPlat" href="javascript:app.restaurateur.newPlat()">nouveau plat</a><a id="newMenu" href="javascript: app.restaurateur.newMenu()">nouveau</a></span>
+                          <span class="resto-menu" >Menu : <span  id="" class="rstoid"></span><span id="menu"></span><a id="id-newPlat" href="javascript:app.restaurateur.newPlat()">nouveau plat</a><a id="newMenu" href="javascript: app.restaurateur.newMenu()">nouveau</a></span>
                         </div>
                        <div  class="large-12 columns group">
   
@@ -72,6 +71,8 @@
                                   <input id="plat_nom" type="text" placeholder="nom du plat"/>
                                   <input id="plat_prix" type="text" placeholder="prix du plat"/>
                                   <input id="plat_description" type="text" placeholder="description du plat"/>
+                                  <div class="alert-box error" id="plats-error">
+                                  </div>
                               </div>
                               <div class="large-1 columns left">
                                 <span style="position: relative; top: 5px;"><a class="admin-btn-style" href="javascript:app.restaurateur.createPlat()">creer</a></span>
@@ -95,75 +96,48 @@
                     </div>
                 </div>
           <div id="menu-preparation" class="row">
-             <div class="large-9 columns group dashboard-table">
-              <table>
-                <tr class="table-title">
-                  <th>No commande</th>
-                  <th>no_de_confirmation</th>
-                  <th>date_commande</th>
-                  <th>heure_commande</th>
-                  <th>statut</th>
-                </tr>
-                <tr>
-                  <td>2<span><a class="hunt-btn-style" href="#">preparer</a></span></td>
-                  <td>wrw3-wrwr</td>
-                  <td>Feb 26, 2014</td>
-                  <td>12:00:00 PM</td>
-                  <td>prete</td>
-                </tr>
-                <tr>
-                        <td>4<span><a class="hunt-btn-style" href="#">preparer</a></span></td>
-                  <td>2424-42</td>
-                  <td>Feb 26, 2014</td>
-                  <td>12:00:00 PM</td>
-                  <td>non prette</td>
-                </tr>
-                <tr>
-                        <td>5<span><a class="hunt-btn-style" href="#">preparer</a></span></td>
-                  <td>P1313ate-da</td>
-                  <td>Feb 26, 2014</td>
-                  <td>12:00:00 PM</td>
-                  <td>Terminer</td>
-                </tr>
-              </table>
+             <div class="large-8 columns group cmd-pret">
+                <table class="large-12 columns tble">
+                    <tbody class="commandes-items"></tbody>
+                </table>
               </div>
-                   <div class="large-3 columns group">
-         <div class="row">
+                   <div class="large-4 columns group order" id="cmd">
+          <div class="row left">
                   <div class="large-6 columns">
-                    <span class="add-title">#4<span></span></span>
+                    <span class="add-title" id="cmd-id">#4<span></span></span>
                   </div>
                   <div class="large-6 columns ">
-                    <span class="bill-price">18$</span>
+                    <span class="bill-price" id="cmd-prix">18$</span>
                   </div>
-        </div>
-
-                <div class="row left">
-                  <div class="large-12 columns">
-                      <p>confirmation: wrw3-wrwr </p>
+                  <div class="large-12 columns bill">
+                      <span id="cmd-conf">wrw3-wrwr</span>
                   </div>
-                  <div class="large-12 columns">
-                     <p>date: Feb 26, 2014 12:00:00 PM</p>
+                  <div class="large-12 columns bill">
+                     <span>Feb 26, 2014 12:00:00 PM</span>
                   </div>
-                  <div class="large-12 columns">
-                        <strong>Mc-Donald</strong><br>
-                          795 Folsom Ave, Suite 600<br>
-                          San Francisco, CA 94107<br>
-                        <abbr title="Phone">P:</abbr> (123) 456-7890
+                  <div class="large-12 columns bill">
+                    <span class="space" id="addr_no_maison"></span>
+                      <span class="space" id="addr_rue"></span>
+                      <span class="space" id="addr_ville"></span>
+                      <span class="space" id="addr_code_postal"></span><br/>
+                      <span class="space" id="addr_telephone"></span>
                   </div>
                     <div class="large-12 columns">
                      <p></p>
                     </div>
-                  <div class="large-12 columns">
-                     <span>TRIO BURGER <span class="bill-price">15$</span></span><br/>
-                      <span>BOISSONS <span class="bill-price">1$</span></span><br/>
-                      <span>FRITES <span class="bill-price">2$</span></span><br/><br/>
-                      <span>TOTAL<span class="bill-price">18$</span></span>
+                  <div class="large-12 columns bill">
+                    <div class="order-items">
+                    </div>
                   </div>
-                   <div class="large-12 columns">
-                     <a class="admin-btn-style" href="" >Terminer</a>
-              </div>
-            </div>
-    </div>
+                  <div class="large-12 columns bill">
+                    ------------------------------------------------------------
+                    <span class="bill">total<span class="bill-price" id="cmd-total"></span></span>
+                  </div>
+                  <div class="large-12 columns bill">
+                     <a class="admin-btn-style" id="cmd-function" href="" >Terminer</a>
+                  </div>
+                </div>
+                </div>
             </div>
             </div>
        </div>
@@ -189,4 +163,5 @@
   app.restaurateur.getRestaurant();
   app.restaurateur.getMenu();
   app.restaurateur.getPlats();
+  // app.restaurateur.getCommandesNotReady();
 </script>

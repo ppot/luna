@@ -47,6 +47,11 @@ LOG::Application.routes.draw do
   get "api/confirmer_cart_plat"
   get "api/nAdresse"
   get "api/adresses"
+  get "api/commandesRestaurantsNotReady"
+  get "api/commandeOrder"
+  get "api/commandeAddr"
+  get "api/commandeOrderItems"
+  get "api/commandeOrderReady"
 
 
   # The priority is based upon order of creation: first created -> highest priority.

@@ -397,7 +397,6 @@ app = (function(){
 			    },
 			    dataType: "html",
 			    success: function(result){
-			        console.log(result);
 			        if(result == 1){
 			        	general.redirect("/users/profile")
 			        }
@@ -444,7 +443,6 @@ app = (function(){
 			    },
 			    dataType: "html",
 			    success: function(result){
-			        console.log(result);
 			        if(result==1){
 			        	general.redirect("/users/profile")
 			        }
@@ -538,6 +536,8 @@ app = (function(){
   var restaurateur=(function(){ 
     function init(){
   		$('#menu-form').hide();
+  		$("#cmd").hide();
+  		$('#plats-error').hide();
     }
 
     function getRestaurant(){
@@ -564,9 +564,10 @@ app = (function(){
               dataType: "html",
               success: function(result){
               	menu = $.parseJSON(result)
-              	console.log(menu)
                 if(menu != null){
                   $('#menu').text(" " + menu.nom);
+                  $('.rstoid').attr("id",menu.restaurant_id);
+                  getCommandesNotReady();
                   $('#newMenu').hide();
                   $('#menu-form').hide();
                   $('#id-newPlat').show();
@@ -594,7 +595,6 @@ app = (function(){
           dataType: "html",
           success: function(result){
           	menu = $.parseJSON(result);
-          	console.log(menu);
           	getMenu();
           }        
       });
@@ -628,27 +628,48 @@ app = (function(){
     }
 
     function createPlat(){
-   		$.ajax({
-          type: "GET",
-          url: "/api/createPlat",
-          data:{
-          	nom: $('#plat_nom').val(),
-          	prix: $('#plat_prix').val(),
-          	description: $('#plat_description').val(),
-          },
-          dataType: "html",
-          success: function(result){
-          	plat = $.parseJSON(result);
-          	console.log(plat);
-          	if(plat != 0){
-          		$("#ul-plats").append('<li id="'+plat.id+'"><span class="plat-nom">'+plat.nom+'</span><span class="spacing">'+plat.prix+'$<a class="admin-btn-style" href="javascript:app.restaurateur.modPlat('+plat.id+')">modifier</a></span> </li>');
-          		$('#nouveau-plat').hide();
-          		$('#plat_nom').val("");
-          		$('#plat_prix').val("");
-          		$('#plat_description').val("");
-          	}
-          }        
-     	});
+    	var nom = $('#plat_nom').val();
+    	var prix = $('#plat_prix').val();
+    	var description = $('#plat_description').val();
+    	var error ="";
+    	if(nom == ""){
+    		error+='le nom du menu est obligatoire<br/>'	
+    	}
+    	if(description == ""){
+    		error+='qu’aucune description n’a été fournie<br/>'
+    		$('#plats-error').html('qu’aucune description n’a été fournie');		
+    	}
+    	if(prix == ""){
+    		error+='aucun prix n’a été fournie<br/>'	
+    	}
+
+    	if(error!=""){
+    		$('#plats-error').html(error);
+    		$('#plats-error').show();
+    	}
+    	else{
+    		$('#plats-error').hide();
+	   		$.ajax({
+	          type: "GET",
+	          url: "/api/createPlat",
+	          data:{
+	          	nom: $('#plat_nom').val(),
+	          	prix: $('#plat_prix').val(),
+	          	description: $('#plat_description').val(),
+	          },
+	          dataType: "html",
+	          success: function(result){
+	          	plat = $.parseJSON(result);
+	          	if(plat != 0){
+	          		$("#ul-plats").append('<li id="'+plat.id+'"><span class="plat-nom">'+plat.nom+'</span><span class="spacing">'+plat.prix+'$<a class="admin-btn-style" href="javascript:app.restaurateur.modPlat('+plat.id+')">modifier</a></span> </li>');
+	          		$('#nouveau-plat').hide();
+	          		$('#plat_nom').val("");
+	          		$('#plat_prix').val("");
+	          		$('#plat_description').val("");
+	          	}
+	          }        
+	     	});
+    	}
     }
     function modifierPlat(id){
    		$.ajax({
@@ -663,7 +684,6 @@ app = (function(){
           dataType: "html",
           success: function(result){
           	plat = $.parseJSON(result);
-          	console.log(plat);
           	if(plat != 0){
           		$("#"+plat.id).html('<span class="plat-nom">'+plat.nom+'</span><span class="spacing right">'+plat.prix+'$<a class="admin-btn-style" href="javascript:app.restaurateur.modPlat('+plat.id+')">modifier</a></span>');
           		$("#info-nom-plat").text("");
@@ -681,9 +701,6 @@ app = (function(){
     	$.ajax({
           type: "GET",
           url: "/api/listPlat",
-          // data:{
-          // 	id: $('#resto_menu').val(),
-          // },
           dataType: "html",
           success: function(result){
 			$.each($.parseJSON(result), function(idx, obj) {
@@ -694,6 +711,105 @@ app = (function(){
       	});
     }
 
+    function getCommandesNotReady(){
+    	val = $('.rstoid').attr('id');
+    	$.ajax({
+          type: "GET",
+          url: "/api/commandesRestaurantsNotReady",
+          dataType: "html",
+          data:{
+          	restaurant_id:val,
+          },
+          success: function(result){
+			$.each($.parseJSON(result), function(idx, obj) {
+				status = "";
+				if(!obj.status_pret)
+					status = "non pret"
+
+				$(".commandes-items").append('<tr class="tr" id="tr_'+obj.id+'"><td>'+obj.id+'<a class="hunt-btn-style" href="javascript:app.restaurateur.getOrder('+obj.id+')">preparer</a></td><td>'+obj.no_confirmation+'</td><td>'+obj.date_de_commande+'</td><td>'+obj.heure_de_commande+'</td><td id="td_status'+obj.id+'">'+status+'</td></tr>');
+			});
+          }        
+      	});
+    }
+
+    function getOrder(id){
+    	$.ajax({
+          type: "GET",
+          url: "/api/commandeOrder",
+          data:{
+          	id:id
+          },
+          dataType: "html",
+          success: function(result){
+          	order = $.parseJSON(result);
+          	$('#td_status'+order.id).text("en preparation");
+          	$("#cmd-id").text("#"+order.id);
+          	$("#cmd-prix").text(order.prix_total+"$"); 
+          	$("#cmd-conf").text(order.no_confirmation);
+          	getOrderItems(order.id);
+          	getAdresse(order.adresse_id);
+          	$('#cmd-total').text(order.prix_total+"$");
+          	$('#cmd-function').attr('href','javascript:app.restaurateur.ready('+order.id+')');
+          	$("#cmd").show();
+          }        
+      	});
+    }
+
+    function getOrderItems(id){
+    	$.ajax({
+          type: "GET",
+          url: "/api/commandeOrderItems",
+          data:{
+          	commande_id:id
+          },
+          dataType: "html",
+          success: function(result){
+          	$('.order-items').html('');
+          	$.each($.parseJSON(result), function(idx, obj) {
+          		$('.order-items').append('<span class="bill">'+obj.nom+' x '+obj.quantitee+'<span class="bill-price">'+obj.prix+'$</span></span><br/>');
+			});
+          }        
+      	});    	
+    }
+
+    function getAdresse(id){
+    	$.ajax({
+          type: "GET",
+          url: "/api/commandeAddr",
+          data:{
+          	id:id
+          },
+          dataType: "html",
+          success: function(result){
+          	addr = $.parseJSON(result);
+          	$("#addr_no_maison").text(addr.no_maison);
+          	$("#addr_rue").text(addr.rue);
+          	$("#addr_ville").text(addr.ville);
+          	$("#addr_code_postal").text(addr.code_postal);
+          	$("#addr_telephone").text(addr.telephone);
+          	}        
+      	});    	
+    }
+
+    function ready(id){
+ 		$.ajax({
+          type: "GET",
+          url: "/api/commandeOrderReady",
+          data:{
+          	commande_id:id
+          },
+          dataType: "html",
+          success: function(result){
+          	cmd = $.parseJSON(result);
+          	if(cmd.status_pret){
+          		$('#td_status'+order.id).text("pret");
+          		$("#cmd").hide();
+          	}
+
+
+          	}        
+      	});    	   	
+    }
 
     return{
       init:init,
@@ -706,6 +822,9 @@ app = (function(){
       modPlat:modPlat,
       createPlat:createPlat,
       modifierPlat:modifierPlat,
+      getCommandesNotReady:getCommandesNotReady,
+      getOrder:getOrder,
+      ready:ready,
     }
   })();
 

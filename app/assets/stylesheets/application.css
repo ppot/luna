@@ -619,6 +619,28 @@ h2 {
   clear: both;
 }
 
+.cmd-pret{
+  height: 400px;
+  overflow:scroll;
+}
+
+.tble{
+  border: 0px; 
+}
+.alert-box.error {
+  background-color: #a94442;
+  border-color: #ebccd1;
+  color: #f2dede;
+}
+
+.bill{
+  margin-bottom: 5px;
+}
+
+.order{
+  font-size: 0.875rem;
+}
+
 nav ul ul {
   display: none;
   font-size: 14px;

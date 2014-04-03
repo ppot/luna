@@ -3,6 +3,7 @@ class CreateCommandes < ActiveRecord::Migration
       create_table :commandes do |t|
           t.integer :client_id,         null: false
           t.integer :adresse_id,        null:false
+          t.integer :restaurant_id,        null:false
           t.integer :livreur_id,    null: true, default: nil
           t.string  :no_confirmation,   limit: 10,  null: false
           t.date    :date_de_commande,  null: false

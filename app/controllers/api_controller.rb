@@ -190,7 +190,6 @@ include  API
   # ===================================================
   # ========================  index Function  =========================
   def confirmer_cart
-    p params[:addr_id]
     _user = current_client
     _confirmation = rand(36**10).to_s(36)
     _cart = Commande.new()
@@ -204,6 +203,7 @@ include  API
     _cart.date_de_commande = params[:date_de_commande]
     _cart.heure_de_commande = params[:heure_de_commande]
     _cart.prix_total = params[:prix_total]
+    _cart.status_pret = false
     _cart.save
     render json: _cart
   end
@@ -216,6 +216,44 @@ include  API
     _commandes_plat.save
 
     render json: 1
+  end
+  # ===================================================
+  # ========================  restaurateur Function  =========================
+  def commandesRestaurantsNotReady
+      _commandes = Adresse.find_by_sql "SELECT commandes.id,commandes.no_confirmation,commandes.date_de_commande,commandes.heure_de_commande,commandes.status_pret 
+      FROM commandes INNER JOIN commandes_plats on commandes.id = commandes_plats.commande_id 
+      INNER JOIN plats ON commandes_plats.plat_id = plats.id 
+      INNER JOIN menus ON plats.menu_id = menus.id 
+      INNER JOIN restaurants ON menus.restaurant_id = restaurants.id 
+      WHERE restaurants.id = #{params[:restaurant_id]} AND commandes.status_pret = false  
+      GROUP BY commandes.id,commandes_plats.commande_id,commandes_plats.plat_id,commandes_plats.quantitee,plats.id,menus.id,restaurants.id";
+
+      render json: _commandes
+  end
+
+  def commandeOrder
+    _commande = Commande.find(params[:id])
+    render json: _commande
+  end
+
+  def commandeOrderItems
+      _plats = Adresse.find_by_sql "SELECT * FROM plats INNER JOIN commandes_plats on plats.id = commandes_plats.plat_id 
+                                    WHERE commandes_plats.commande_id  = #{params[:commande_id]}
+                                    GROUP BY commandes_plats.commande_id,plats.id,commandes_plats.plat_id,commandes_plats.quantitee"
+    render json: _plats
+  end
+
+  def commandeOrderReady
+    _commande = Commande.find(params[:commande_id])
+    _commande.status_pret = true
+    _commande.save
+
+    render json: _commande
+  end
+
+  def commandeAddr
+      _adresse = Adresse.find(params[:id])
+      render json: _adresse
   end
   # ===================================================
 end
