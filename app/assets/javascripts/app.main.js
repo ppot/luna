@@ -113,6 +113,8 @@ app = (function(){
 		}
 
 		function getFoodElements(id){
+			$('#resto-menu').text('');
+			$("#ul-plats").html('');
 			  app.general.menu(id);
               app.general.plats(id);
 		}
@@ -422,40 +424,49 @@ app = (function(){
 		}
 
 		function register () {
-			$.ajax({
-			    type: "GET",
-			    url: "/api/register",
-			    data: {
-			    	utilisateur: {
-				    	nom :  $('#inscription_nom').val(),
-				    	prenom :  $('#inscription_prenom').val(),
-				    	identificateur : $('#inscription_identificateur').val(),
-				    	mot_de_passe : $('#inscription_motDePass').val(),
+			if($('#inscription_nom').val()==""||$('#inscription_prenom').val()==""||$('#inscription_identificateur').val()==""||$('#inscription_motDePass').val()==""||
+				$('#inscription_email').val()==""||$('#inscription_dateNaissance').val()==""||$('#adresse_numero').val()==""||$('#adresse_rue').val()==""||$('#adresse_ville').val()==""||
+				$('#adresse_telephone').val()==""||$('#adresse_code_postale').val()==""){
+							$('#register-error').show();
+							$('.register-message-error').text("oups i did it again");
+			}
+			else{
+				$.ajax({
+				    type: "GET",
+				    url: "/api/register",
+				    data: {
+				    	utilisateur: {
+					    	nom :  $('#inscription_nom').val(),
+					    	prenom :  $('#inscription_prenom').val(),
+					    	identificateur : $('#inscription_identificateur').val(),
+					    	mot_de_passe : $('#inscription_motDePass').val(),
 
-			    	},
-			    	infos:{
-			    		courriel : $('#inscription_email').val(),
-				    	date_naissance : $('#inscription_dateNaissance').val()
-			    	},
-			    	adress:{
-			    		no_maison  :  $('#adresse_numero').val(), 
-			    		rue  :  $('#adresse_rue').val(),	
-			    		ville  :  $('#adresse_ville').val(), 
-			    		telephone  :  $('#adresse_telephone').val(), 
-			    		code_postal  :  $('#adresse_code_postale').val()
-			    	}
-			    },
-			    dataType: "html",
-			    success: function(result){
-			        if(result==1){
-			        	general.redirect("/users/profile")
-			        }
-			        else{
-						$('#register-error').show();
-						$('.register-message-error').text("oups i did it again");
-			        }
-			    }        
-			});
+				    	},
+				    	infos:{
+				    		courriel : $('#inscription_email').val(),
+					    	date_naissance : $('#inscription_dateNaissance').val(),
+				    	},
+				    	adress:{
+				    		no_maison  :  $('#adresse_numero').val(), 
+				    		rue  :  $('#adresse_rue').val(),	
+				    		ville  :  $('#adresse_ville').val(), 
+				    		telephone  :  $('#adresse_telephone').val(), 
+				    		code_postal  :  $('#adresse_code_postale').val()
+				    	}
+				    },
+				    dataType: "html",
+				    success: function(result){
+				        if(result==1){
+				        	general.redirect("/users/profile")
+				        }
+				        else{
+							$('#register-error').show();
+							$('.register-message-error').text("oups i did it again");
+				        }
+				    }        
+				});
+			}
+
 		}
 
 		function user_update(){
@@ -511,11 +522,11 @@ var entrepreneur=(function(){
 			        if (response.response == '1') {
 			        	adresse_client = '<address><strong>' + response.restaurant_nom + '</strong><br>' + response.restaurant_adresse.no_maison + ' ' + response.restaurant_adresse.rue + ' <br>' + response.restaurant_adresse.ville + ' , ' + response.restaurant_adresse.code_postal + ' <br><abbr title="Phone">P:</abbr>' + response.restaurant_adresse.telephone + ' </address>';
 			        	$('#restaurateur_succes').html('Restaurateur ajouté avec succès');
-			        	$('#restaurateurs_table').append('<tr><td>'+ response.restaurateur.identificateur + '</td><td>'+ response.restaurateur.mot_de_passe + '</td><td>' + response.restaurateur.nom + '</td><td>' + response.restaurateur.prenom + '</td><td>' + adresse_client + '</td></tr>');
+			        	$('#restaurateurs_table').append('<tr class="tr"><td>'+ response.restaurateur.identificateur + '</td><td>'+ response.restaurateur.mot_de_passe + '</td><td>' + response.restaurateur.nom + '</td><td>' + response.restaurateur.prenom + '</td><td>' + adresse_client + '</td></tr>');
 			        	$('#restaurateur_succes').addClass('alert-box success group');
 			        } else if (response.response == '2') {
 			        	$('#ajouterRestaurateur_restaurant_label').html("Création d'un restaurateur SANS restaurant");
-			        	$('#restaurateurs_table').append('<tr><td>'+ response.restaurateur.identificateur + '</td><td>'+ response.restaurateur.mot_de_passe + '</td><td>' + response.restaurateur.nom + '</td><td>' + response.restaurateur.prenom + '</td><td>restaurant requis</td></tr>');
+			        	$('#restaurateurs_table').append('<tr class="tr"><td>'+ response.restaurateur.identificateur + '</td><td>'+ response.restaurateur.mot_de_passe + '</td><td>' + response.restaurateur.nom + '</td><td>' + response.restaurateur.prenom + '</td><td>restaurant requis</td></tr>');
 			        } else {	//rep 0
 			        	
 			        	for (key in response.errors) {
@@ -617,14 +628,13 @@ var entrepreneur=(function(){
 			    success: function(response){
 			    	$('#add-restaurant label').html('');
 			    	$('#restaurant_succes').removeClass('alert-box success group');
-			        if (response.response == '1') {
-			        	adresse_client = '<address><strong>' + response.restaurant_nom + '</strong><br>' + response.restaurant_adresse.no_maison + ' ' + response.restaurant_adresse.rue + ' <br>' + response.restaurant_adresse.ville + ' , ' + response.restaurant_adresse.code_postal + ' <br><abbr title="Phone">P:</abbr>' + response.restaurant_adresse.telephone + ' </address>';
+			        if (response.response == '1') {			        	
 			        	$('#restaurant_succes').html('Restaurant ajouté avec succès');
-			        	$('#restaurants_table').append('<tr><td>'+ response.restaurateur.identificateur + '</td><td>'+ response.restaurateur.mot_de_passe + '</td><td>' + response.restaurateur.nom + '</td><td>' + response.restaurateur.prenom + '</td><td>' + adresse_client + '</td></tr>');
+			        	$('#restaurants_table').append('<tr class="tr"><td>'+ response.restaurateur +'</td><td>'+ response.restaurant + '</td><td>'+ response.adresse.telephone + '</td><td>' + response.adresse.no_maison + '</td><td>' + response.adresse.rue + '</td><td>'+ response.adresse.ville + '</td><td>'+ response.adresse.code_postal + '</td></tr>');
 			        	$('#restaurant_succes').addClass('alert-box success group');
 			        } else if (response.response == '2') {
 			        	$('#restaurant_succes').html("Création d'un restaurant SANS restaurateur");
-			        	$('#restaurants_table').append('<tr><td>restaurateur requis</td><td>'+ response.restaurant + '</td><td>'+ response.adresse.telephone + '</td><td>' + response.adresse.no_maison + '</td><td>' + response.adresse.rue + '</td><td>'+ response.adresse.ville + '</td><td>'+ response.adresse.code_postal + '</td></tr>');
+			        	$('#restaurants_table').append('<tr class="tr"><td>restaurateur requis</td><td>'+ response.restaurant + '</td><td>'+ response.adresse.telephone + '</td><td>' + response.adresse.no_maison + '</td><td>' + response.adresse.rue + '</td><td>'+ response.adresse.ville + '</td><td>'+ response.adresse.code_postal + '</td></tr>');
 			        } else {	//rep 0
 			        	if(response.errors.nom.length > 0) {
 			        		$('#restaurant_nom_label').html(response.errors.nom[0]);	//on place les erreurs de valiadtion dans les labels
@@ -735,7 +745,7 @@ var entrepreneur=(function(){
 		        if (response.response == '1') {		        	
 		        	$('#utilisateur_succes_label').html('Livreur ajouté avec succès');
 		        	$('#utilisateur_succes_label').addClass('alert-box success group');
-		        	$('#livreurs_table').append('<tr><td>'+ response.livreur.identificateur + '</td><td>'+ response.livreur.mot_de_passe + '</td><td>' + response.livreur.nom + '</td><td>' + response.livreur.prenom + '</td></tr>');
+		        	$('#livreurs_table').append('<tr class="tr"><td>'+ response.livreur.identificateur + '</td><td>'+ response.livreur.mot_de_passe + '</td><td>' + response.livreur.nom + '</td><td>' + response.livreur.prenom + '</td></tr>');
 		        } else {	//rep 0	
 		        	for (key in response.errors) {
 					    $('#utilisateur_'+ key +'_label').html(response.errors[key][0]);	//on place les erreurs de valiadtion dans les labels
@@ -1056,6 +1066,7 @@ var entrepreneur=(function(){
           },
           success: function(result){
 			$.each($.parseJSON(result), function(idx, obj) {
+				console.log(obj);
 				status = "";
 				if(!obj.status_pret)
 					status = "non pret"
@@ -1189,9 +1200,9 @@ var livreur=(function(){
 		        if (response.response == '1') {
 		        	adresse_client_template = "<h5 style='color:#C0C0C0'>Adresse du client</h5>\
                         <strong>Client</strong><br>\
-                          "+ response.adresse_client[0].no_maison+" "+ response.adresse_client[0].rue +",<br>\
-                          "+ response.adresse_client[0].ville+", CA "+ response.adresse_client[0].code_postal+"<br>\
-                        <abbr title='Phone'>P:</abbr> "+ response.adresse_client[0].telephone+"\
+                          "+ response.adresse_client.no_maison+" "+ response.adresse_client.rue +",<br>\
+                          "+ response.adresse_client.ville+", CA "+ response.adresse_client.code_postal+"<br>\
+                        <abbr title='Phone'>P:</abbr> "+ response.adresse_client.telephone+"\
                   	</div>"
 		        	$('#adresse_client').html(adresse_client_template);
 		        	adresse_restaurant_template = "<h5 style='color:#C0C0C0'>Adresse du Restaurant</h5>\
@@ -1203,7 +1214,7 @@ var livreur=(function(){
 		        	$('#adresse_restaurant').html(adresse_restaurant_template);
 		        	$('#livraison_client').html('<a class="hunt-btn-style" href="javascript:void(0)" onclick="app.livreur.livrerCommande('+ commande.id +')">Livrer</a>');
 		        	//google_map.calcRoute(response.adresse_client[0].code_postal, response.adresse_restaurant[0].code_postal);    	
-		        	$('#route_de_livraison_client').val(response.adresse_client[0].code_postal);
+		        	$('#route_de_livraison_client').val(response.adresse_client.code_postal);
 		        	$('#route_de_livraison_restaurant').val(response.adresse_restaurant[0].code_postal);
 		        } else {	//rep 0	
 		        	console.log("Les adresses n'ont pas pu être loadées.");

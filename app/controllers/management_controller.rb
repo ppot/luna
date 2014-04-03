@@ -64,7 +64,7 @@ class ManagementController < ApplicationController
               restaurateur.restaurant.update(restaurateur_id: nil) unless restaurateur.restaurant.nil?
               restaurant_modification.update(restaurateur_id: restaurateur.id)
 
-            format.json { render :json => { :response => "1", :restaurateur => restaurateur, :restaurant_nom => restaurant_modification.nom, :restaurant_adresse => restaurant_modification.adresse } }
+            format.json { render :json => { :response => "1", :restaurateur => restaurateur, :restaurant_nom => "#{restaurant_modification.nom} #{restaurant_modification.prenom}", :restaurant_adresse => restaurant_modification.adresse } }
           else
             format.json { render :json => { :response => "2", :restaurateur => restaurateur} }
           end         
@@ -125,7 +125,7 @@ class ManagementController < ApplicationController
             restaurant_adresse.save
           if params[:restaurateur] != "-1" 
             nouveau_restaurant.update(:restaurateur_id => params[:restaurateur])
-            format.json { render :json => { :response => "1", :restaurant => nouveau_restaurant.nom, :restaurant_adresse => restaurant_adresse, :restaurateur => nouveau_restaurant.restaurateur.nom } }
+            format.json { render :json => { :response => "1", :restaurant => nouveau_restaurant.nom, :adresse => restaurant_adresse, :restaurateur => nouveau_restaurant.restaurateur.nom } }
           else
             format.json { render :json => { :response => "2", :restaurant => nouveau_restaurant.nom, :adresse => restaurant_adresse } }
           end           
@@ -184,6 +184,7 @@ class ManagementController < ApplicationController
                                                 INNER JOIN commandes_plats ON plats.id = commandes_plats.plat_id 
                                                 AND commandes_plats.commande_id = '#{commande_actuelle.id}' 
                                                 AND adresses.adresseable_type = 'Restaurant'
+                                                LIMIT 1
                                                 "
       if !adresse_client.nil? && !adresse_restaurant.nil?
         respond_to do |format|
@@ -196,7 +197,7 @@ class ManagementController < ApplicationController
   end
 
   def livrerCommande
-      @_user = current_client
+      user = current_client
       d = Date.today.to_formatted_s(:rfc822)  #2014-03-22 exemple
       t = Time.now.strftime("%I:%M%p") #formatage de l'heure actuelle exemple 04:22PM
       livraison = Livraison.new(:commande_id => params[:id],:date_de_livraison => d, :heure_de_livraison => t)
@@ -204,9 +205,10 @@ class ManagementController < ApplicationController
       client = Client.find(commande.client_id)
       respond_to do |format|
         if livraison.save
-            Commande.update(:params[:id], :livreur_id => @_user.id)     #param session requis
+            commande.livreur_id = user.id     #param session requis
+            commande.save
             Notifier.notifier_client(client, commande).deliver
-            format.json { render :json => { :response => "1"} }
+            format.json { render :json => { :response => "1" } }
         else
             format.json { render :json => { :response => "0" } }
         end

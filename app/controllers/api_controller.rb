@@ -220,7 +220,7 @@ include  API
   # ===================================================
   # ========================  restaurateur Function  =========================
   def commandesRestaurantsNotReady
-      _commandes = Adresse.find_by_sql "SELECT commandes.id,commandes.no_confirmation,commandes.date_de_commande,commandes.heure_de_commande,commandes.status_pret 
+      _commandes = Adresse.find_by_sql "SELECT DISTINCT commandes.id,commandes.no_confirmation,commandes.date_de_commande,commandes.heure_de_commande,commandes.status_pret 
       FROM commandes INNER JOIN commandes_plats on commandes.id = commandes_plats.commande_id 
       INNER JOIN plats ON commandes_plats.plat_id = plats.id 
       INNER JOIN menus ON plats.menu_id = menus.id 
